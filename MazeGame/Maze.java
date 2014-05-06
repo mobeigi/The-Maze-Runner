@@ -5,15 +5,20 @@
  * @see Tile
  * @see Player
  */
+
 public class Maze {
 	private Tile[][] grid;
 	private int width;
 	private int height;
+	private Tile playerLoc;	//location of the current player
 			
 	public Maze (int width, int height) {
 		grid = new Tile[width][height];
 		this.width = width;
 		this.height = height;
+		createMaze();	//initialise all tiles
+		playerLoc = grid[0][1];	//origin at (0,1), 
+								//width and height should be big enough to allow this to be valid
 	}
 	
 	public void createMaze() {
@@ -21,11 +26,13 @@ public class Maze {
 			for (int j = 0; j < height; j++) {
 				Tile t; 
 				//if border tile
-				if (i == 0 || i == width-1 ||
+				//not origin which is (0,1)
+				//not destination which is (width-1, height)
+				if ((i == 0 && j != 1) || (i == width-1 && j != height) ||
 					j == 0 || j == height-1) {
-					t = new Tile(0); // 0 denotes walkable tile
+					t = new Tile(false,i,j); // false denotes walkable tile
 				} else {
-					t = new Tile(1); // 1 denotes wall/non-walkable tile
+					t = new Tile(true,i,j); // true denotes wall/non-walkable tile
 				}
 				grid[i][j] = t;
 			}
@@ -38,13 +45,22 @@ public class Maze {
 	 * @return the tile in which the player is on
 	 */
 	public Tile findPlayer (Player p) {
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				if (grid[i][j].containsPlayer(p)) {
-					return grid[i][j];
-				}
-			}
+		return playerLoc;
+	}
+	
+	public void updatePlayerLoc (int x, int y) {
+		//only update player location if the move is valid
+		//disallow teleportation? (check here or elsewhere?) 
+		//e.g. limit x to 0,1,-1 and y to 0,1,-1 and one of x,y must be 0
+		//as we can only move in one direction at a time
+		if (playerLoc.getX()+x < width && playerLoc.getY()+y < height
+			&& grid[playerLoc.getX()+x][playerLoc.getY()+y].isWalkable()) {
+			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
 		}
-		return null;
+	}
+	
+	public boolean reachedEnd (Tile currLoc) {
+		//destination is at (width-1, height)
+		return (currLoc.get(X) == width-1 && currLoc.get(Y) == height);
 	}
 }
