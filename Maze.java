@@ -1,5 +1,6 @@
 /**
  * Contains the board of the maze.
+ * It contains the maze-generating algorithm.
  * @author Gavin Tam
  * @see Tile
  * @see Player
