@@ -1,0 +1,10 @@
+//constructor
+public Tile (boolean isWalkable, int x, int y);
+
+public void setWalkable ();
+
+public ArrayList<Tile> getAdjacentTiles ();
+
+public int getX();
+
+public int getY();

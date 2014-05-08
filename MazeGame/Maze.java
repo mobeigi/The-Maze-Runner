@@ -61,6 +61,6 @@ public class Maze {
 	
 	public boolean reachedEnd (Tile currLoc) {
 		//destination is at (width-1, height)
-		return (currLoc.get(X) == width-1 && currLoc.get(Y) == height);
+		return (currLoc.getX() == width-1 && currLoc.getY() == height);
 	}
 }
