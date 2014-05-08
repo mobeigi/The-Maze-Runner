@@ -63,4 +63,31 @@ public class Maze {
 		//destination is at (width-1, height)
 		return (currLoc.getX() == width-1 && currLoc.getY() == height);
 	}
+	
+	//double check syntax please, my eclipse isnt giving me
+	//any errors
+	// -Calvin
+	public ArrayList<Tile> getAdjacentTiles (Tile t){
+		ArrayList<Tile> a = new ArrayList<Tile>();
+		int x = t.getX();
+		int y = t.getY();
+		
+		if(x != 0){
+			a.add(grid[x-1][y]);
+		}
+		
+		if(x != (width-1)){
+			a.add(grid[x+1][y]);
+		}
+		
+		if(y!=0){
+			a.add(grid[x][y-1]);
+		}
+		
+		if(y!=(height-1)){
+			a.add(grid[x][y+1])
+		}
+		
+		return a;
+	}
 }
