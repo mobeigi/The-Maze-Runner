@@ -67,7 +67,7 @@ public class Maze {
 	//double check syntax please, my eclipse isnt giving me
 	//any errors
 	// -Calvin
-	public ArrayList<Tile> getAdjacentTiles (Tile t){
+	public ArrayList<Tile> getAdjacentTiles(Tile t){
 		ArrayList<Tile> a = new ArrayList<Tile>();
 		int x = t.getX();
 		int y = t.getY();
