@@ -1,6 +1,7 @@
 import java.util.PriorityQueue;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 /**
  * Contains the board of the maze.
  * It contains the maze-generating algorithm.
@@ -40,7 +41,7 @@ public class Maze {
 		//Use Prim's algorithm on a randomly weighted grid graph representation of the maze
 		//vertices are represented by tiles with odd coordinates
 		//and edges are represented by two adjacent vertices (i.e. a series of 3 consecutive tiles)
-		ArrayList<Tile> visited = new ArrayList<Tile>();
+		HashSet<Tile> visited = new HashSet<Tile>();
 		PriorityQueue<TileEdge> edges = new PriorityQueue<TileEdge>(100, new Comparator<TileEdge>() { 
 			public int compare (TileEdge e1, TileEdge e2) {
 				double weightDiff = (weights[e1.getTile0().getX()][e1.getTile0().getY()] +
@@ -54,10 +55,11 @@ public class Maze {
 				return 0;
 			}
 		});
-		
+		HashSet<TileEdge> edgesAdded = new HashSet<TileEdge>();
 		ArrayList<TileEdge> neighbours = getNeighbouringEdges(grid[1][1]);
 		for (int i = 0; i < neighbours.size(); i++) {
 			edges.add(neighbours.get(i));
+			edgesAdded.add(neighbours.get(i));
 		}
 		visited.add(grid[1][1]);
 		int numVertices = ((width-1)/2)*((height-1)/2);
@@ -68,16 +70,18 @@ public class Maze {
 				|| (!visited.contains(curr.getTile0()) && !visited.contains(curr.getTile2()))) {
 				continue;
 			}
+			//only one of the tiles of the edge is unvisited
 			if (visited.contains(curr.getTile0())) {
 				neighbours = getNeighbouringEdges(curr.getTile2());
-				visited.add(curr.getTile2());
+				visited.add(curr.getTile2());	//if Tile0 has been visited, Tile2 must not have been visited
 			} else {
 				neighbours = getNeighbouringEdges(curr.getTile0());
-				visited.add(curr.getTile0());
+				visited.add(curr.getTile0());	//if Tile2 has been visited, Tile0 must not have been visited
 			}
 			for (int i = 0; i < neighbours.size(); i++) {
-				if (!edges.contains(neighbours.get(i))) {
+				if (!edgesAdded.contains(neighbours.get(i))) {
 					edges.add(neighbours.get(i));
+					edgesAdded.add(neighbours.get(i));
 				}
 			}
 			curr.getTile0().setWalkable();		//set the edge as a walkable path
@@ -99,6 +103,7 @@ public class Maze {
 		}
 	}
 	
+	//can improve efficiency by only checking within a 2 tile radius
 	public ArrayList<TileEdge> getNeighbouringEdges (Tile curr) {
 		ArrayList<TileEdge> neighbouringEdges = new ArrayList<TileEdge>();
 		for (int i = 1; i < width; i+=2) {

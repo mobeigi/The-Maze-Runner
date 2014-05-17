@@ -30,7 +30,6 @@ public class Tile {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (isWalkable ? 1231 : 1237);
 		result = prime * result + x;
 		result = prime * result + y;
 		return result;
@@ -45,8 +44,6 @@ public class Tile {
 		if (getClass() != obj.getClass())
 			return false;
 		Tile other = (Tile) obj;
-		if (isWalkable != other.isWalkable)
-			return false;
 		if (x != other.x)
 			return false;
 		if (y != other.y)
