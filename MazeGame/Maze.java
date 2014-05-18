@@ -212,6 +212,8 @@ public class Maze {
 			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
 		}
 	}
+	
+	//checks if a player move is valid
 	private boolean isValid (int x, int y) {
 		if (x > 1 || x < -1 || y > 1 || y < -1) {	//can only move at most one tile per turn
 			return false;
