@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Contains the board of the maze.
  * It contains the maze-generating algorithm.
@@ -85,9 +87,15 @@ public class Maze {
 		}
 		
 		if(y!=(height-1)){
-			a.add(grid[x][y+1])
+			a.add(grid[x][y+1]);
 		}
 		
 		return a;
+	}
+	
+	//Check if there is a wall at these coordinates
+	public boolean isValid(int x, int y){
+		//NEEDS TO BE IMPLEMENTED
+		return true;
 	}
 }

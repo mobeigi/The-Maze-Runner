@@ -21,4 +21,9 @@ public class Tile {
 	public int getY(){
 		return this.y;
 	}
+
+	public boolean isWalkable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
