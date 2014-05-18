@@ -3,7 +3,7 @@ public class Game {
     Maze maze;
     int numPlayers;
     boolean status;
-    boolean playAgain
+    boolean playAgain;
     
     public Game(){
         
@@ -18,6 +18,6 @@ public class Game {
     }
     
     public boolean isGameOver(){
-        return true //hehe
+        return true; //hehe
     }
 }

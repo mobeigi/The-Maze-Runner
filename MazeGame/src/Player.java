@@ -13,11 +13,11 @@ public class Player {
 		return name;
 	}
 	
-	public getX(){
+	public int getX(){
 		return this.x;
 	}
 	
-	public getY(){
+	public int getY(){
 		return this.y;
 	}
 }
