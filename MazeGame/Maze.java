@@ -30,7 +30,7 @@ public class Maze {
 			
 	public Maze (int width, int height) {
 		//width and height should be an odd number
-		//width and height is assumed to be greater than 3
+		//width and height is assumed to be greater than 1
 		grid = new Tile[width+2][height+2];
 		this.width = width+2;
 		this.height = height+2;
@@ -112,46 +112,47 @@ public class Maze {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
+					//order of printing is important as path contains start and dest
 					if (playerLoc.equals(grid[i][j])) {
 						System.out.print("P");
 					} else if (i == (width-1)-1 && j == (height-1)-1) {
 						System.out.print("D");
 					} else if (mazeSolution.contains(grid[i][j])) {
-						System.out.print("X");
+						System.out.print("*");
 					} else {
 						System.out.print("0");
 					}
 				} else {
-					System.out.print("-");
+					System.out.print("-");	//represents wall
 				}
 			}
 			System.out.println();
 		}
 	}
 	
-	//can improve efficiency by only checking within a 2 tile radius
+	//checking within a 2 tile radius
 	public ArrayList<TileEdge> getNeighbouringEdges (Tile curr) {
 		ArrayList<TileEdge> neighbouringEdges = new ArrayList<TileEdge>();
 		//vertices exist only on tiles with odd x and y coordinates
-		for (int i = 1; i < width; i+=2) {
-			for (int j = 1; j < height; j+=2) {
+		for (int i = Math.max(curr.getX()-2,1); i <= Math.min(curr.getX()+2,width-1); i+=2) {
+			for (int j = Math.max(curr.getY()-2,1); j <= Math.min(curr.getY()+2,height-1); j+=2) {
+				TileEdge newEdge = null;
 				if (curr.getX()-i == 2 && curr.getY()-j == 0) {
-					TileEdge newEdge = new TileEdge(grid[i][curr.getY()],
-													grid[i+1][curr.getY()],curr);
-					neighbouringEdges.add(newEdge);
+					newEdge = new TileEdge(grid[i][curr.getY()],
+										   grid[i+1][curr.getY()],curr);
 				} else if (curr.getX()-i == -2 && curr.getY()-j == 0) {
-					TileEdge newEdge = new TileEdge(curr,grid[i-1][curr.getY()],
-													grid[i][curr.getY()]);
-					neighbouringEdges.add(newEdge);
+					newEdge = new TileEdge(curr,grid[i-1][curr.getY()],
+												grid[i][curr.getY()]);
 				} else if (curr.getX()-i == 0 && curr.getY()-j == 2) {
-					TileEdge newEdge = new TileEdge(grid[curr.getX()][j],
-													grid[curr.getX()][j+1], curr);
-					neighbouringEdges.add(newEdge);
+					newEdge = new TileEdge(grid[curr.getX()][j],
+										   grid[curr.getX()][j+1], curr);
 				} else if (curr.getX()-i == 0 && curr.getY()-j == -2) {
-					TileEdge newEdge = new TileEdge(curr, grid[curr.getX()][j-1],
-													grid[curr.getX()][j]);
-					neighbouringEdges.add(newEdge);
+					newEdge = new TileEdge(curr, grid[curr.getX()][j-1],
+												 grid[curr.getX()][j]);
+				} else {
+					continue;
 				}
+				neighbouringEdges.add(newEdge);
 			}
 		}
 		return neighbouringEdges;
@@ -202,23 +203,31 @@ public class Maze {
 	 * @param p the player
 	 * @return the tile in which the player is on
 	 */
-	public Tile findPlayer (Player p) {
+	public Tile findPlayer () {
 		return playerLoc;
 	}
 	
 	public void updatePlayerLoc (int x, int y) {
-		//only update player location if the move is valid
-		//disallow teleportation? (check here or elsewhere?) 
-		//e.g. limit x to 0,1,-1 and y to 0,1,-1 and one of x,y must be 0
-		//as we can only move in one direction at a time
-		if (playerLoc.getX()+x < width && playerLoc.getY()+y < height
-			&& grid[playerLoc.getX()+x][playerLoc.getY()+y].isWalkable()) {
+		if (isValid(x,y)) {
 			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
 		}
 	}
+	private boolean isValid (int x, int y) {
+		if (x > 1 || x < -1 || y > 1 || y < -1) {	//can only move at most one tile per turn
+			return false;
+		} else if (x != 0 && y != 0) {	//can only move in one direction
+			return false;
+		} else if ((playerLoc.getX()+x) >= (width-1) || (playerLoc.getY()+y) >= (height-1)
+			|| (playerLoc.getX()+x) <= 0 || (playerLoc.getY()+y) <= 0) {	//cannot move over border
+			return false;
+		} else if (!grid[playerLoc.getX()+x][playerLoc.getY()+y].isWalkable()) { //cannot move to wall
+			return false;
+		}
+		return true;
+	}
 	
-	public boolean reachedEnd (Tile currLoc) {
+	public boolean reachedEnd () {
 		//destination is at (width-2, height-2)
-		return (currLoc.getX() == (width-2) && currLoc.getY() == (height-2));
+		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2));
 	}
 }
