@@ -4,10 +4,21 @@ import java.util.Comparator;
 import java.util.HashSet;
 /**
  * Contains the board of the maze.
- * It contains the maze-generating algorithm.
+ * It contains the maze-generating algorithm
+ * and the maze solving algorithm.
  * @author Gavin Tam
  * @see Tile
  * @see Player
+ */
+
+/*
+ * IDEAS:
+ * Enemy player
+ * Weapons for player to collect to kill enemy
+ * Collecting items for the next level (powerups)
+ * Treasure chest to get high scores for a maze
+ * Score dependent on time taken to finish maze
+ * Have a plot with dialogue boxes coming up for each level with picture displayed
  */
 
 public class Maze {
@@ -15,16 +26,23 @@ public class Maze {
 	private int width;
 	private int height;
 	private Tile playerLoc;	//location of the current player
+	private HashSet<Tile> mazeSolution;
 			
 	public Maze (int width, int height) {
 		//width and height should be an odd number
 		//width and height is assumed to be greater than 3
-		grid = new Tile[width][height];
-		this.width = width;
-		this.height = height;
+		grid = new Tile[width+2][height+2];
+		this.width = width+2;
+		this.height = height+2;
 		createMaze();	//initialise all tiles
 		playerLoc = grid[1][1];	//origin at (1,1), 
 								//width and height should be big enough to allow this to be valid
+		mazeSolution = new HashSet<Tile>();
+		boolean[][] visited = new boolean[width+2][height+2];
+		boolean solvable = solveMaze(1,1,visited);
+		if (solvable) {	//maze should always be solvable
+			showMaze();
+		}
 	}
 	
 	public void createMaze() {
@@ -41,7 +59,6 @@ public class Maze {
 		//Use Prim's algorithm on a randomly weighted grid graph representation of the maze
 		//vertices are represented by tiles with odd coordinates
 		//and edges are represented by two adjacent vertices (i.e. a series of 3 consecutive tiles)
-		HashSet<Tile> visited = new HashSet<Tile>();
 		PriorityQueue<TileEdge> edges = new PriorityQueue<TileEdge>(100, new Comparator<TileEdge>() { 
 			public int compare (TileEdge e1, TileEdge e2) {
 				double weightDiff = (weights[e1.getTile0().getX()][e1.getTile0().getY()] +
@@ -56,6 +73,7 @@ public class Maze {
 			}
 		});
 		HashSet<TileEdge> edgesAdded = new HashSet<TileEdge>();
+		HashSet<Tile> visited = new HashSet<Tile>();
 		ArrayList<TileEdge> neighbours = getNeighbouringEdges(grid[1][1]);
 		for (int i = 0; i < neighbours.size(); i++) {
 			edges.add(neighbours.get(i));
@@ -94,7 +112,15 @@ public class Maze {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
-					System.out.print("0");
+					if (playerLoc.equals(grid[i][j])) {
+						System.out.print("P");
+					} else if (i == (width-1)-1 && j == (height-1)-1) {
+						System.out.print("D");
+					} else if (mazeSolution.contains(grid[i][j])) {
+						System.out.print("X");
+					} else {
+						System.out.print("0");
+					}
 				} else {
 					System.out.print("-");
 				}
@@ -106,6 +132,7 @@ public class Maze {
 	//can improve efficiency by only checking within a 2 tile radius
 	public ArrayList<TileEdge> getNeighbouringEdges (Tile curr) {
 		ArrayList<TileEdge> neighbouringEdges = new ArrayList<TileEdge>();
+		//vertices exist only on tiles with odd x and y coordinates
 		for (int i = 1; i < width; i+=2) {
 			for (int j = 1; j < height; j+=2) {
 				if (curr.getX()-i == 2 && curr.getY()-j == 0) {
@@ -131,11 +158,51 @@ public class Maze {
 	}
 	
 	/**
+	 * Credit to http://en.wikipedia.org/wiki/Maze_solving_algorithm
+	 * Adapted from "Recursive algorithm"
+	 */
+	public boolean solveMaze (int x, int y, boolean[][] visited) {
+		if (x == width-2 && y == height-2) return true;
+		if (!grid[x][y].isWalkable() || visited[x][y]) return false;
+		visited[x][y] = true;
+		if (x != 0) {
+			if (solveMaze(x-1,y,visited)) {
+				mazeSolution.add(grid[x][y]);
+				return true;
+			}
+		}
+		if (x != width-1) {
+			if (solveMaze(x+1,y,visited)) {
+				mazeSolution.add(grid[x][y]);
+				return true;
+			}
+		}
+		if (y != 0) {
+			if (solveMaze(x,y-1,visited)) {
+				mazeSolution.add(grid[x][y]);
+				return true;
+			}
+		}
+		if (y != height-1) {
+			if (solveMaze(x,y+1,visited)) {
+				mazeSolution.add(grid[x][y]);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void giveHint() {
+		//TODO change colour of tiles such that path from current player position
+		//to the nearest tile part of the solution is given
+	}
+	
+	/**
 	 * Finds the tile on the maze that the player is situated in
 	 * @param p the player
 	 * @return the tile in which the player is on
 	 */
-	/*public Tile findPlayer (Player p) {
+	public Tile findPlayer (Player p) {
 		return playerLoc;
 	}
 	
@@ -151,7 +218,7 @@ public class Maze {
 	}
 	
 	public boolean reachedEnd (Tile currLoc) {
-		//destination is at (width-1, height)
-		return (currLoc.getX() == width-1 && currLoc.getY() == height-1);
-	}*/
+		//destination is at (width-2, height-2)
+		return (currLoc.getX() == (width-2) && currLoc.getY() == (height-2));
+	}
 }
