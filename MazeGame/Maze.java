@@ -232,4 +232,8 @@ public class Maze {
 		//destination is at (width-2, height-2)
 		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2));
 	}
+	
+	public Tile getTile(int x, int y) {
+		return this.grid[x][y];
+	}
 }
