@@ -54,6 +54,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 	//Draw
 	public void draw (Maze m) 
 	{
+		//Make new GridBagLayout for maze itself
+		JPanel mazeGrid = new JPanel();
+		mazeGrid.setLayout(new GridBagLayout());
+		
 		//Constraints
 		GridBagConstraints c = new GridBagConstraints();
 		c.weightx = 1;
@@ -83,26 +87,32 @@ public class MazeFrame extends JFrame implements ActionListener {
 					newEntry.setBackground(Color.BLACK);	
 				}
 				
-				this.add(newEntry, c);
+				mazeGrid.add(newEntry, c);
 			}
 		}
 		
-		c.gridx = width / 2;
-		c.gridy = -(height + 1);
-		c.gridwidth = 5;
-		c.weightx = 2;
-		c.weighty = 2;
-		c.fill = GridBagConstraints.SOUTH;
+		//Add maze to frame
+		c.gridx = 0;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.CENTER;
+		this.add(mazeGrid, c);
+		
+		
+		c.gridx = 0;
+		c.gridy = -1;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.CENTER;
 		
 		//Add exit button
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.add(exitButton);
 		
 		//Add Score
-		c.gridy = -(height + 2);
+		c.gridy = -2;
 		JLabel score = new JLabel("Score: 0");
 		bottomPanel.add(score);
 		
+		//Add panels to this frame
 		this.add(bottomPanel, c);
 		
 		//Pack
