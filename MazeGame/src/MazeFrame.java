@@ -87,31 +87,16 @@ public class MazeFrame extends JFrame implements ActionListener {
 				JPanel blocks = new JPanel();
 				blocks.setLayout(new GridLayout(2,2));
 				
-				JPanel block1 = new JPanel();
-				JPanel block2 = new JPanel();
-				JPanel block3 = new JPanel();
-				JPanel block4 = new JPanel();
-				
 				Dimension blockSize = new Dimension(48, 48);
 				blocks.setPreferredSize(blockSize);
-				
-				/*
-				Dimension innerBlockSize = new Dimension(24, 24);
-				
-				block1.setPreferredSize(innerBlockSize);
-				block2.setPreferredSize(innerBlockSize);
-				block3.setPreferredSize(innerBlockSize);
-				block4.setPreferredSize(innerBlockSize);
-				*/
-				
 				
 				String blockSprite = "";
 				JLayeredPane fullblock = new JLayeredPane();
 				
 				if (m.findPlayer().equals(t)) { //if player here
-					blockSprite = "link";
+					blockSprite = "link_48";
 					
-					Goku g1 = new Goku(blockSprite);
+					PlayerPanel g1 = new PlayerPanel(blockSprite);
 					JLabel l1 = new JLabel(g1.image);
 					
 					fullblock.add(l1, 0);
@@ -123,7 +108,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 					blockSprite = "ques";
 				}
 				
-				Goku g = new Goku(blockSprite);	
+				PlayerPanel g = new PlayerPanel(blockSprite);	
 				JLabel l = new JLabel(g.image);
 				
 				fullblock.setPreferredSize(blockSize);
