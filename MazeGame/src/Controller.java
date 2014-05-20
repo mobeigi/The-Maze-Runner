@@ -22,33 +22,29 @@ public class Controller implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		 double dx = 0;
 		 double dy = 0;
+		 
 		 if (e.getKeyCode() == KeyEvent.VK_D){
 			 System.out.println("right");
 			 dx = 1;
 			 dy = 0;
-			// s.translate((int) dx, (int) dy);
 		 } else if (e.getKeyCode() == KeyEvent.VK_A){
 			 System.out.println("left");
 			 dx = -1;
 			 dy = 0;
-			 //s.translate((int) dx, (int) dy);
 		 } else if (e.getKeyCode() == KeyEvent.VK_W) {
 			 System.out.println("up");
 			 dx = 0;
 			 dy = -1;
-			// s.translate((int) dx, (int) dy);
 		 } else if (e.getKeyCode() == KeyEvent.VK_S){
 			 System.out.println("down");
 			 dx = 0;
 			 dy = +1;
-			// s.translate((int) dx, (int) dy);
-		 } else {
-			// System.out.println("Key Pressed!!!");
+		 } else {	//Ignore other presses
 			 return;
 		 }
 		 
 		 //Update the player location
-		 if (m.isValid((int)dx,(int)dy)){
+		 if (m.isValid((int)dx,(int)dy)) {
 			 m.updatePlayerLoc((int)dx, (int)dy);
 			 mazeFrame.init(m);	//update maze
 			 mazeFrame.repaint(); //paint
