@@ -9,7 +9,7 @@ public class run
 		
 		MazeFrame MF = new MazeFrame(15, 15);
 		Player p = new Player("joe", "link");
-		Controller c = new Controller(m, p);
+		Controller c = new Controller(m, MF, p);
 		MF.addKeyListener(c);
 		
 		long second = 0;
@@ -19,9 +19,12 @@ public class run
 		
 		Tile old, t;
 		
-		//init
+		//Init first maze
 		MF.init(m);
 		
+		
+		//This while loop can be used to redraw maze every X ms if needed
+		//Otherwise it would manipulate game class to ask user to play again, progress levels, etc
 		while (true) 
 		{
 			if (System.currentTimeMillis() - second >= 125) 
@@ -67,8 +70,8 @@ public class run
 				
 				*/
 				
-				MF.init(m);
-				MF.repaint();
+				//MF.init(m);
+				//MF.repaint();
 				
 				second = System.currentTimeMillis();
 			} 

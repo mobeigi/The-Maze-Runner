@@ -1,16 +1,21 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JFrame;
+
+
 
 public class Controller implements KeyListener {
 	private Maze m;
 	private Player p1;
 	private Player p2;
+	private MazeFrame mazeFrame;
 	
 	
-	public Controller(Maze m, Player p1){
+	public Controller(Maze m, MazeFrame mazeFrame, Player p1){
 		this.p1 = p1;
 		this.m = m;
+		this.mazeFrame = mazeFrame;
 	}
 		
 	@Override
@@ -39,10 +44,13 @@ public class Controller implements KeyListener {
 			// s.translate((int) dx, (int) dy);
 		 } else {
 			// System.out.println("Key Pressed!!!");
+			 return;
 		 }
 		 
-		 //update the player location
+		 //Update the player location
 		 m.updatePlayerLoc((int)dx, (int)dy);
+		 mazeFrame.init(m);	//update maze
+		 mazeFrame.repaint(); //paint
 		 
 	}
 
