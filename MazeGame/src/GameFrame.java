@@ -10,6 +10,8 @@ public class GameFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private MazeFrame mazeFrame;
 	private boolean mazeSet;
+	private int width;
+	private int height;
 	
 	//Frame components
 	JButton playButton = new JButton("Play Game!");
@@ -22,6 +24,8 @@ public class GameFrame extends JFrame implements ActionListener {
 		Dimension minSize = new Dimension(600, 600);
 		this.setMinimumSize(minSize);
 		
+		this.width = width;
+		this.height = height;
 		this.mazeSet = false;
 		
 		//Set user size
@@ -56,7 +60,6 @@ public class GameFrame extends JFrame implements ActionListener {
 		
 		//Pack
 		this.pack();
-		this.revalidate();
 		this.setVisible(true);
 	}
 
@@ -66,7 +69,7 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
 			//Make maze frame
-			this.mazeFrame = new MazeFrame(30, 30);
+			this.mazeFrame = new MazeFrame(width, height);
 			this.mazeSet = true;
 			this.setVisible(false);
 		}

@@ -22,10 +22,10 @@ import java.util.HashSet;
  */
 
 public class Maze {
-	private Tile[][] grid;
+	public Tile[][] grid;
 	private int width;
 	private int height;
-	private Tile playerLoc;	//location of the current player
+	public Tile playerLoc;	//location of the current player
 	private HashSet<Tile> mazeSolution;
 			
 	public Maze (int width, int height) {
@@ -109,6 +109,7 @@ public class Maze {
 	}
 	
 	public void showMaze () {
+		/*
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
@@ -128,6 +129,7 @@ public class Maze {
 			}
 			System.out.println();
 		}
+		*/
 	}
 	
 	//checking within a 2 tile radius
@@ -235,5 +237,13 @@ public class Maze {
 	
 	public Tile getTile(int x, int y) {
 		return this.grid[x][y];
+	}
+	
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
 	}
 }

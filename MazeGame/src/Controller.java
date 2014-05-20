@@ -5,16 +5,14 @@ import javax.swing.JFrame;
 
 
 public class Controller implements KeyListener {
-
-	
-	JFrame frame;
-	Player p1;
-	Player p2;
+	private Maze m;
+	private Player p1;
+	private Player p2;
 	
 	
-	public Controller(Player p1, JFrame frame){
+	public Controller(Maze m, Player p1){
 		this.p1 = p1;
-		this.frame = frame;
+		this.m = m;
 	}
 		
 	@Override
@@ -34,21 +32,19 @@ public class Controller implements KeyListener {
 		 } else if (e.getKeyCode() == KeyEvent.VK_W) {
 			 System.out.println("up");
 			 dx = 0;
-			 dy = 1;
+			 dy = -1;
 			// s.translate((int) dx, (int) dy);
 		 } else if (e.getKeyCode() == KeyEvent.VK_S){
 			 System.out.println("down");
 			 dx = 0;
-			 dy = -1;
+			 dy = +1;
 			// s.translate((int) dx, (int) dy);
 		 } else {
 			 System.out.println("Key Pressed!!!");
 		 }
 		 //update the player location
-		 p1.translate((int)dx,(int) dy);
-		 frame.repaint();
+		 m.updatePlayerLoc((int)dx, (int)dy);
 		 
-		
 	}
 
 	@Override
