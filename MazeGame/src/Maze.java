@@ -246,4 +246,8 @@ public class Maze {
 	public int getHeight() {
 		return this.height;
 	}
+	
+	public Tile getPlayerLoc() {
+		return this.playerLoc;
+	}
 }

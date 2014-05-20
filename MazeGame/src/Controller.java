@@ -1,8 +1,6 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JFrame;
-
 
 public class Controller implements KeyListener {
 	private Maze m;
@@ -40,8 +38,9 @@ public class Controller implements KeyListener {
 			 dy = +1;
 			// s.translate((int) dx, (int) dy);
 		 } else {
-			 System.out.println("Key Pressed!!!");
+			// System.out.println("Key Pressed!!!");
 		 }
+		 
 		 //update the player location
 		 m.updatePlayerLoc((int)dx, (int)dy);
 		 

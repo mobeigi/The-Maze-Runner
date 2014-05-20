@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 public class PlayerPanel extends JPanel{
 	//Private Fields
 	private static final long serialVersionUID = 1L;
-	public ImageIcon image;
+	private ImageIcon image;
 
     public PlayerPanel(String imageName) {
     	try {

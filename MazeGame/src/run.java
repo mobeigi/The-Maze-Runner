@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class run 
 {
@@ -8,7 +7,7 @@ public class run
 		Maze m = new Maze(15,15);
 		m.createMaze();
 		
-		MazeFrame MF = new MazeFrame(17, 17);
+		MazeFrame MF = new MazeFrame(15, 15);
 		Player p = new Player("joe", "link");
 		Controller c = new Controller(m, p);
 		MF.addKeyListener(c);
@@ -20,14 +19,15 @@ public class run
 		
 		Tile old, t;
 		
+		//init
+		MF.init(m);
+		
 		while (true) 
 		{
-			System.out.flush(); //flush buffer
-			
-			if (System.currentTimeMillis() - second >= 100) 
+			if (System.currentTimeMillis() - second >= 125) 
 			{
 				
-				/*
+				/* random move player
 			
 			double random = Math.random();
 			
@@ -66,7 +66,8 @@ public class run
 				m.playerLoc = t;
 				
 				*/
-				MF.update(m);
+				
+				MF.init(m);
 				MF.repaint();
 				
 				second = System.currentTimeMillis();
