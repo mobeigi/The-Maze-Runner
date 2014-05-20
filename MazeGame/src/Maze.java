@@ -216,7 +216,7 @@ public class Maze {
 	}
 	
 	//checks if a player move is valid
-	private boolean isValid (int x, int y) {
+	public boolean isValid (int x, int y) {
 		if (x > 1 || x < -1 || y > 1 || y < -1) {	//can only move at most one tile per turn
 			return false;
 		} else if (x != 0 && y != 0) {	//can only move in one direction

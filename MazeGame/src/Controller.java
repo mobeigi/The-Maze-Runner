@@ -48,10 +48,11 @@ public class Controller implements KeyListener {
 		 }
 		 
 		 //Update the player location
-		 m.updatePlayerLoc((int)dx, (int)dy);
-		 mazeFrame.init(m);	//update maze
-		 mazeFrame.repaint(); //paint
-		 
+		 if (m.isValid((int)dx,(int)dy)){
+			 m.updatePlayerLoc((int)dx, (int)dy);
+			 mazeFrame.init(m);	//update maze
+			 mazeFrame.repaint(); //paint
+		 }
 	}
 
 	@Override
