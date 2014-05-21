@@ -8,8 +8,6 @@ import javax.swing.*;
 public class GameFrame extends JFrame implements ActionListener {
 	//Private Fields
 	private static final long serialVersionUID = 1L;
-	private MazeFrame mazeFrame;
-	private boolean mazeSet;
 	private int width;
 	private int height;
 	private Game g;
@@ -27,7 +25,6 @@ public class GameFrame extends JFrame implements ActionListener {
 		
 		this.width = width;
 		this.height = height;
-		this.mazeSet = false;
 		this.g = g;
 		
 		//Set user size
@@ -71,8 +68,8 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
 			//Make maze and mazeframe
-			g.createMaze(17, 17); //based on user options
-			g.setMazeFrameVisibe(true);
+			g.createMaze(width, height); //based on user options
+			g.setIsInGame(true);
 			g.setGameFrameVisible(false);
 		}
 		else if (e.getSource() == this.howButton) {
@@ -81,13 +78,5 @@ public class GameFrame extends JFrame implements ActionListener {
 		else if (e.getSource() == this.exitButton) {
 			System.exit(0);
 		}
-	}
-	
-	public boolean isMazeSet() {
-		return this.mazeSet;
-	}
-	
-	public MazeFrame getMazeFrame() {
-		return this.mazeFrame;
 	}
 }

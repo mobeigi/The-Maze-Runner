@@ -5,6 +5,7 @@ public class Game {
     private GameFrame gameFrame;
     private MazeFrame mazeFrame;
     private Player player;
+    private Controller c;
     
     //Flow control
     private boolean inGame;
@@ -20,24 +21,20 @@ public class Game {
         this.isGameOver = false;
         this.inGame = false;
         
-        this.width = 0;
-        this.height = 0;
+        this.width = 17;
+        this.height = 17;
         
         this.gameFrame = new GameFrame(this, width, height);
     }
     
     public void createMaze(int width, int height) {
     	this.maze =  new Maze(width, height);
-    	this.mazeFrame = new MazeFrame(this.maze.getWidth(), this.maze.getHeight()); //make new maze frame
+    	this.mazeFrame = new MazeFrame(width, height); //make new maze frame
     	this.mazeFrame.setVisible(true);
     }
     
-    public void update() {
-        
-    }
-    
-    public void draw() {
-        
+    public void initMazeFrame() {
+       this.mazeFrame.init(this.maze); 
     }
     
     public void setGameFrameVisible(boolean isVisible) {
@@ -64,6 +61,15 @@ public class Game {
     
     public boolean isInGame() {
     	return this.inGame;
+    }
+    
+    public void setMazeKeyListerner() {
+    	this.c = new Controller(this.maze, this.mazeFrame, this.player);
+    	this.mazeFrame.addKeyListener(this.c);
+    }
+    
+    public void setPlayer(Player player) {
+    	this.player = player;
     }
     
     /**

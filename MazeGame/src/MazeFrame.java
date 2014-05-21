@@ -22,8 +22,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 	
 	private String wallSprite;
 	private String areaSprite;
-	private String player1Sprite;
+	private String playerSprite;
 	private String doorSprite;
+	private String keySprite;
 	
 	public MazeFrame(int width, int height)
 	{
@@ -42,7 +43,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.wallSprite = "steel_wall";
 		this.areaSprite = "grass";
 		this.doorSprite = "locked_door";
-		this.player1Sprite = "link";
+		this.playerSprite = "link";
+		this.keySprite = "key";
 		
 		//Make maze take up full screen
 		Toolkit tk = Toolkit.getDefaultToolkit();  
@@ -82,6 +84,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	//Update only the player position in maze
 	public void update(Maze m) 
 	{
+		/*
 		if (m.getPlayerLoc().getX() == lastPlayerPos.getX() &&
 			m.getPlayerLoc().getY() == lastPlayerPos.getY() )
 			return;
@@ -160,6 +163,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Repack
 		this.revalidate();
 		this.pack();
+		*/
 	}
 	
 	//Initilise maze GUI and pack it
@@ -179,71 +183,74 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Fill All blocks
 		for (int x = 0; x < width; x++)
 		{
-			gbc.gridx = x;
+			gbc.gridx = x;	//update grid x pos
 			for (int y = 0; y < height; y++)
 			{
-				//Get Tile information
+		
+				gbc.gridy = -y; //update grid y pos
+				
+				//Get information about current tile
 				Tile t = m.getTile(x, y);
-				
-				gbc.gridy = -y;
-				
-				String blockSprite = "";
 				
 				//Use JLayeredPane for each block
 				JLayeredPane block = new JLayeredPane();
-				block.setPreferredSize(blockSize);
 				
-				//If player here
+				//Set size and layout
+				block.setPreferredSize(blockSize);
+				block.setLayout(new OverlayLayout(block));
+				
+				String blockSprite = "";	//base (bottom) block sprite
+				String overLaySprite = "";	//Overlay sprite that goes on top of block sprite
+				
+				//Determine block graphics based on type of tile
+				//If player is at this tile
 				if (m.findPlayer().equals(t)) {
-					blockSprite = this.player1Sprite;
-					
-					PlayerPanel playerSprite = new PlayerPanel(blockSprite);
-					JLabel playerSpriteImage = new JLabel(playerSprite.getPlayerSprite());
-					
-					block.add(playerSpriteImage, 0);	//add player sprite with high priority (overlap terrain)
-					blockSprite = this.areaSprite;	//set sprite to load below to terrain
-					
-					this.lastPlayerPos.setLocation(gbc.gridx, -gbc.gridy); //update last player pos
-					
+					blockSprite = this.areaSprite;
+					overLaySprite = this.playerSprite;
 				}
 				//Check if this is a door
-				else if (t.getType() == 4) {
-					blockSprite = this.doorSprite;
-					
-					PlayerPanel playerSprite = new PlayerPanel(blockSprite);
-					JLabel playerSpriteImage = new JLabel(playerSprite.getPlayerSprite());
-					
-					block.add(playerSpriteImage, 0);	//add player sprite with high priority (overlap terrain)
-					blockSprite = this.wallSprite;	//set sprite to load below to terrain
+				else if (t.getType() == Tile.DOOR) {
+					blockSprite = this.wallSprite;
+					overLaySprite = this.doorSprite;
 				}
-				//Else if walkable terrain
-				else if (t.getType() == 1) {
+				//Check for key
+				else if (t.getType() == Tile.KEY) {
+					blockSprite = this.areaSprite;
+					overLaySprite = this.keySprite;
+				}
+				//Else if walkable path
+				else if (t.getType() == Tile.PATH) {
 					blockSprite = this.areaSprite;
 				} 
 				//Else must be wall
-				else if (t.getType() == 0){
+				else if (t.getType() == Tile.WALL){
 					blockSprite = this.wallSprite;
 				}
-				
-				//Create sprite for block
+
+				//Always add block sprite
 				PlayerPanel sprite = new PlayerPanel(blockSprite);	
 				JLabel spriteImage = new JLabel(sprite.getPlayerSprite());
-				
-				block.setPreferredSize(blockSize);
-				block.setLayout(new OverlayLayout(block));
 				block.add(spriteImage, 1);
 				
+				//Add overlay sprite if required
+				if (overLaySprite != "") {
+					PlayerPanel overlaySprite = new PlayerPanel(overLaySprite);	
+					JLabel overlayImage = new JLabel(overlaySprite.getPlayerSprite());
+					block.add(overlayImage, 0);
+				}
+				
+				//Add block as hole to maze
 				mazeGrid.add(block, gbc);
 			}
 		}
 		
-		//Add maze to frame
+		//Add maze to frame at top
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.CENTER;
 		this.add(mazeGrid, gbc);
 		
-		
+		//Add next component underneath mazegrid
 		gbc.gridx = 0;
 		gbc.gridy = -1;
 		gbc.gridwidth = 1;
@@ -260,7 +267,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Add panels to this frame
 		this.add(bottomPanel, gbc);
 		
-		//Repack
+		//Repack frame
 		this.pack();
 	}
 	

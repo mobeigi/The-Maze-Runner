@@ -25,12 +25,6 @@ import java.util.HashSet;
  */
 
 public class Maze {
-	private static int WALL = 0;
-	private static int PATH = 1;
-	private static int KEY = 2;
-	private static int TREASURE = 3;
-	private static int DOOR = 4;
-	
 	private Tile[][] grid;
 	private int width;
 	private int height;
@@ -110,9 +104,9 @@ public class Maze {
 			curr.getTile2().setWalkable();
 		}
 		//set special tiles
-		grid[1][0].setType(DOOR);	//set tile just above the origin to a door
-		grid[width-2][height-1].setType(DOOR);	//set tile just below the destination to a door
-		grid[1][height-2].setType(KEY);	//set bottom left corner to treasure
+		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
+		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
+		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to treasure
 		keyCollected = false;
 		
 		playerLoc = grid[1][1];	//origin at (1,1), 
@@ -122,7 +116,7 @@ public class Maze {
 		boolean[][] visitedTile = new boolean[width+2][height+2];
 		findPath(1,1,visitedTile,mazeSolution);		//finds solution to maze
 		//if (solvable) {	//maze should always be solvable
-		showMaze();
+		//showMaze();
 		//}
 	}
 	
@@ -252,11 +246,13 @@ public class Maze {
 	public void updatePlayerLoc (int x, int y) {
 		if (isValid(x,y)) {
 			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
-			if (playerLoc.getType() == KEY) {
+			if (playerLoc.getType() == Tile.KEY) {
 				keyCollected = true;
-				playerLoc.setType(PATH);	//set key tile to normal path
+				playerLoc.setType(Tile.PATH);	//set key tile to normal path
 			}
 		}
+		
+		reachedEnd();	//check if we have reached the end
 	}
 	
 	//checks if a player move is valid
@@ -276,13 +272,13 @@ public class Maze {
 	
 	//see if player reaches the destination tile
 	//the door is unlocked if so
-	public boolean reachedEnd () {
+	public boolean reachedEnd() {
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
 			atEnd = true;
 			if (keyCollected) {	//if key is collected, unlock door
-				grid[width-2][height-1].setType(PATH);	//set door to walkable path
+				grid[width-2][height-1].setType(Tile.PATH);	//set door to walkable path
 				grid[width-2][height-1].setWalkable();
 			}
 		}

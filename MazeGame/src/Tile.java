@@ -1,10 +1,11 @@
 
 public class Tile {
-	private static int WALL = 0;
-	private static int PATH = 1;
-	private static int KEY = 2;
-	private static int TREASURE = 3;
-	private static int DOOR = 4;
+	//Public constants for tile type
+	public static final int WALL = 0;
+	public static final int PATH = 1;
+	public static final int KEY = 2;
+	public static final int TREASURE = 3;
+	public static final int DOOR = 4;
 	
 	private int x;
 	private int y;
