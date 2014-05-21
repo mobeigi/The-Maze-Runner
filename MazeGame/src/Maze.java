@@ -295,6 +295,8 @@ public class Maze {
 				keyCollected = true;
 				playerLoc.setType(Tile.PATH);	//set key tile to normal path
 			}
+			
+			reachedEnd();	//unlock door if player has reached end tile
 		}
 	}
 	
