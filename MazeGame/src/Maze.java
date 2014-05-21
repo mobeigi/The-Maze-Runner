@@ -26,12 +26,6 @@ import java.util.TimerTask;
  * @see Player
  */
 public class Maze {
-	private static int WALL = 0;
-	private static int PATH = 1;
-	private static int KEY = 2;
-	private static int TREASURE = 3;
-	private static int DOOR = 4;
-	
 	private Tile[][] grid;
 	private int width;
 	private int height;
@@ -132,9 +126,9 @@ public class Maze {
 			curr.getTile2().setWalkable();
 		}
 		//set special tiles
-		grid[1][0].setType(DOOR);	//set tile just above the origin to a door
-		grid[width-2][height-1].setType(DOOR);	//set tile just below the destination to a door
-		grid[1][height-2].setType(KEY);	//set bottom left corner to key to door for now
+		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
+		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
+		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
 		keyCollected = false;
 		
 		playerLoc = grid[1][1];	//origin at (1,1), 
@@ -297,9 +291,9 @@ public class Maze {
 	public void updatePlayerLoc (int x, int y) {
 		if (isValid(x,y) && playerLoc != null) {
 			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
-			if (playerLoc.getType() == KEY) {
+			if (playerLoc.getType() == Tile.KEY) {
 				keyCollected = true;
-				playerLoc.setType(PATH);	//set key tile to normal path
+				playerLoc.setType(Tile.PATH);	//set key tile to normal path
 			}
 		}
 	}
@@ -353,7 +347,7 @@ public class Maze {
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
 			atEnd = true;
 			if (keyCollected) {	//if key is collected, unlock door
-				grid[width-2][height-1].setType(PATH);	//set door to walkable path
+				grid[width-2][height-1].setType(Tile.PATH);	//set door to walkable path
 				grid[width-2][height-1].setWalkable();
 			}
 		}
