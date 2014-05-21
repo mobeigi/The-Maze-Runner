@@ -6,16 +6,18 @@ import javax.swing.JFrame;
 
 
 public class Controller implements KeyListener {
-	private Maze m;
+	private Maze maze;
 	private Player p1;
 	private Player p2;
 	private MazeFrame mazeFrame;
+	private Game game;
 	
 	
-	public Controller(Maze m, MazeFrame mazeFrame, Player p1){
+	public Controller(Maze m, MazeFrame mazeFrame, Player p1, Game g){
 		this.p1 = p1;
-		this.m = m;
+		this.maze = m;
 		this.mazeFrame = mazeFrame;
+		this.game = g;
 	}
 		
 	@Override
@@ -44,10 +46,15 @@ public class Controller implements KeyListener {
 		 }
 		 
 		 //Update the player location
-		 if (m.isValid((int)dx,(int)dy)) {
-			 m.updatePlayerLoc((int)dx, (int)dy);
-			 mazeFrame.init(m);	//update maze
+		 if (maze.isValid((int)dx,(int)dy)) {
+			 maze.updatePlayerLoc((int)dx, (int)dy);
+			 mazeFrame.init(maze);	//update maze
 			 mazeFrame.repaint(); //paint
+		 }
+		 if (maze.exitedMaze()){
+			 System.out.println("hello!");
+			 game.setIsGameOver(true);
+			 game.setIsInGame(false);
 		 }
 	}
 
