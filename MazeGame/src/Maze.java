@@ -41,7 +41,7 @@ public class Maze {
 		this.width = width+2;
 		this.height = height+2;
 		createMaze();	//initialise all tiles
-		final Timer timer = new Timer();	//auto-scheduling of enemy movement
+		/*final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
 				if (enemyLoc.equals(playerLoc)) {
@@ -56,7 +56,7 @@ public class Maze {
 				}
 				showMaze();	//for debugging
 			}
-		},500,500);	//enemy moves every 0.5 seconds
+		},500,500);	//enemy moves every 0.5 seconds*/
 	}
 	
 	/**
