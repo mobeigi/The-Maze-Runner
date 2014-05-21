@@ -64,7 +64,7 @@ public class Game {
     }
     
     public void setMazeKeyListerner() {
-    	this.c = new Controller(this.maze, this.mazeFrame, this.player);
+    	this.c = new Controller(this, this.maze, this.mazeFrame, this.player);
     	this.mazeFrame.addKeyListener(this.c);
     }
     

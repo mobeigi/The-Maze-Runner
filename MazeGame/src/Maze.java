@@ -341,7 +341,7 @@ public class Maze {
 	 * To check if the player takes the exit, see exitedMaze().
 	 * @return true if the player has reached the destination.
 	 */
-	public boolean reachedEnd () {
+	public boolean reachedEnd() {
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
@@ -386,7 +386,7 @@ public class Maze {
 	 * the coordinates are outside of the maze area.
 	 */
 	public Tile getTile(int x, int y) {
-		if (x >= 0 && y >= 0 && x >= (width-1) && y >= (height-1)) {
+		if (x >= 0 && y >= 0 && x <= (width-1) && y <= (height-1)) {
 			return this.grid[x][y];
 		} else {
 			return null;

@@ -13,11 +13,11 @@ public class Controller implements KeyListener {
 	private Game game;
 	
 	
-	public Controller(Maze m, MazeFrame mazeFrame, Player p1, Game g){
+	public Controller(Game g, Maze m, MazeFrame mazeFrame, Player p1){
+		this.game = g;
 		this.p1 = p1;
 		this.maze = m;
 		this.mazeFrame = mazeFrame;
-		this.game = g;
 	}
 		
 	@Override
