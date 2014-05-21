@@ -206,7 +206,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 					this.lastPlayerPos.setLocation(gbc.gridx, -gbc.gridy); //update last player pos
 					
 				}
-				else if ((t.getX() == 1 && t.getY() == 0) || (t.getX() == width-2 && t.getY() == height-1) ) {
+				//Check if this is a door
+				else if (t.getType() == 4) {
 					blockSprite = this.doorSprite;
 					
 					PlayerPanel playerSprite = new PlayerPanel(blockSprite);
@@ -216,11 +217,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 					blockSprite = this.wallSprite;	//set sprite to load below to terrain
 				}
 				//Else if walkable terrain
-				else if (t.isWalkable()) {
+				else if (t.getType() == 1) {
 					blockSprite = this.areaSprite;
 				} 
 				//Else must be wall
-				else {
+				else if (t.getType() == 0){
 					blockSprite = this.wallSprite;
 				}
 				
