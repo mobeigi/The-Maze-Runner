@@ -5,15 +5,8 @@ import java.util.PriorityQueue;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
-/**
- * Contains the board of the maze.
- * It contains the maze-generating algorithm
- * and the maze solving algorithm.
- * @author Gavin Tam
- * @see Tile
- * @see Player
- */
-
+import java.util.Timer;
+import java.util.TimerTask;
 /*
  * IDEAS:
  * Enemy player
@@ -24,11 +17,26 @@ import java.util.HashSet;
  * Have a plot with dialogue boxes coming up for each level with picture displayed
  */
 
+/**
+ * Contains the board of the maze.
+ * It contains the maze-generating algorithm
+ * and the maze solving algorithm.
+ * @author Gavin Tam
+ * @see Tile
+ * @see Player
+ */
 public class Maze {
+	private static int WALL = 0;
+	private static int PATH = 1;
+	private static int KEY = 2;
+	private static int TREASURE = 3;
+	private static int DOOR = 4;
+	
 	private Tile[][] grid;
 	private int width;
 	private int height;
-	private Tile playerLoc;	//location of the current player
+	private Tile playerLoc;	//location of the current player, null if dead
+	private Tile enemyLoc;	//location of the enemy, null if dead
 	private boolean keyCollected;
 	private HashMap<Tile,Tile> mazeSolution;
 			
@@ -39,9 +47,29 @@ public class Maze {
 		this.width = width+2;
 		this.height = height+2;
 		createMaze();	//initialise all tiles
+		final Timer timer = new Timer();	//auto-scheduling of enemy movement
+		timer.schedule(new TimerTask() {
+			public void run() {
+				if (enemyLoc.equals(playerLoc)) {
+					playerLoc = null;	//player dies and enemy stops moving
+					timer.cancel();
+				} else if (!enemyLoc.equals(grid[1][1])) {
+					//dumb logic for now
+					//enemy moves from destination to origin
+					enemyLoc = mazeSolution.get(enemyLoc);
+				} else {
+					//don't move enemy
+				}
+				showMaze();	//for debugging
+			}
+		},500,500);	//enemy moves every 0.5 seconds
 	}
 	
-	public void createMaze() {
+	/**
+	 * Generate the maze.
+	 * This should be called only once when initialising the maze.
+	 */
+	private void createMaze() {
 		//initialise maze as all non-walkable tiles
 		//and assign a random weight to each tile
 		final double weights[][] = new double[width][height];
@@ -104,19 +132,20 @@ public class Maze {
 			curr.getTile2().setWalkable();
 		}
 		//set special tiles
-		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
-		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
-		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to treasure
+		grid[1][0].setType(DOOR);	//set tile just above the origin to a door
+		grid[width-2][height-1].setType(DOOR);	//set tile just below the destination to a door
+		grid[1][height-2].setType(KEY);	//set bottom left corner to key to door for now
 		keyCollected = false;
 		
 		playerLoc = grid[1][1];	//origin at (1,1), 
+		enemyLoc = grid[width-2][height-2];	//enemy starts at destination
 		//width and height should be big enough to allow this to be valid
 		mazeSolution = new HashMap<Tile,Tile>();
 		mazeSolution.put(grid[1][1], null);
 		boolean[][] visitedTile = new boolean[width+2][height+2];
 		findPath(1,1,visitedTile,mazeSolution);		//finds solution to maze
 		//if (solvable) {	//maze should always be solvable
-		//showMaze();
+		showMaze();			//for debugging
 		//}
 	}
 	
@@ -125,10 +154,12 @@ public class Maze {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
 					//order of printing is important as path contains start and dest
-					if (playerLoc.equals(grid[i][j])) {
+					if (playerLoc != null && playerLoc.equals(grid[i][j])) {
 						System.out.print("P");
 					} else if (i == (width-1)-1 && j == (height-1)-1) {
 						System.out.print("D");
+					} else if (enemyLoc.equals(grid[i][j])) {
+						System.out.print("E");
 					} else {
 						List<Tile> path = giveHint(grid[1][height-2]);
 						if (path.contains(grid[i][j])) {
@@ -176,8 +207,13 @@ public class Maze {
 	}
 	
 	/**
-	 * Credit to http://en.wikipedia.org/wiki/Maze_solving_algorithm
-	 * Adapted from "Recursive algorithm"
+	 * Finds the path from (x,y) to the destination.
+	 * It stores the path in an input hash map,
+	 * which maps the tile to its parent tile.
+	 * Credit to http://en.wikipedia.org/wiki/Maze_solving_algorithm.
+	 * Adapted from "Recursive algorithm".
+	 * @return true if a path exists. It should be true
+	 * as the maze is always solvable from any position.
 	 */
 	public boolean findPath (int x, int y, boolean[][] visited, HashMap<Tile,Tile> parent) {
 		if (x == width-2 && y == height-2) return true;
@@ -235,27 +271,60 @@ public class Maze {
 	}
 	
 	/**
-	 * Finds the tile on the maze that the player is situated in
-	 * @param p the player
-	 * @return the tile in which the player is on
+	 * Finds the tile on the maze that the player is situated in.
+	 * @return the tile in which the player is on.
 	 */
 	public Tile findPlayer () {
 		return playerLoc;
 	}
 	
-	public void updatePlayerLoc (int x, int y) {
-		if (isValid(x,y)) {
-			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
-			if (playerLoc.getType() == Tile.KEY) {
-				keyCollected = true;
-				playerLoc.setType(Tile.PATH);	//set key tile to normal path
-			}
-		}
-		
-		reachedEnd();	//check if we have reached the end
+	/**
+	 * Finds the tile on the maze that the enemy is situated in.
+	 * @return the tile in which the enemy is on.
+	 */
+	public Tile findEnemy() {
+		return enemyLoc;
 	}
 	
-	//checks if a player move is valid
+	/**
+	 * Updates the player location if a valid move is taken.
+	 * See isValid() for conditions.
+	 * @param x the amount of movement in the x direction, as per number of tiles.
+	 * The number is negative if the movement is to the left direction.
+	 * @param y the amount of movement in the y direction, as per number of tiles.
+	 * The number is negative if the movement is to the up direction.
+	 */
+	public void updatePlayerLoc (int x, int y) {
+		if (isValid(x,y) && playerLoc != null) {
+			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
+			if (playerLoc.getType() == KEY) {
+				keyCollected = true;
+				playerLoc.setType(PATH);	//set key tile to normal path
+			}
+		}
+	}
+	
+	/**
+	 * Checks if a player is dead.
+	 * A player is dead if it encounters the enemy.
+	 * @return true if the player is dead.
+	 */
+	public boolean playerDied () {
+		return (playerLoc == null);
+	}
+	
+	/**
+	 * Checks if a player move is valid.
+	 * The player can only move one tile from its original position
+	 * in either direction.
+	 * It cannot move over the border of the maze,
+	 * or walk onto a wall.
+	 * @param x the amount of movement in the x direction, as per number of tiles.
+	 * The number is negative if the movement is to the left direction.
+	 * @param y the amount of movement in the y direction, as per number of tiles.
+	 * The number is negative if the movement is to the up direction.
+	 * @return true if the player move is valid.
+	 */
 	public boolean isValid (int x, int y) {
 		if (x > 1 || x < -1 || y > 1 || y < -1) {	//can only move at most one tile per turn
 			return false;
@@ -270,33 +339,83 @@ public class Maze {
 		return true;
 	}
 	
-	//see if player reaches the destination tile
-	//the door is unlocked if so
-	public boolean reachedEnd() {
+	/**
+	 * Checks if the player has reached the destination.
+	 * The destination is the tile right before the exit door.
+	 * If the key is collected, then the door is unlocked as well;
+	 * otherwise, it remains closed.
+	 * To check if the player takes the exit, see exitedMaze().
+	 * @return true if the player has reached the destination.
+	 */
+	public boolean reachedEnd () {
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
 			atEnd = true;
 			if (keyCollected) {	//if key is collected, unlock door
-				grid[width-2][height-1].setType(Tile.PATH);	//set door to walkable path
+				grid[width-2][height-1].setType(PATH);	//set door to walkable path
 				grid[width-2][height-1].setWalkable();
 			}
 		}
 		return atEnd;
 	}
 	
+	/**
+	 * Checks if the player is at the origin.
+	 * The origin of the maze is at (1,1),
+	 * just in front of the entrance door.
+	 * @return true if the player is at the origin.
+	 */
 	public boolean atStart() {
 		return (playerLoc.getX() == 1 && playerLoc.getY() == 1);
 	}
 	
+	/**
+	 * Checks if the player has completed the maze.
+	 * It is completed when the destination door is opened by the key
+	 * and the player is located on the exit, where the door was originally
+	 * positioned.
+	 * @return true if player has completed the maze.
+	 */
 	//see if player unlocked door and took the exit
 	public boolean exitedMaze() {
 		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-1));
 	}
-	
-	public Tile getTile(int x, int y) { return this.grid[x][y]; }
+	/**
+	 * Get the tile of a specific set of x and y coordinates.
+	 * (0,0) is the top left corner of the maze (includes border).
+	 * If a set of coordinates outside of the bounds of the maze is entered,
+	 * the null tile is returned.
+	 * @param x the x coordinate of the tile.
+	 * @param y the y coordinate of the tile.
+	 * @return the tile with the specified x and y coordinates, or null if
+	 * the coordinates are outside of the maze area.
+	 */
+	public Tile getTile(int x, int y) {
+		if (x >= 0 && y >= 0 && x >= (width-1) && y >= (height-1)) {
+			return this.grid[x][y];
+		} else {
+			return null;
+		}
+	}
+	/**
+	 * Get the width of the maze (including border).
+	 * @return the width of the maze, as per the number of tiles.
+	 */
 	public int getWidth() { return this.width; }
+	/**
+	 * Get the length of the maze (including border).
+	 * @return the length of the maze, as per the number of tiles.
+	 */
 	public int getHeight() { return this.height; }
+	/**
+	 * Get the current player location in the maze.
+	 * @return the tile where the player is situated, or null if player is dead
+	 */
 	public Tile getPlayerLoc() { return this.playerLoc; }
+	/**
+	 * Gets the grid of tiles of the maze.
+	 * @return the grid of tiles of the maze.
+	 */
 	public Tile[][] getGrid() { return this.grid; }
 }
