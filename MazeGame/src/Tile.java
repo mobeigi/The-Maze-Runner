@@ -1,17 +1,39 @@
 
 public class Tile {
+	private static int WALL = 0;
+	private static int PATH = 1;
+	private static int KEY = 2;
+	private static int TREASURE = 3;
+	private static int DOOR = 4;
+	
 	private int x;
 	private int y;
 	private boolean isWalkable;
+	private int type;
 	
 	public Tile (boolean isWalkable, int x, int y){
 		this.x = x;
 		this.y = y;
 		this.isWalkable = isWalkable;
+		this.type = WALL; 	//default type is WALL
+	}
+	
+	public int getType () {
+		return type;
+	}
+	
+	//returns boolean if setting type was successful
+	public boolean setType (int newType) {
+		if (newType >= 0 && newType <= 4) {
+			this.type = newType;
+			return true;
+		}
+		return false;
 	}
 
 	public void setWalkable (){
 		this.isWalkable = true;
+		this.type = PATH;	//default type is path if walkable
 	}
 	
 	public boolean isWalkable (){

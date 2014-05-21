@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,11 +25,17 @@ import java.util.HashSet;
  */
 
 public class Maze {
+	private static int WALL = 0;
+	private static int PATH = 1;
+	private static int KEY = 2;
+	private static int TREASURE = 3;
+	private static int DOOR = 4;
+	
 	public Tile[][] grid;
 	private int width;
 	private int height;
 	public Tile playerLoc;	//location of the current player
-	private HashSet<Tile> mazeSolution;
+	private HashMap<Tile,Tile> mazeSolution;
 			
 	public Maze (int width, int height) {
 		//width and height should be an odd number
@@ -37,9 +46,13 @@ public class Maze {
 		createMaze();	//initialise all tiles
 		playerLoc = grid[1][1];	//origin at (1,1), 
 								//width and height should be big enough to allow this to be valid
-		mazeSolution = new HashSet<Tile>();
+		grid[1][0].setType(DOOR);
+		grid[this.width-2][this.height-1].setType(DOOR);
+		
+		mazeSolution = new HashMap<Tile,Tile>();
+		mazeSolution.put(grid[1][1], null);
 		boolean[][] visited = new boolean[width+2][height+2];
-		boolean solvable = solveMaze(1,1,visited);
+		boolean solvable = findPath(1,1,visited,mazeSolution);
 		if (solvable) {	//maze should always be solvable
 			showMaze();
 		}
@@ -109,8 +122,7 @@ public class Maze {
 	}
 	
 	public void showMaze () {
-		/*
-		for (int i = 0; i < width; i++) {
+		/*for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
 					//order of printing is important as path contains start and dest
@@ -118,7 +130,7 @@ public class Maze {
 						System.out.print("P");
 					} else if (i == (width-1)-1 && j == (height-1)-1) {
 						System.out.print("D");
-					} else if (mazeSolution.contains(grid[i][j])) {
+					} else if (mazeSolution.containsKey(grid[i][j])) {
 						System.out.print("*");
 					} else {
 						System.out.print("0");
@@ -128,8 +140,7 @@ public class Maze {
 				}
 			}
 			System.out.println();
-		}
-		*/
+		}*/
 	}
 	
 	//checking within a 2 tile radius
@@ -164,40 +175,59 @@ public class Maze {
 	 * Credit to http://en.wikipedia.org/wiki/Maze_solving_algorithm
 	 * Adapted from "Recursive algorithm"
 	 */
-	public boolean solveMaze (int x, int y, boolean[][] visited) {
+	public boolean findPath (int x, int y, boolean[][] visited, HashMap<Tile,Tile> parent) {
 		if (x == width-2 && y == height-2) return true;
 		if (!grid[x][y].isWalkable() || visited[x][y]) return false;
 		visited[x][y] = true;
 		if (x != 0) {
-			if (solveMaze(x-1,y,visited)) {
-				mazeSolution.add(grid[x][y]);
+			if (findPath(x-1,y,visited,parent)) {
+				parent.put(grid[x-1][y], grid[x][y]);
 				return true;
 			}
 		}
 		if (x != width-1) {
-			if (solveMaze(x+1,y,visited)) {
-				mazeSolution.add(grid[x][y]);
+			if (findPath(x+1,y,visited,parent)) {
+				parent.put(grid[x+1][y], grid[x][y]);
 				return true;
 			}
 		}
 		if (y != 0) {
-			if (solveMaze(x,y-1,visited)) {
-				mazeSolution.add(grid[x][y]);
+			if (findPath(x,y-1,visited,parent)) {
+				parent.put(grid[x][y-1], grid[x][y]);
 				return true;
 			}
 		}
 		if (y != height-1) {
-			if (solveMaze(x,y+1,visited)) {
-				mazeSolution.add(grid[x][y]);
+			if (findPath(x,y+1,visited,parent)) {
+				parent.put(grid[x][y+1], grid[x][y]);
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public void giveHint() {
+	//give first 10 steps from current tile to destination
+	public List<Tile> giveHint(Tile t) {
 		//TODO change colour of tiles such that path from current player position
 		//to the nearest tile part of the solution is given
+		boolean[][] visited = new boolean[width+2][height+2];
+		HashMap<Tile,Tile> parent = new HashMap<Tile,Tile>();
+		parent.put(t, null);	//current tile has no parent as it is the starting tile of the path
+		boolean pathFound = findPath(t.getX(), t.getY(), visited, parent);
+		if (!pathFound) {
+			return null;		//error in pathfinding
+		} else {
+			LinkedList<Tile> path = new LinkedList<Tile>();
+			Tile curr = grid[width-2][height-2];	//backtrack from destination
+			path.addFirst(curr);
+			while (parent.get(curr) != null) {	//if we haven't reached the starting state yet
+				Tile prev = parent.get(curr);
+				path.addFirst(prev);
+				curr = prev;
+			}
+			List<Tile> pathInit = path.subList(0,10);
+			return pathInit;
+		}
 	}
 	
 	/**
@@ -213,6 +243,7 @@ public class Maze {
 		if (isValid(x,y)) {
 			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
 		}
+		reachedEnd();
 	}
 	
 	//checks if a player move is valid
@@ -221,8 +252,8 @@ public class Maze {
 			return false;
 		} else if (x != 0 && y != 0) {	//can only move in one direction
 			return false;
-		} else if ((playerLoc.getX()+x) >= (width-1) || (playerLoc.getY()+y) >= (height-1)
-			|| (playerLoc.getX()+x) <= 0 || (playerLoc.getY()+y) <= 0) {	//cannot move over border
+		} else if ((playerLoc.getX()+x) > (width-1) || (playerLoc.getY()+y) > (height-1)
+			|| (playerLoc.getX()+x) < 0 || (playerLoc.getY()+y) < 0) {	//cannot move over border
 			return false;
 		} else if (!grid[playerLoc.getX()+x][playerLoc.getY()+y].isWalkable()) { //cannot move to wall
 			return false;
@@ -232,7 +263,17 @@ public class Maze {
 	
 	public boolean reachedEnd () {
 		//destination is at (width-2, height-2)
-		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2));
+		boolean atEnd = false;
+		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
+			atEnd = true;
+			grid[width-2][height-1].setType(PATH);	//set door to walkable path
+			grid[width-2][height-1].setWalkable();
+		}
+		return atEnd;
+	}
+	
+	public boolean atStart() {
+		return (playerLoc.getX() == 1 && playerLoc.getY() == 1);
 	}
 	
 	public Tile getTile(int x, int y) {

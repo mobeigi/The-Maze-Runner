@@ -5,7 +5,6 @@ public class Run
 	{
 		
 		Maze m = new Maze(13, 13);
-		m.createMaze();
 		
 		MazeFrame MF = new MazeFrame(13, 13);
 		Player p = new Player("joe", "link");
