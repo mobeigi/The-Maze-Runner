@@ -9,21 +9,19 @@ public class Run
 		Game g = new Game();
 		
 		//Make 1 player
-		Player player = new Player("joe", "link");
+		Player player = new Player("Test User #17", "link");
 		g.setPlayer(player);		//set player
 		
 		while (true)
 		{
-			System.out.flush(); //Needed WTF???
-			
 			//If not in game, do nothing (wait for play button to be clicked)
 			if (!g.isInGame())
 				continue;
 			
 			//Once made, init the frame of the game
 			g.initMazeFrame();			//init maze
-			g.setMazeKeyListerner();	//set up a new controller
-			
+			g.setController(new Controller(g));
+			g.setMazeKeyListerner();
 			
 			//While still in game
 			while (!g.isGameOver()) 
@@ -31,7 +29,7 @@ public class Run
 				//Do nothing as we wait for game to be completed
 			}
 			
-			//We have left game, show game UI and repeat
+			//We have finished game, show game UI and repeat
 			g.showUI();
 			
 		}

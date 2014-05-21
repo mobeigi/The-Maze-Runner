@@ -31,8 +31,9 @@ public class Game {
     public void createMaze(int width, int height) {
     	this.maze =  new Maze(width, height);
     	this.mazeFrame = new MazeFrame(this, width, height); //make new maze frame
+    	
+    	//Init maze that was created
     	initMazeFrame();
-    	this.mazeFrame.setVisible(true);
     }
     
     public void initMazeFrame() {
@@ -48,9 +49,8 @@ public class Game {
     }
     
     public void showUI() {
-    	this.mazeFrame.removeAll(); //remove maze
+    	this.mazeFrame.dispose(); //remove maze
     	this.gameFrame.setVisible(true);
-    	this.mazeFrame.setVisible(false);
     }
     
     public void setIsGameOver(boolean isGameOver) {
@@ -65,8 +65,11 @@ public class Game {
     	return this.inGame;
     }
     
+    public void setController(Controller c) {
+    	this.c = c;
+    }
+    
     public void setMazeKeyListerner() {
-    	this.c = new Controller(this, this.maze, this.mazeFrame, this.player);
     	this.mazeFrame.addKeyListener(this.c);
     }
     
@@ -76,6 +79,14 @@ public class Game {
     
     public Player getPlayer() {
     	return this.player;
+    }
+    
+    public Maze getMaze() {
+    	return this.maze;
+    }
+    
+    public MazeFrame getMazeFrame() {
+    	return this.mazeFrame;
     }
     
     /**

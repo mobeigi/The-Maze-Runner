@@ -70,6 +70,7 @@ public class GameFrame extends JFrame implements ActionListener {
 			//Make maze and mazeframe
 			g.createMaze(width, height); //based on user options
 			g.setIsInGame(true);
+			g.setIsGameOver(false);
 			g.setGameFrameVisible(false);
 		}
 		else if (e.getSource() == this.howButton) {

@@ -92,7 +92,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 			
 			//If user wishes to quit
 			if (dialogResult == JOptionPane.YES_OPTION) {
-				g.showUI();
+				g.setIsGameOver(true);
+				g.setIsInGame(false);
+			} else {
+				this.requestFocus();	//request focus again
 			}
 		}
 	}
