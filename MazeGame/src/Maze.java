@@ -31,10 +31,11 @@ public class Maze {
 	private static int TREASURE = 3;
 	private static int DOOR = 4;
 	
-	public Tile[][] grid;
+	private Tile[][] grid;
 	private int width;
 	private int height;
-	public Tile playerLoc;	//location of the current player
+	private Tile playerLoc;	//location of the current player
+	private boolean keyCollected;
 	private HashMap<Tile,Tile> mazeSolution;
 			
 	public Maze (int width, int height) {
@@ -44,18 +45,6 @@ public class Maze {
 		this.width = width+2;
 		this.height = height+2;
 		createMaze();	//initialise all tiles
-		playerLoc = grid[1][1];	//origin at (1,1), 
-								//width and height should be big enough to allow this to be valid
-		grid[1][0].setType(DOOR);
-		grid[this.width-2][this.height-1].setType(DOOR);
-		
-		mazeSolution = new HashMap<Tile,Tile>();
-		mazeSolution.put(grid[1][1], null);
-		boolean[][] visited = new boolean[width+2][height+2];
-		boolean solvable = findPath(1,1,visited,mazeSolution);
-		if (solvable) {	//maze should always be solvable
-			showMaze();
-		}
 	}
 	
 	public void createMaze() {
@@ -69,6 +58,7 @@ public class Maze {
 				weights[i][j] = Math.random();
 			}
 		}
+		
 		//Use Prim's algorithm on a randomly weighted grid graph representation of the maze
 		//vertices are represented by tiles with odd coordinates
 		//and edges are represented by two adjacent vertices (i.e. a series of 3 consecutive tiles)
@@ -119,10 +109,25 @@ public class Maze {
 			curr.getTile1().setWalkable();
 			curr.getTile2().setWalkable();
 		}
+		//set special tiles
+		grid[1][0].setType(DOOR);	//set tile just above the origin to a door
+		grid[width-2][height-1].setType(DOOR);	//set tile just below the destination to a door
+		grid[1][height-2].setType(KEY);	//set bottom left corner to treasure
+		keyCollected = false;
+		
+		playerLoc = grid[1][1];	//origin at (1,1), 
+		//width and height should be big enough to allow this to be valid
+		mazeSolution = new HashMap<Tile,Tile>();
+		mazeSolution.put(grid[1][1], null);
+		boolean[][] visitedTile = new boolean[width+2][height+2];
+		findPath(1,1,visitedTile,mazeSolution);		//finds solution to maze
+		//if (solvable) {	//maze should always be solvable
+		showMaze();
+		//}
 	}
 	
 	public void showMaze () {
-		/*for (int i = 0; i < width; i++) {
+		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
 					//order of printing is important as path contains start and dest
@@ -130,17 +135,22 @@ public class Maze {
 						System.out.print("P");
 					} else if (i == (width-1)-1 && j == (height-1)-1) {
 						System.out.print("D");
-					} else if (mazeSolution.containsKey(grid[i][j])) {
-						System.out.print("*");
 					} else {
-						System.out.print("0");
+						List<Tile> path = giveHint(grid[1][height-2]);
+						if (path.contains(grid[i][j])) {
+							System.out.print("X");
+						} else if (mazeSolution.containsKey(grid[i][j])) {
+							System.out.print("*");
+						} else {
+							System.out.print("0");
+						}
 					}
 				} else {
 					System.out.print("-");	//represents wall
 				}
 			}
 			System.out.println();
-		}*/
+		}
 	}
 	
 	//checking within a 2 tile radius
@@ -210,7 +220,7 @@ public class Maze {
 	public List<Tile> giveHint(Tile t) {
 		//TODO change colour of tiles such that path from current player position
 		//to the nearest tile part of the solution is given
-		boolean[][] visited = new boolean[width+2][height+2];
+		boolean[][] visited = new boolean[width][height];
 		HashMap<Tile,Tile> parent = new HashMap<Tile,Tile>();
 		parent.put(t, null);	//current tile has no parent as it is the starting tile of the path
 		boolean pathFound = findPath(t.getX(), t.getY(), visited, parent);
@@ -242,8 +252,11 @@ public class Maze {
 	public void updatePlayerLoc (int x, int y) {
 		if (isValid(x,y)) {
 			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
+			if (playerLoc.getType() == KEY) {
+				keyCollected = true;
+				playerLoc.setType(PATH);	//set key tile to normal path
+			}
 		}
-		reachedEnd();
 	}
 	
 	//checks if a player move is valid
@@ -261,13 +274,17 @@ public class Maze {
 		return true;
 	}
 	
+	//see if player reaches the destination tile
+	//the door is unlocked if so
 	public boolean reachedEnd () {
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
 			atEnd = true;
-			grid[width-2][height-1].setType(PATH);	//set door to walkable path
-			grid[width-2][height-1].setWalkable();
+			if (keyCollected) {	//if key is collected, unlock door
+				grid[width-2][height-1].setType(PATH);	//set door to walkable path
+				grid[width-2][height-1].setWalkable();
+			}
 		}
 		return atEnd;
 	}
@@ -276,19 +293,14 @@ public class Maze {
 		return (playerLoc.getX() == 1 && playerLoc.getY() == 1);
 	}
 	
-	public Tile getTile(int x, int y) {
-		return this.grid[x][y];
+	//see if player unlocked door and took the exit
+	public boolean exitedMaze() {
+		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-1));
 	}
 	
-	public int getWidth() {
-		return this.width;
-	}
-	
-	public int getHeight() {
-		return this.height;
-	}
-	
-	public Tile getPlayerLoc() {
-		return this.playerLoc;
-	}
+	public Tile getTile(int x, int y) { return this.grid[x][y]; }
+	public int getWidth() { return this.width; }
+	public int getHeight() { return this.height; }
+	public Tile getPlayerLoc() { return this.playerLoc; }
+	public Tile[][] getGrid() { return this.grid; }
 }
