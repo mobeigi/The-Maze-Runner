@@ -23,6 +23,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private String wallSprite;
 	private String areaSprite;
 	private String player1Sprite;
+	private String doorSprite;
 	
 	public MazeFrame(int width, int height)
 	{
@@ -38,9 +39,21 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Interface variables
 		this.lastPlayerPos = new Point();
 		this.blockSize = new Dimension(48, 48);
-		this.wallSprite = "question";
+		this.wallSprite = "steel_wall";
 		this.areaSprite = "grass";
+		this.doorSprite = "locked_door";
 		this.player1Sprite = "link";
+		
+		//Make maze take up full screen
+		Toolkit tk = Toolkit.getDefaultToolkit();  
+		int xSize = ((int) tk.getScreenSize().getWidth());  
+		int ySize = ((int) tk.getScreenSize().getHeight()); 
+		Dimension fullscreen = new Dimension(xSize, ySize);
+		this.setPreferredSize(fullscreen);
+
+		//Update state
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);  
+
 		
 		//Fix window size
 		this.setResizable(false);
@@ -52,7 +65,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Pack
-		//this.setUndecorated(true);
+		this.setUndecorated(true);
 		this.pack();
 		this.setVisible(true);
 	}
@@ -69,7 +82,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 	//Update only the player position in maze
 	public void update(Maze m) 
 	{
-		/*
 		if (m.getPlayerLoc().getX() == lastPlayerPos.getX() &&
 			m.getPlayerLoc().getY() == lastPlayerPos.getY() )
 			return;
@@ -148,7 +160,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Repack
 		this.revalidate();
 		this.pack();
-		*/
 	}
 	
 	//Initilise maze GUI and pack it
@@ -194,6 +205,15 @@ public class MazeFrame extends JFrame implements ActionListener {
 					
 					this.lastPlayerPos.setLocation(gbc.gridx, -gbc.gridy); //update last player pos
 					
+				}
+				else if ((t.getX() == 1 && t.getY() == 0) || (t.getX() == width-2 && t.getY() == height-1) ) {
+					blockSprite = this.doorSprite;
+					
+					PlayerPanel playerSprite = new PlayerPanel(blockSprite);
+					JLabel playerSpriteImage = new JLabel(playerSprite.getPlayerSprite());
+					
+					block.add(playerSpriteImage, 0);	//add player sprite with high priority (overlap terrain)
+					blockSprite = this.wallSprite;	//set sprite to load below to terrain
 				}
 				//Else if walkable terrain
 				else if (t.isWalkable()) {

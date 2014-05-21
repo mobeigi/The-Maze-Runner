@@ -4,10 +4,10 @@ public class Run
 	public static void main (String args[])
 	{
 		
-		Maze m = new Maze(15,15);
+		Maze m = new Maze(13, 13);
 		m.createMaze();
 		
-		MazeFrame MF = new MazeFrame(15, 15);
+		MazeFrame MF = new MazeFrame(13, 13);
 		Player p = new Player("joe", "link");
 		Controller c = new Controller(m, MF, p);
 		MF.addKeyListener(c);
