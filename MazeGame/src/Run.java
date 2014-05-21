@@ -3,6 +3,7 @@ public class Run
 {
 	public static void main (String args[])
 	{
+		/*
 		
 		Maze m = new Maze(13, 13);
 		
@@ -20,6 +21,7 @@ public class Run
 		
 		//Init first maze
 		MF.init(m);
+		
 		
 		
 		//This while loop can be used to redraw maze every X ms if needed
@@ -67,7 +69,7 @@ public class Run
 				t = new Tile(true, x, y);
 				m.playerLoc = t;
 				
-				*/
+				
 				
 				//MF.init(m);
 				//MF.repaint();
@@ -76,28 +78,34 @@ public class Run
 			} 
 		}
 		
+		*/
 		
 		
-		/*
 		Game g = new Game();
 		
-		while (g.playAgain)
+		while (true)
 		{
-			//g.createGame();
+			//Make new GameFrame
 			
-			while (!g.isGameOver())
+			while (!g.isInGame()) //While not in a game, wait for actions
 			{
-				//g.updateGame();
-				//g.drawGame();
+				//Do nothing
 			}
 			
-			Scanner s = new Scanner(System.in);
+			//Now we are in game, update maze frame until game is over
+			while (!g.isGameOver()) 
+			{
+				
+			}
 			
-			//if (s.next().equalsIgnoreCase("Y") || s.next().equalsIgnoreCase("YES"))
-				//g.setPlayAgain(s.next());
+			//We have left game
+			g.showUI();
+			
+			
 		}
 		
-		*/
+		
+		
 	}
 
 }

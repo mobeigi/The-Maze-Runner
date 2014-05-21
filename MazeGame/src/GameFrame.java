@@ -12,13 +12,14 @@ public class GameFrame extends JFrame implements ActionListener {
 	private boolean mazeSet;
 	private int width;
 	private int height;
+	private Game g;
 	
 	//Frame components
 	JButton playButton = new JButton("Play Game!");
 	JButton howButton = new JButton("How to Play");
 	JButton exitButton = new JButton("EXIT");
 	
-	public GameFrame(int width, int height)
+	public GameFrame(Game g, int width, int height)
 	{
 		//Set Minimum size
 		Dimension minSize = new Dimension(600, 600);
@@ -27,6 +28,7 @@ public class GameFrame extends JFrame implements ActionListener {
 		this.width = width;
 		this.height = height;
 		this.mazeSet = false;
+		this.g = g;
 		
 		//Set user size
 		this.setSize(width, height);
@@ -35,8 +37,8 @@ public class GameFrame extends JFrame implements ActionListener {
 		this.setResizable(false);
 		
 		//Set layout
-		GridLayout g = new GridLayout(3, 2);
-		this.setLayout(g);
+		GridLayout gl = new GridLayout(3, 2);
+		this.setLayout(gl);
 		
 		//Add play button
 		this.playButton.setBackground(Color.LIGHT_GRAY);
@@ -68,10 +70,10 @@ public class GameFrame extends JFrame implements ActionListener {
 	{
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
-			//Make maze frame
-			this.mazeFrame = new MazeFrame(width, height);
-			this.mazeSet = true;
-			this.setVisible(false);
+			//Make maze and mazeframe
+			g.createMaze(17, 17); //based on user options
+			g.setMazeFrameVisibe(true);
+			g.setGameFrameVisible(false);
 		}
 		else if (e.getSource() == this.howButton) {
 			//Input diagJOptionPane.showInputDialog(null, "This is the message", "This is the default text");
