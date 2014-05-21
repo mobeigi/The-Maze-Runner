@@ -18,9 +18,10 @@ public class Run
 				continue;
 			
 			//Once made, init the frame of the game
-			g.initMazeFrame();
-			g.setMazeKeyListerner();	//set up a new controller
 			g.setPlayer(player);		//set player
+			g.initMazeFrame();			//init maze
+			g.setMazeKeyListerner();	//set up a new controller
+			
 			
 			//While still in game
 			while (!g.isGameOver()) 

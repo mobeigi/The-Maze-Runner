@@ -3,6 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 
 public class MazeFrame extends JFrame implements ActionListener {
@@ -12,9 +14,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private int height;
 	private int width;
 	
+	private Game g;
+	
 	//Frame components
 	private JPanel mazeGrid;
-	private JPanel bottomPanel;
+	private JPanel sidePanel;
 	private JButton exitButton;
 
 	private Point lastPlayerPos;
@@ -26,14 +30,15 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private String doorSprite;
 	private String keySprite;
 	
-	public MazeFrame(int width, int height)
+	public MazeFrame(Game g, int width, int height)
 	{
 		//Initilisation
 		this.height = height + 2; 	//add 2 for border around maze
 		this.width = width + 2;
+		this.g = g;
 		
 		this.mazeGrid = new JPanel();	//panels
-		this.bottomPanel = new JPanel();
+		this.sidePanel = new JPanel();
 		this.exitButton = new JButton("Exit");
 		this.exitButton.addActionListener(this);
 		
@@ -46,17 +51,23 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.playerSprite = "link";
 		this.keySprite = "key";
 		
+		//Initilise side panel looks
+		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
+														(int) (this.height * blockSize.getHeight()))); //height is matched exactly
+		this.sidePanel.setBackground(new Color(240, 240, 240));
+		this.sidePanel.setLayout(new GridBagLayout());
+		this.sidePanel.setBorder(new LineBorder(Color.black, 2));
+		
 		//Make maze take up full screen
 		Toolkit tk = Toolkit.getDefaultToolkit();  
 		int xSize = ((int) tk.getScreenSize().getWidth());  
 		int ySize = ((int) tk.getScreenSize().getHeight()); 
 		Dimension fullscreen = new Dimension(xSize, ySize);
 		this.setPreferredSize(fullscreen);
-
+		
 		//Update state
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);  
 
-		
 		//Fix window size
 		this.setResizable(false);
 		
@@ -77,7 +88,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 	{
 		//Detect object who performed action
 		if (e.getSource() == this.exitButton) {
+			int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure you want to exit to the main menu?\n\nAll game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
+			
+			//If user wishes to quit
+			if (dialogResult == JOptionPane.YES_OPTION) {
 				System.exit(0);
+			}
 		}
 	}
 
@@ -171,7 +187,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	{
 		//Clear panels
 		mazeGrid.removeAll();
-		bottomPanel.removeAll();
+		sidePanel.removeAll();
 		
 		//Make new GridBagLayout for maze itself
 		mazeGrid.setLayout(new GridBagLayout());
@@ -244,28 +260,52 @@ public class MazeFrame extends JFrame implements ActionListener {
 			}
 		}
 		
-		//Add maze to frame at top
+		//Add maze to this frame
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.CENTER;
 		this.add(mazeGrid, gbc);
 		
-		//Add next component underneath mazegrid
+		//Create SidePanel components using gridbaglayout 
 		gbc.gridx = 0;
-		gbc.gridy = -1;
-		gbc.gridwidth = 1;
-		gbc.fill = GridBagConstraints.CENTER;
+		gbc.gridy = 0;
 		
-		//Add exit button
-		bottomPanel.add(exitButton);
+		//Add Score Panel
+		JPanel scorePanel = new JPanel(new GridLayout(2,1));
+		scorePanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		
-		//Add Score
+		//Add player image
+		PlayerPanel player = new PlayerPanel(this.playerSprite);	
+		JLabel playerImage = new JLabel(player.getPlayerSprite());
+		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+		scorePanel.add(playerImage);
+		
+		//Add Score for player
+		JPanel playerScore = new JPanel(new GridLayout(3,1));
+		JLabel name = new JLabel("Name: " + g.getPlayer().getName());
+		JLabel character = new JLabel("Character: " + g.getPlayer().getCharacter().substring(0, 1).toUpperCase() + g.getPlayer().getCharacter().substring(1));
+		JLabel score = new JLabel("Score: 9001");
+		playerScore.add(name);
+		playerScore.add(character);
+		playerScore.add(score);
+		
+		scorePanel.add(playerScore);
+		
+		sidePanel.add(scorePanel);
+		
+		gbc.gridx = 0;
 		gbc.gridy = -2;
-		JLabel score = new JLabel("Score: 0");
-		bottomPanel.add(score);
+		
+		//Add exit button at very bottom
+		exitButton.setMargin(new Insets(5, 10, 5, 10));
+		exitButton.setToolTipText("Click here to exit to main menu.");
+		sidePanel.add(exitButton, gbc);
 
-		//Add panels to this frame
-		this.add(bottomPanel, gbc);
+		
+		//Add sidePanel to this frame
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		this.add(sidePanel, gbc);
 		
 		//Repack frame
 		this.pack();

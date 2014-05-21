@@ -29,7 +29,7 @@ public class Game {
     
     public void createMaze(int width, int height) {
     	this.maze =  new Maze(width, height);
-    	this.mazeFrame = new MazeFrame(width, height); //make new maze frame
+    	this.mazeFrame = new MazeFrame(this, width, height); //make new maze frame
     	this.mazeFrame.setVisible(true);
     }
     
@@ -70,6 +70,10 @@ public class Game {
     
     public void setPlayer(Player player) {
     	this.player = player;
+    }
+    
+    public Player getPlayer() {
+    	return this.player;
     }
     
     /**

@@ -11,9 +11,19 @@ public class Player {
 		this.character = character;
 	}
 	
-	//returns the name object
+	//Return the name of the player
 	public String getName(){
-		return name;
+		return this.name;
+	}
+	
+	//Return the character this player has selected
+	public String getCharacter(){
+		return this.character;
+	}
+	
+	//Return the character this player has selected
+	public void setCharacter(String character){
+		this.character = character;
 	}
 	
 	public int getX(){
