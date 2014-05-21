@@ -1,3 +1,5 @@
+import java.util.concurrent.CountDownLatch;
+
 
 public class Run 
 {
@@ -8,6 +10,7 @@ public class Run
 		
 		//Make 1 player
 		Player player = new Player("joe", "link");
+		g.setPlayer(player);		//set player
 		
 		while (true)
 		{
@@ -18,7 +21,6 @@ public class Run
 				continue;
 			
 			//Once made, init the frame of the game
-			g.setPlayer(player);		//set player
 			g.initMazeFrame();			//init maze
 			g.setMazeKeyListerner();	//set up a new controller
 			
@@ -26,10 +28,10 @@ public class Run
 			//While still in game
 			while (!g.isGameOver()) 
 			{
-				//Do nothing
+				//Do nothing as we wait for game to be completed
 			}
 			
-			//We have left game
+			//We have left game, show game UI and repeat
 			g.showUI();
 			
 		}

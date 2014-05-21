@@ -92,7 +92,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 			
 			//If user wishes to quit
 			if (dialogResult == JOptionPane.YES_OPTION) {
-				System.exit(0);
+				g.showUI();
 			}
 		}
 	}

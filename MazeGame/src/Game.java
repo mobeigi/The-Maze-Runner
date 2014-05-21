@@ -8,8 +8,8 @@ public class Game {
     private Controller c;
     
     //Flow control
-    private boolean inGame;
-    private boolean isGameOver;
+    private volatile boolean inGame;
+    private volatile boolean isGameOver;
     
     private int width;
     private int height;
@@ -21,6 +21,7 @@ public class Game {
         this.isGameOver = false;
         this.inGame = false;
         
+        //Hard coded for now until difficulty is set by levels etc
         this.width = 17;
         this.height = 17;
         
@@ -30,6 +31,7 @@ public class Game {
     public void createMaze(int width, int height) {
     	this.maze =  new Maze(width, height);
     	this.mazeFrame = new MazeFrame(this, width, height); //make new maze frame
+    	initMazeFrame();
     	this.mazeFrame.setVisible(true);
     }
     
