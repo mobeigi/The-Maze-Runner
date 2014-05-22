@@ -136,7 +136,7 @@ public class Maze {
 		do {
 			int randomX = 1 + (int)(Math.random()*((width-2)));
 			int randomY = 1 + (int)(Math.random()*((height-2)));
-			if (grid[randomX][randomY].isWalkable()) {	//check that the tile is walkable
+			if (grid[randomX][randomY].getType() == Tile.PATH) {	//check that the tile is walkable
 				grid[randomX][randomY].setType(Tile.TREASURE);
 				i++;
 			}
@@ -308,7 +308,7 @@ public class Maze {
 			} else if (playerLoc.getType() == Tile.TREASURE) {
 				playerLoc.setType(Tile.PATH);	//if we collected the treasure
 			}
-			reachedEnd();	//unlock door if player has reached end tile
+			checkReachedEnd();	//unlock door if player has reached end tile
 		}
 	}
 	
@@ -355,7 +355,7 @@ public class Maze {
 	 * To check if the player takes the exit, see exitedMaze().
 	 * @return true if the player has reached the destination.
 	 */
-	public boolean reachedEnd() {
+	public boolean checkReachedEnd() {
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
