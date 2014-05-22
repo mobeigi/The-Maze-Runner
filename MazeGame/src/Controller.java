@@ -19,19 +19,19 @@ public class Controller implements KeyListener {
 		 double dy = 0;
 		 
 		 if (e.getKeyCode() == KeyEvent.VK_D){
-			 System.out.println("right");
+			 //System.out.println("right");
 			 dx = 1;
 			 dy = 0;
 		 } else if (e.getKeyCode() == KeyEvent.VK_A){
-			 System.out.println("left");
+			 //System.out.println("left");
 			 dx = -1;
 			 dy = 0;
 		 } else if (e.getKeyCode() == KeyEvent.VK_W) {
-			 System.out.println("up");
+			 //System.out.println("up");
 			 dx = 0;
 			 dy = -1;
 		 } else if (e.getKeyCode() == KeyEvent.VK_S){
-			 System.out.println("down");
+			 //System.out.println("down");
 			 dx = 0;
 			 dy = +1;
 		 } else {	//Ignore other presses
@@ -41,12 +41,6 @@ public class Controller implements KeyListener {
 		 //Update the player location
 		 if (game.getMaze().isValid((int)dx, (int)dy)) {
 			 game.getMaze().updatePlayerLoc((int)dx, (int)dy);
-			 game.initMazeFrame(); //update maze
-			 game.getMazeFrame().repaint(); //paint
-		 }
-		 if (game.getMaze().exitedMaze()){
-			 game.setIsGameOver(true);
-			 game.setIsInGame(false);
 		 }
 	}
 

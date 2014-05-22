@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,11 +25,15 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private Point lastPlayerPos;
 	private Dimension blockSize;
 	
+	//Store sprites once
+	private HashMap<String, PlayerPanel> sprites;
+	
 	private String wallSprite;
-	private String areaSprite;
+	private String pathSprite;
 	private String playerSprite;
 	private String doorSprite;
 	private String keySprite;
+	private String enemySprite;
 	
 	public MazeFrame(Game g, int width, int height)
 	{
@@ -42,14 +47,32 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.exitButton = new JButton("Exit");
 		this.exitButton.addActionListener(this);
 		
-		//Interface variables
+		//Initilise character spites
 		this.lastPlayerPos = new Point();
 		this.blockSize = new Dimension(48, 48);
+		this.sprites = new HashMap<String, PlayerPanel>();
+		
 		this.wallSprite = "steel_wall";
-		this.areaSprite = "grass";
+		this.pathSprite = "grass";
 		this.doorSprite = "locked_door";
 		this.playerSprite = "link";
 		this.keySprite = "key";
+		this.enemySprite = "dead_pacman_monster";
+		
+		//Add sprites to hashmap
+		PlayerPanel sprite = new PlayerPanel(wallSprite);	
+		sprites.put(wallSprite, sprite);
+		
+		sprite = new PlayerPanel(pathSprite);	
+		sprites.put(pathSprite, sprite);
+		sprite = new PlayerPanel(playerSprite);	
+		sprites.put(playerSprite, sprite);
+		sprite = new PlayerPanel(doorSprite);	
+		sprites.put(doorSprite, sprite);
+		sprite = new PlayerPanel(keySprite);	
+		sprites.put(keySprite, sprite);
+		sprite = new PlayerPanel(enemySprite);	
+		sprites.put(enemySprite, sprite);
 		
 		//Initilise side panel looks
 		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -110,7 +133,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 			
 		
 		//Clear botom panel
-		bottomPanel.removeAll();
+		sidePanel.removeAll();
 		
 		//Create new panel for tile
 		Dimension blockSize = new Dimension(48, 48);
@@ -169,20 +192,21 @@ public class MazeFrame extends JFrame implements ActionListener {
 		gbc.fill = GridBagConstraints.CENTER;
 		
 		//Add exit button
-		bottomPanel.add(exitButton);
+		sidePanel.add(exitButton);
 		
 		//Add Score
 		gbc.gridy = -2;
 		JLabel score = new JLabel("Score: 0");
-		bottomPanel.add(score);
+		sidePanel.add(score);
 
 		//Add panels to this frame
-		this.add(bottomPanel, gbc);
+		this.add(sidePanel, gbc);
 		
 		//Repack
-		this.revalidate();
 		this.pack();
+		
 		*/
+		
 	}
 	
 	//Initilise maze GUI and pack it
@@ -193,20 +217,20 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sidePanel.removeAll();
 		
 		//Make new GridBagLayout for maze itself
-		mazeGrid.setLayout(new GridBagLayout());
+		mazeGrid.setLayout(new GridLayout(width, height));
 		
 		//Constraints
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
 		
 		//Fill All blocks
-		for (int x = 0; x < width; x++)
+		for (int y = 0; y < height; y++)
 		{
-			gbc.gridx = x;	//update grid x pos
-			for (int y = 0; y < height; y++)
+			gbc.gridx = -y;	//update grid y pos
+			for (int x = 0; x < width; x++)
 			{
 		
-				gbc.gridy = -y; //update grid y pos
+				gbc.gridy = x; //update grid x pos
 				
 				//Get information about current tile
 				Tile t = m.getTile(x, y);
@@ -223,9 +247,14 @@ public class MazeFrame extends JFrame implements ActionListener {
 				
 				//Determine block graphics based on type of tile
 				//If player is at this tile
-				if (m.findPlayer().equals(t)) {
-					blockSprite = this.areaSprite;
+				if (m.getPlayerTile().equals(t)) {
+					blockSprite = this.pathSprite;
 					overLaySprite = this.playerSprite;
+				}
+				//Check if enemy unit
+				else if (m.getEnemyTile().equals(t)) {
+					blockSprite = this.pathSprite;
+					overLaySprite = this.enemySprite;
 				}
 				//Check if this is a door
 				else if (t.getType() == Tile.DOOR) {
@@ -234,12 +263,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 				}
 				//Check for key
 				else if (t.getType() == Tile.KEY) {
-					blockSprite = this.areaSprite;
+					blockSprite = this.pathSprite;
 					overLaySprite = this.keySprite;
 				}
 				//Else if walkable path
 				else if (t.getType() == Tile.PATH) {
-					blockSprite = this.areaSprite;
+					blockSprite = this.pathSprite;
 				} 
 				//Else must be wall
 				else if (t.getType() == Tile.WALL){
@@ -247,14 +276,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 				}
 
 				//Always add block sprite
-				PlayerPanel sprite = new PlayerPanel(blockSprite);	
-				JLabel spriteImage = new JLabel(sprite.getPlayerSprite());
+				JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
 				block.add(spriteImage, 1);
 				
 				//Add overlay sprite if required
 				if (overLaySprite != "") {
-					PlayerPanel overlaySprite = new PlayerPanel(overLaySprite);	
-					JLabel overlayImage = new JLabel(overlaySprite.getPlayerSprite());
+					JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
 					block.add(overlayImage, 0);
 				}
 				

@@ -41,7 +41,8 @@ public class Maze {
 		this.width = width+2;
 		this.height = height+2;
 		createMaze();	//initialise all tiles
-		/*final Timer timer = new Timer();	//auto-scheduling of enemy movement
+		
+		final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
 				if (enemyLoc.equals(playerLoc)) {
@@ -51,12 +52,11 @@ public class Maze {
 					//dumb logic for now
 					//enemy moves from destination to origin
 					enemyLoc = mazeSolution.get(enemyLoc);
-				} else {
-					//don't move enemy
-				}
-				showMaze();	//for debugging
+				} //else don't move enemy
+				
+				//showMaze();	//for debugging
 			}
-		},500,500);	//enemy moves every 0.5 seconds*/
+		},500,500);	//enemy moves every 0.5 seconds
 	}
 	
 	/**
@@ -268,7 +268,7 @@ public class Maze {
 	 * Finds the tile on the maze that the player is situated in.
 	 * @return the tile in which the player is on.
 	 */
-	public Tile findPlayer () {
+	public Tile getPlayerTile() {
 		return playerLoc;
 	}
 	
@@ -276,7 +276,7 @@ public class Maze {
 	 * Finds the tile on the maze that the enemy is situated in.
 	 * @return the tile in which the enemy is on.
 	 */
-	public Tile findEnemy() {
+	public Tile getEnemyTile() {
 		return enemyLoc;
 	}
 	

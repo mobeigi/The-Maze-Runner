@@ -22,8 +22,8 @@ public class Game {
         this.inGame = false;
         
         //Hard coded for now until difficulty is set by levels etc
-        this.width = 17;
-        this.height = 17;
+        this.width = 9;
+        this.height = 9;
         
         this.gameFrame = new GameFrame(this, width, height);
     }
@@ -38,7 +38,13 @@ public class Game {
     
     public void initMazeFrame() {
        this.mazeFrame.init(this.maze); 
+       this.mazeFrame.requestFocus();
     }
+    
+    public void updateMazeFrame() {
+        this.mazeFrame.update(this.maze);
+        this.mazeFrame.requestFocus();
+     }
     
     public void setGameFrameVisible(boolean isVisible) {
     	this.gameFrame.setVisible(isVisible);

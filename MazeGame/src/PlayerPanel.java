@@ -1,4 +1,5 @@
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 /**
  * Create a PlayerPanel based on provided gif sprite.
@@ -6,11 +7,11 @@ import javax.swing.JPanel;
 public class PlayerPanel extends JPanel{
 	//Private Fields
 	private static final long serialVersionUID = 1L;
-	private ImageIcon image;
+	private ImageIcon sprite;
 
     public PlayerPanel(String imageName) {
     	try {
-    		this.image = new ImageIcon(this.getClass().getResource("/sprites/" + imageName + ".gif"));
+    		this.sprite = new ImageIcon(this.getClass().getResource("/sprites/" + imageName + ".gif"));
     	}
     	catch (Exception e) {} //Empty JPanel if file not found
     	
@@ -22,6 +23,6 @@ public class PlayerPanel extends JPanel{
      */
     public ImageIcon getPlayerSprite()
     {
-    	return this.image;
+    	return this.sprite;
     }
 }

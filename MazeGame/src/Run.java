@@ -21,10 +21,24 @@ public class Run
 			g.setController(new Controller(g));
 			g.setMazeKeyListener();
 			
+			long lastUpdateTime = System.currentTimeMillis();
+			
 			//While still in game
 			while (!g.isGameOver()) 
 			{
-				//Do nothing as we wait for game to be completed
+				if (System.currentTimeMillis() - lastUpdateTime > 50) {	//update every 250ms
+					 g.initMazeFrame(); //update maze
+					 g.getMazeFrame().repaint(); //paint
+					 
+					 //If game is over
+					 if (g.getMaze().exitedMaze()) {
+						 g.setIsGameOver(true);
+						 g.setIsInGame(false);
+					 }
+				
+					 lastUpdateTime = System.currentTimeMillis(); //update time
+				}
+				
 			}
 			
 			//We have finished game, show game UI and repeat
