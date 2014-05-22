@@ -34,6 +34,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private String doorSprite;
 	private String keySprite;
 	private String enemySprite;
+	private String coinSprite;
 	
 	public MazeFrame(Game g, int width, int height)
 	{
@@ -73,6 +74,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sprites.put(keySprite, sprite);
 		sprite = new PlayerPanel(enemySprite);	
 		sprites.put(enemySprite, sprite);
+		this.coinSprite = "coin";
 		
 		//Initilise side panel looks
 		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -265,6 +267,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 				else if (t.getType() == Tile.KEY) {
 					blockSprite = this.pathSprite;
 					overLaySprite = this.keySprite;
+				}
+				else if (t.getType() == Tile.TREASURE) {
+					blockSprite = this.pathSprite;
+					overLaySprite = this.coinSprite;
 				}
 				//Else if walkable path
 				else if (t.getType() == Tile.PATH) {

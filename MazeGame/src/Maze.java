@@ -32,6 +32,7 @@ public class Maze {
 	private Tile playerLoc;	//location of the current player, null if dead
 	private Tile enemyLoc;	//location of the enemy, null if dead
 	private boolean keyCollected;
+	private int numTreasureCollected;
 	private HashMap<Tile,Tile> mazeSolution;
 			
 	public Maze (int width, int height) {
@@ -130,6 +131,18 @@ public class Maze {
 		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
 		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
 		keyCollected = false;
+		
+		//sets three random tiles to treasure
+		int i = 0;
+		do {
+			int randomX = 1 + (int)(Math.random()*((width-2)));
+			int randomY = 1 + (int)(Math.random()*((height-2)));
+			if (grid[randomX][randomY].getType() == Tile.PATH) {	//check that the tile is walkable
+				grid[randomX][randomY].setType(Tile.TREASURE);
+				i++;
+			}
+		} while (i < 3);
+		numTreasureCollected = 0;
 		
 		playerLoc = grid[1][1];	//origin at (1,1), 
 		enemyLoc = grid[width-2][height-2];	//enemy starts at destination
@@ -294,9 +307,11 @@ public class Maze {
 			if (playerLoc.getType() == Tile.KEY) {
 				keyCollected = true;
 				playerLoc.setType(Tile.PATH);	//set key tile to normal path
+			} else if (playerLoc.getType() == Tile.TREASURE) {
+				numTreasureCollected++;
+				playerLoc.setType(Tile.PATH);	//if we collected the treasure
 			}
-			
-			reachedEnd();	//unlock door if player has reached end tile
+			checkReachedEnd();	//unlock door if player has reached end tile
 		}
 	}
 	
@@ -343,7 +358,7 @@ public class Maze {
 	 * To check if the player takes the exit, see exitedMaze().
 	 * @return true if the player has reached the destination.
 	 */
-	public boolean reachedEnd() {
+	public boolean checkReachedEnd() {
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
@@ -376,6 +391,14 @@ public class Maze {
 	//see if player unlocked door and took the exit
 	public boolean exitedMaze() {
 		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-1));
+	}
+	
+	public int getNumTreasureCollected() {
+		return numTreasureCollected;
+	}
+	
+	public boolean keyCollected() {
+		return keyCollected;
 	}
 	/**
 	 * Get the tile of a specific set of x and y coordinates.
