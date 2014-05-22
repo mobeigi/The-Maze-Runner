@@ -58,6 +58,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.doorSprite = "locked_door";
 		this.playerSprite = "link";
 		this.keySprite = "key";
+		this.coinSprite = "coin";
 		this.enemySprite = "dead_pacman_monster";
 		
 		//Add sprites to hashmap
@@ -74,7 +75,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sprites.put(keySprite, sprite);
 		sprite = new PlayerPanel(enemySprite);	
 		sprites.put(enemySprite, sprite);
-		this.coinSprite = "coin";
+		sprite = new PlayerPanel(coinSprite);	
+		sprites.put(coinSprite, sprite);
 		
 		//Initilise side panel looks
 		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
