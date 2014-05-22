@@ -21,7 +21,7 @@ public class Run
 			//Once made, init the frame of the game
 			g.initMazeFrame();			//init maze
 			g.setController(new Controller(g));
-			g.setMazeKeyListerner();
+			g.setMazeKeyListener();
 			
 			//While still in game
 			while (!g.isGameOver()) 

@@ -44,7 +44,7 @@ public class Game {
     	this.gameFrame.setVisible(isVisible);
     }
     
-    public void setMazeFrameVisibe(boolean isVisible) {
+    public void setMazeFrameVisible(boolean isVisible) {
     	this.gameFrame.setVisible(isVisible);
     }
     
@@ -69,7 +69,7 @@ public class Game {
     	this.c = c;
     }
     
-    public void setMazeKeyListerner() {
+    public void setMazeKeyListener() {
     	this.mazeFrame.addKeyListener(this.c);
     }
     
