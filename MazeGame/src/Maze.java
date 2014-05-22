@@ -131,6 +131,17 @@ public class Maze {
 		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
 		keyCollected = false;
 		
+		//sets three random tiles to treasure
+		int i = 0;
+		do {
+			int randomX = 1 + (int)(Math.random()*((width-2)));
+			int randomY = 1 + (int)(Math.random()*((height-2)));
+			if (grid[randomX][randomY].isWalkable()) {	//check that the tile is walkable
+				grid[randomX][randomY].setType(Tile.TREASURE);
+				i++;
+			}
+		} while (i < 3);
+		
 		playerLoc = grid[1][1];	//origin at (1,1), 
 		enemyLoc = grid[width-2][height-2];	//enemy starts at destination
 		//width and height should be big enough to allow this to be valid
