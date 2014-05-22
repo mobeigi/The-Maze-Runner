@@ -305,8 +305,9 @@ public class Maze {
 			if (playerLoc.getType() == Tile.KEY) {
 				keyCollected = true;
 				playerLoc.setType(Tile.PATH);	//set key tile to normal path
+			} else if (playerLoc.getType() == Tile.TREASURE) {
+				playerLoc.setType(Tile.PATH);	//if we collected the treasure
 			}
-			
 			reachedEnd();	//unlock door if player has reached end tile
 		}
 	}
