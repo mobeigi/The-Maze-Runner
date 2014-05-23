@@ -35,6 +35,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private String keySprite;
 	private String enemySprite;
 	private String coinSprite;
+	private String swordSprite;
 	
 	public MazeFrame(Game g, int width, int height)
 	{
@@ -60,6 +61,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.keySprite = "key";
 		this.coinSprite = "coin";
 		this.enemySprite = "dead_pacman_monster";
+		this.swordSprite = "sword";
 		
 		//Add sprites to hashmap
 		PlayerPanel sprite = new PlayerPanel(wallSprite);	
@@ -77,6 +79,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sprites.put(enemySprite, sprite);
 		sprite = new PlayerPanel(coinSprite);	
 		sprites.put(coinSprite, sprite);
+		sprite = new PlayerPanel(swordSprite);
+		sprites.put(swordSprite, sprite);
 		
 		//Initilise side panel looks
 		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -274,6 +278,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 					blockSprite = this.pathSprite;
 					overLaySprite = this.coinSprite;
 				}
+				else if (t.getType() == Tile.SWORD){
+					blockSprite = this.pathSprite;
+					overLaySprite = this.swordSprite;
+				}
 				//Else if walkable path
 				else if (t.getType() == Tile.PATH) {
 					blockSprite = this.pathSprite;
@@ -282,6 +290,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 				else if (t.getType() == Tile.WALL){
 					blockSprite = this.wallSprite;
 				}
+			
 
 				//Always add block sprite
 				JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
@@ -322,7 +331,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		JPanel playerScore = new JPanel(new GridLayout(3,1));
 		JLabel name = new JLabel("Name: " + g.getPlayer().getName());
 		JLabel character = new JLabel("Character: " + g.getPlayer().getCharacter().substring(0, 1).toUpperCase() + g.getPlayer().getCharacter().substring(1));
-		JLabel score = new JLabel("Score: 9001");
+		JLabel score = new JLabel("Score: " + Integer.toString(g.getScore()));
 		playerScore.add(name);
 		playerScore.add(character);
 		playerScore.add(score);

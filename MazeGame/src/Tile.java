@@ -6,6 +6,7 @@ public class Tile {
 	public static final int KEY = 2;
 	public static final int TREASURE = 3;
 	public static final int DOOR = 4;
+	public static final int SWORD = 5;
 	
 	private int x;
 	private int y;

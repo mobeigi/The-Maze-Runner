@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class Game {
 	//Private fields
@@ -6,6 +8,8 @@ public class Game {
     private MazeFrame mazeFrame;
     private Player player;
     private Controller c;
+    private ArrayList<Tile> inventory;
+    private int score;
     
     //Flow control
     private volatile boolean inGame;
@@ -26,6 +30,8 @@ public class Game {
         this.height = 15;
         
         this.gameFrame = new GameFrame(this, width, height);
+        
+        this.score = 0;
     }
     
     public void createMaze(int width, int height) {
@@ -61,6 +67,8 @@ public class Game {
     
     public void setIsGameOver(boolean isGameOver) {
     	this.isGameOver = isGameOver;
+    	//set score back to zero.
+    	this.score = 0;
     }
     
     public void setIsInGame(boolean inGame) {
@@ -101,4 +109,13 @@ public class Game {
     public boolean isGameOver() {
         return this.isGameOver;
     }
+    
+    public void updateScore(){
+    	//score just determined by treasure
+    	score = maze.getNumTreasureCollected();
+    }
+    
+	public int getScore() {
+		return score;
+	}
 }

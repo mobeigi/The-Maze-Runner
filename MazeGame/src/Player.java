@@ -4,8 +4,7 @@ public class Player {
 	private String character;
 	private int x;
 	private int y;
-	
-	
+
 	public Player(String name, String character){
 		this.name = name;
 		this.character = character;
