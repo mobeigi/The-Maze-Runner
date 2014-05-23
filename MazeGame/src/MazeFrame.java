@@ -19,10 +19,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 	
 	//Frame components
 	private JPanel mazeGrid;
+	private JLayeredPane[][] mazeGridComp;
+	
 	private JPanel sidePanel;
 	private JButton exitButton;
 
-	private Point lastPlayerPos;
+	private Tile lastPlayerPos;
 	private Dimension blockSize;
 	
 	//Store sprites once
@@ -44,13 +46,13 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.width = width + 2;
 		this.g = g;
 		
-		this.mazeGrid = new JPanel();	//panels
+		this.mazeGrid = new JPanel();
+		this.mazeGridComp = new JLayeredPane[this.width][this.height];
 		this.sidePanel = new JPanel();
 		this.exitButton = new JButton("Exit");
 		this.exitButton.addActionListener(this);
 		
 		//Initilise character spites
-		this.lastPlayerPos = new Point();
 		this.blockSize = new Dimension(48, 48);
 		this.sprites = new HashMap<String, PlayerPanel>();
 		
@@ -134,87 +136,24 @@ public class MazeFrame extends JFrame implements ActionListener {
 	//Update only the player position in maze
 	public void update(Maze m) 
 	{
-		/*
+		if (m.playerDied()) {
+			mazeGridComp[lastPlayerPos.getX()][lastPlayerPos.getY()].remove(0);
+			return;
+		}
+		
 		if (m.getPlayerLoc().getX() == lastPlayerPos.getX() &&
 			m.getPlayerLoc().getY() == lastPlayerPos.getY() )
 			return;
-			
 		
-		//Clear botom panel
-		sidePanel.removeAll();
+		Component[] components = mazeGridComp[lastPlayerPos.getX()][lastPlayerPos.getY()].getComponentsInLayer(0);
+		//if the JLayeredPane consists of move then one element, the top layer should be the player
+		mazeGridComp[lastPlayerPos.getX()][lastPlayerPos.getY()].remove(0);
 		
-		//Create new panel for tile
-		Dimension blockSize = new Dimension(48, 48);
+		if (!m.playerDied()) {
+			mazeGridComp[m.getPlayerLoc().getX()][m.getPlayerLoc().getY()].add(components[0],0);
+		}
 		
-		//New player pos
-		Tile newPos = m.getPlayerLoc();
-		
-		String blockSprite = "grass";
-		JLayeredPane grassblock = new JLayeredPane();
-		
-		PlayerPanel g = new PlayerPanel(blockSprite);	
-		JLabel l = new JLabel(g.getPlayerSprite());
-		
-		grassblock.setPreferredSize(blockSize);
-		grassblock.setLayout(new OverlayLayout(grassblock));
-		grassblock.add(l, 1);
-		
-		int index = (int) (((lastPlayerPos.getY()) * width) + (lastPlayerPos.getX()) );
-		
-		Component c = mazeGrid.getComponent(index);
-		System.out.println(index);
-		mazeGrid.remove(index);
-		
-	
-		JLayeredPane playerBlock = new JLayeredPane();
-		
-		PlayerPanel g1 = new PlayerPanel(blockSprite);	
-		JLabel l1 = new JLabel(g1.getPlayerSprite());
-		
-		playerBlock.setPreferredSize(blockSize);
-		playerBlock.setLayout(new OverlayLayout(playerBlock));
-		playerBlock.add(l, 1);
-		playerBlock.add(l1, 0);
-		
-		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.BOTH;
-		mazeGrid.add(grassblock, index);
-		
-		gbc.gridx = newPos.getX();
-		gbc.gridy = -newPos.getY();
-		//mazeGrid.add(playerBlock, gbc);
-		
-		//Set new last position for next update
-		this.lastPlayerPos.setLocation(newPos.getX(), newPos.getY());
-		
-		//Add maze to frame
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.CENTER;
-		this.add(mazeGrid, gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = -1;
-		gbc.gridwidth = 1;
-		gbc.fill = GridBagConstraints.CENTER;
-		
-		//Add exit button
-		sidePanel.add(exitButton);
-		
-		//Add Score
-		gbc.gridy = -2;
-		JLabel score = new JLabel("Score: 0");
-		sidePanel.add(score);
-
-		//Add panels to this frame
-		this.add(sidePanel, gbc);
-		
-		//Repack
-		this.pack();
-		
-		*/
-		
+		lastPlayerPos = m.getPlayerLoc();
 	}
 	
 	//Initilise maze GUI and pack it
@@ -245,6 +184,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 				
 				//Use JLayeredPane for each block
 				JLayeredPane block = new JLayeredPane();
+				this.mazeGridComp[x][y] = block;	//set mazegrid to represent this block
 				
 				//Set size and layout
 				block.setPreferredSize(blockSize);
@@ -258,6 +198,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 				if (m.getPlayerTile().equals(t)) {
 					blockSprite = this.pathSprite;
 					overLaySprite = this.playerSprite;
+					
+					this.lastPlayerPos = t; //update last position
 				}
 				//Check if enemy unit
 				else if (m.getEnemyTile().equals(t)) {
@@ -313,7 +255,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		gbc.fill = GridBagConstraints.CENTER;
 		this.add(mazeGrid, gbc);
 		
-		//Create SidePanel components using gridbaglayout 
+		//Create SidePanel components using gridbag layout 
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		
@@ -326,6 +268,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		JLabel playerImage = new JLabel(player.getPlayerSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		scorePanel.add(playerImage);
+		
 		
 		//Add Score for player
 		JPanel playerScore = new JPanel(new GridLayout(3,1));
