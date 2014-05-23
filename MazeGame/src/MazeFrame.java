@@ -25,6 +25,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JButton exitButton;
 
 	private Tile lastPlayerPos;
+	private Tile lastEnemyPos;
 	private Dimension blockSize;
 	
 	//Store sprites once
@@ -136,24 +137,88 @@ public class MazeFrame extends JFrame implements ActionListener {
 	//Update only the player position in maze
 	public void update(Maze m) 
 	{
-		if (m.playerDied()) {
-			mazeGridComp[lastPlayerPos.getX()][lastPlayerPos.getY()].remove(0);
-			return;
-		}
 		
-		if (m.getPlayerLoc().getX() == lastPlayerPos.getX() &&
-			m.getPlayerLoc().getY() == lastPlayerPos.getY() )
-			return;
-		
-		Component[] components = mazeGridComp[lastPlayerPos.getX()][lastPlayerPos.getY()].getComponentsInLayer(0);
-		//if the JLayeredPane consists of move then one element, the top layer should be the player
-		mazeGridComp[lastPlayerPos.getX()][lastPlayerPos.getY()].remove(0);
+		Tile curPlayerPos = m.getPlayerTile();
+		Tile curEnemyPos = m.getEnemyTile();
 		
 		if (!m.playerDied()) {
-			mazeGridComp[m.getPlayerLoc().getX()][m.getPlayerLoc().getY()].add(components[0],0);
+			updateBlock(m, lastPlayerPos);
+			updateBlock(m, curPlayerPos);
+			
+			lastPlayerPos = curPlayerPos;
 		}
 		
-		lastPlayerPos = m.getPlayerLoc();
+		
+		if (!m.enemyDied()) {
+			updateBlock(m, lastEnemyPos);
+			updateBlock(m, curEnemyPos);
+			
+			lastEnemyPos = curEnemyPos;
+		}
+	
+		
+		this.pack();
+	}
+	
+	private void updateBlock(Maze m, Tile old)
+	{	
+		mazeGridComp[old.getX()][old.getY()].removeAll();
+		
+		//Read block
+		Tile t = m.getTile(old.getX(), old.getY());
+		
+		String blockSprite = "";	//base (bottom) block sprite
+		String overLaySprite = "";	//Overlay sprite that goes on top of block sprite
+		
+		//Determine block graphics based on type of tile
+		//If player is at this tile
+		if (m.getPlayerTile() != null && m.getPlayerTile().equals(t)) {
+			blockSprite = this.pathSprite;
+			overLaySprite = this.playerSprite;
+		}
+		//Check if enemy unit
+		else if (m.getEnemyTile() != null && m.getEnemyTile().equals(t)) {
+			blockSprite = this.pathSprite;
+			overLaySprite = this.enemySprite;
+		}
+		//Check if this is a door
+		else if (old.getType() == Tile.DOOR) {
+			blockSprite = this.wallSprite;
+			overLaySprite = this.doorSprite;
+		}
+		//Check for key
+		else if (old.getType() == Tile.KEY) {
+			blockSprite = this.pathSprite;
+			overLaySprite = this.keySprite;
+		}
+		else if (old.getType() == Tile.TREASURE) {
+			blockSprite = this.pathSprite;
+			overLaySprite = this.coinSprite;
+		}
+		else if (old.getType() == Tile.SWORD){
+			blockSprite = this.pathSprite;
+			overLaySprite = this.swordSprite;
+		}
+		//Else if walkable path
+		else if (old.getType() == Tile.PATH) {
+			blockSprite = this.pathSprite;
+		} 
+		//Else must be wall
+		else if (old.getType() == Tile.WALL){
+			blockSprite = this.wallSprite;
+		} else {	//Default is not path
+			blockSprite = this.pathSprite;
+		}
+		
+		//Always add block sprite
+		JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
+		this.mazeGridComp[old.getX()][old.getY()].add(spriteImage, 1);
+		
+		//Add overlay sprite if required
+		if (overLaySprite != "") {
+			JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
+			this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, 0);
+		}
 	}
 	
 	//Initilise maze GUI and pack it
@@ -248,6 +313,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 				mazeGrid.add(block, gbc);
 			}
 		}
+		
+		//Save enemy last position
+		lastEnemyPos = m.getEnemyTile();
 		
 		//Add maze to this frame
 		gbc.gridx = 0;

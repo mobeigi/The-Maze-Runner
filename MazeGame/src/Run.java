@@ -30,6 +30,7 @@ public class Run
 					 g.updateMazeFrame(); //update maze
 					 g.getMazeFrame().repaint(); //paint
 					 g.updateScore();
+					 
 					 //If game is over
 					 if (g.getMaze().exitedMaze()) {
 						 g.setIsGameOver(true);

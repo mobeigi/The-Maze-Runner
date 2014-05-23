@@ -31,6 +31,8 @@ public class Maze {
 	private int height;
 	private Tile playerLoc;	//location of the current player, null if dead
 	private Tile enemyLoc;	//location of the enemy, null if dead
+	private boolean isEnemyDead;
+	private boolean isPlayerDead;
 	private boolean keyCollected;
 	private boolean swordCollected;
 	private int numTreasureCollected;
@@ -47,18 +49,23 @@ public class Maze {
 		final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
-				if (enemyLoc.equals(playerLoc)) {
-					if (!swordCollected) {
-						playerLoc = null;	//player dies and enemy stops moving
-					} else {
-						enemyLoc = null;
-					}
+				if (isEnemyDead) {
 					timer.cancel();
 				} else if (!enemyLoc.equals(grid[1][1])) {
 					//dumb logic for now
 					//enemy moves from destination to origin
 					enemyLoc = mazeSolution.get(enemyLoc);
+					
+					if (enemyLoc.equals(playerLoc)) {
+						if (!swordCollected) {
+							isPlayerDead = true;	//player dies and enemy stops moving
+						} else {
+							isEnemyDead = true;
+						}
+					}
 				} //else don't move enemy
+				
+			
 				
 				//showMaze();	//for debugging
 			}
@@ -289,6 +296,9 @@ public class Maze {
 	 * @return the tile in which the player is on.
 	 */
 	public Tile getPlayerTile() {
+		if (isPlayerDead) {
+			return null;
+		}
 		return playerLoc;
 	}
 	
@@ -297,6 +307,9 @@ public class Maze {
 	 * @return the tile in which the enemy is on.
 	 */
 	public Tile getEnemyTile() {
+		if (isEnemyDead) {
+			return null;
+		}
 		return enemyLoc;
 	}
 	
@@ -309,9 +322,15 @@ public class Maze {
 	 * The number is negative if the movement is to the up direction.
 	 */
 	public void updatePlayerLoc (int x, int y) {
-		if (isValid(x,y) && playerLoc != null) {
+		if (isValid(x,y) && !isPlayerDead) {
 			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
-			if (playerLoc.getType() == Tile.KEY) {
+			if (playerLoc.equals(enemyLoc)) {
+				if (!swordCollected) {
+					isPlayerDead = true;	//player dies and enemy stops moving
+				} else {
+					isEnemyDead = true;
+				}
+			} else if (playerLoc.getType() == Tile.KEY) {
 				keyCollected = true;
 				playerLoc.setType(Tile.PATH);	//set key tile to normal path
 			} else if (playerLoc.getType() == Tile.TREASURE) {
@@ -331,7 +350,11 @@ public class Maze {
 	 * @return true if the player is dead.
 	 */
 	public boolean playerDied () {
-		return (playerLoc == null);
+		return isPlayerDead;
+	}
+	
+	public boolean enemyDied () {
+		return isEnemyDead;
 	}
 	
 	/**
