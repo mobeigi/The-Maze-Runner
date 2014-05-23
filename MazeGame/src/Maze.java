@@ -32,6 +32,7 @@ public class Maze {
 	private Tile playerLoc;	//location of the current player, null if dead
 	private Tile enemyLoc;	//location of the enemy, null if dead
 	private boolean keyCollected;
+	private boolean swordCollected;
 	private int numTreasureCollected;
 	private HashMap<Tile,Tile> mazeSolution;
 			
@@ -130,7 +131,9 @@ public class Maze {
 		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
 		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
 		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
+		grid[width-2][1].setType(Tile.SWORD);
 		keyCollected = false;
+		swordCollected = false;
 		
 		//sets three random tiles to treasure
 		int i = 0;
@@ -310,6 +313,9 @@ public class Maze {
 			} else if (playerLoc.getType() == Tile.TREASURE) {
 				numTreasureCollected++;
 				playerLoc.setType(Tile.PATH);	//if we collected the treasure
+			} else if (playerLoc.getType() == Tile.SWORD) {
+				swordCollected = true;
+				playerLoc.setType(Tile.SWORD);
 			}
 			checkReachedEnd();	//unlock door if player has reached end tile
 		}
@@ -399,6 +405,10 @@ public class Maze {
 	
 	public boolean keyCollected() {
 		return keyCollected;
+	}
+	
+	public boolean swordCollected() {
+		return swordCollected;
 	}
 	/**
 	 * Get the tile of a specific set of x and y coordinates.
