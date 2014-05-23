@@ -48,7 +48,11 @@ public class Maze {
 		timer.schedule(new TimerTask() {
 			public void run() {
 				if (enemyLoc.equals(playerLoc)) {
-					playerLoc = null;	//player dies and enemy stops moving
+					if (!swordCollected) {
+						playerLoc = null;	//player dies and enemy stops moving
+					} else {
+						enemyLoc = null;
+					}
 					timer.cancel();
 				} else if (!enemyLoc.equals(grid[1][1])) {
 					//dumb logic for now
