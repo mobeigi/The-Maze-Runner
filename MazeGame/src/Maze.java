@@ -319,7 +319,7 @@ public class Maze {
 				playerLoc.setType(Tile.PATH);	//if we collected the treasure
 			} else if (playerLoc.getType() == Tile.SWORD) {
 				swordCollected = true;
-				playerLoc.setType(Tile.SWORD);
+				playerLoc.setType(Tile.PATH);
 			}
 			checkReachedEnd();	//unlock door if player has reached end tile
 		}

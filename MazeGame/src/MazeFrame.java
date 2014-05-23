@@ -332,6 +332,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 		JLabel name = new JLabel("Name: " + g.getPlayer().getName());
 		JLabel character = new JLabel("Character: " + g.getPlayer().getCharacter().substring(0, 1).toUpperCase() + g.getPlayer().getCharacter().substring(1));
 		JLabel score = new JLabel("Score: " + Integer.toString(g.getScore()));
+		
+		Font font = new Font("Arial", Font.PLAIN, 16);
+		name.setFont(font);
+		character.setFont(font);
+		score.setFont(new Font("Arial", Font.BOLD, 18));
+		
 		playerScore.add(name);
 		playerScore.add(character);
 		playerScore.add(score);

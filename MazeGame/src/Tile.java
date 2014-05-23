@@ -26,7 +26,7 @@ public class Tile {
 	
 	//returns boolean if setting type was successful
 	public boolean setType (int newType) {
-		if (newType >= 0 && newType <= 4) {
+		if (newType >= 0 && newType <= 5) {
 			this.type = newType;
 			return true;
 		}
