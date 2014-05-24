@@ -32,14 +32,14 @@ public class MazeFrame extends JFrame implements ActionListener {
 	//Store sprites once
 	private HashMap<String, PlayerPanel> sprites;
 	
-	private static String wallSprite = "steel_wall";
-	private static String pathSprite = "carpet";
-	private static String doorSprite = "locked_door";
-	private static String playerSprite = "link";
-	private static String keySprite = "key";
-	private static String coinSprite = "coin";
-	private static String enemySprite = "dead_pacman_monster";
-	private static String swordSprite = "sword";
+	public static String wallSprite = "steel_wall";
+	public static String pathSprite = "carpet";
+	public static String doorSprite = "locked_door";
+	public static String playerSprite = "link";
+	public static String keySprite = "key";
+	public static String coinSprite = "coin";
+	public static String enemySprite = "dead_pacman_monster";
+	public static String swordSprite = "sword";
 	
 	public MazeFrame(Game g, int width, int height)
 	{
