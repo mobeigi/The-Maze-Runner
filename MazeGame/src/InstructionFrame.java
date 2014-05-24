@@ -59,11 +59,11 @@ public class InstructionFrame extends JFrame implements ActionListener{
 	    	System.out.println("FAIL");
 	    }
 		
-		JLabel sword = new JLabel((new PlayerPanel(MazeFrame.swordSprite).getPlayerSprite()));
-		JLabel player = new JLabel((new PlayerPanel(MazeFrame.playerSprite).getPlayerSprite()));
-		JLabel key = new JLabel((new PlayerPanel(MazeFrame.keySprite).getPlayerSprite()));
-		JLabel coin = new JLabel((new PlayerPanel(MazeFrame.coinSprite).getPlayerSprite()));
-		JLabel enemy = new JLabel((new PlayerPanel(MazeFrame.enemySprite).getPlayerSprite()));
+		JLabel sword = new JLabel((new PlayerPanel(MazeFrame.swordSprite,48,48).getPlayerSprite()));
+		JLabel player = new JLabel((new PlayerPanel(MazeFrame.playerSprite,48,48).getPlayerSprite()));
+		JLabel key = new JLabel((new PlayerPanel(MazeFrame.keySprite,48,48).getPlayerSprite()));
+		JLabel coin = new JLabel((new PlayerPanel(MazeFrame.coinSprite,48,48).getPlayerSprite()));
+		JLabel enemy = new JLabel((new PlayerPanel(MazeFrame.enemySprite,48,48).getPlayerSprite()));
 		JLabel keyboard = new JLabel(new ImageIcon(wasd));
 		
 		sword.setText("Pick this up to kill ghosts, like in Pacman lelz");
