@@ -130,10 +130,21 @@ public class MazeFrame extends JFrame implements ActionListener {
 				updateBlock(m, curPlayerPos);
 			}
 			lastPlayerPos = curPlayerPos;
+			score.setText("Score: " + Integer.toString(g.getScore())); //update score
 			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
 				updateBlock(m,m.getDestDoor());
+			} else if (m.exitedMaze()) {
+				Object[] options = {"Next level"};
+				int dialogResult = JOptionPane.showOptionDialog (this, "The next journey awaits you...\n" +
+									"What unknown challenges lay ahead?","Room cleared!", 
+									1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,0);
+				//when user clicks the exit button
+				if (dialogResult == 0) {
+					//do nothing for now, change so that next level is reached
+				} else {
+					this.requestFocus();	//request focus again
+				}
 			}
-			score.setText("Score: " + Integer.toString(g.getScore())); //update score
 		} else {
 			Object[] options = {"End campaign"};
 			int dialogResult = JOptionPane.showOptionDialog (this, "Dead Pacman monster killed you!","OH NO!", 
