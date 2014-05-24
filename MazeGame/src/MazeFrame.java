@@ -33,7 +33,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private HashMap<String, PlayerPanel> sprites;
 	
 	private static String wallSprite = "steel_wall";
-	private static String pathSprite = "grass";
+	private static String pathSprite = "carpet";
 	private static String doorSprite = "locked_door";
 	private static String playerSprite = "link";
 	private static String keySprite = "key";
