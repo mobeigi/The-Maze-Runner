@@ -66,9 +66,6 @@ public class Maze {
 						}
 					}
 				} //else don't move enemy
-				
-			
-				
 				//showMaze();	//for debugging
 			}
 		},500,500);	//enemy moves every 0.5 seconds
@@ -143,14 +140,13 @@ public class Maze {
 		//set special tiles
 		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
 		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
+
 		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
 		grid[width-2][1].setType(Tile.SWORD);
-		keyCollected = false;
-		swordCollected = false;
 		
 		//sets three random tiles to treasure
 		int i = 0;
-		do {
+		while (i < 3) {
 			int randomX = 1 + (int)(Math.random()*((width-2)));
 			int randomY = 1 + (int)(Math.random()*((height-2)));
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
@@ -158,9 +154,7 @@ public class Maze {
 				grid[randomX][randomY].setType(Tile.TREASURE);
 				i++;
 			}
-		} while (i < 3);
-		numTreasureCollected = 0;
-		
+		}
 		playerLoc = grid[1][1];	//origin at (1,1), 
 		enemyLoc = grid[width-2][height-2];	//enemy starts at destination
 		//width and height should be big enough to allow this to be valid
@@ -356,13 +350,8 @@ public class Maze {
 	 * A player is dead if it encounters the enemy.
 	 * @return true if the player is dead.
 	 */
-	public boolean playerDied () {
-		return isPlayerDead;
-	}
-	
-	public boolean enemyDied () {
-		return isEnemyDead;
-	}
+	public boolean playerDied () { return isPlayerDead; }
+	public boolean enemyDied () { return isEnemyDead; }
 	
 	/**
 	 * Checks if a player move is valid.
@@ -433,17 +422,10 @@ public class Maze {
 		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-1));
 	}
 	
-	public int getNumTreasureCollected() {
-		return numTreasureCollected;
-	}
+	public int getNumTreasureCollected() { return numTreasureCollected; }
+	public boolean keyCollected() { return keyCollected; }
+	public boolean swordCollected() { return swordCollected; }
 	
-	public boolean keyCollected() {
-		return keyCollected;
-	}
-	
-	public boolean swordCollected() {
-		return swordCollected;
-	}
 	/**
 	 * Get the tile of a specific set of x and y coordinates.
 	 * (0,0) is the top left corner of the maze (includes border).
