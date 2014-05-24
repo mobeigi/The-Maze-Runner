@@ -153,7 +153,8 @@ public class Maze {
 		do {
 			int randomX = 1 + (int)(Math.random()*((width-2)));
 			int randomY = 1 + (int)(Math.random()*((height-2)));
-			if (grid[randomX][randomY].getType() == Tile.PATH) {	//check that the tile is walkable
+			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
+				!grid[randomX][randomY].equals(playerLoc)) {		//and not the origin
 				grid[randomX][randomY].setType(Tile.TREASURE);
 				i++;
 			}
