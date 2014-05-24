@@ -18,16 +18,16 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private Game g;
 	
 	//Frame components
-	private JPanel mazeGrid;
-	private JLayeredPane[][] mazeGridComp;
+	private JPanel mazeGrid;	//panel where maze grid is placed in
+	private JLayeredPane[][] mazeGridComp;	//allows access to each tile in the grid
 	
-	private JLabel score;
+	private JLabel score;	//the score of the player
 	private JPanel sidePanel;
 	private JButton exitButton;
 
 	private Tile lastPlayerPos;
 	private Tile lastEnemyPos;
-	private Dimension blockSize;
+	private Dimension blockSize;	//the size of each tile in the maze grid
 	
 	//Store sprites once
 	private HashMap<String, PlayerPanel> sprites;
@@ -44,8 +44,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 	public MazeFrame(Game g, int width, int height)
 	{
 		//Initialisation
-		this.height = height + 2; 	//add 2 for border around maze
-		this.width = width + 2;
+		this.height = height+2; 	//add 2 for border around maze
+		this.width = width+2;
 		this.g = g;
 		
 		this.mazeGrid = new JPanel();
@@ -63,13 +63,17 @@ public class MazeFrame extends JFrame implements ActionListener {
 		
 		//Initialise character spites
 		//block is made into a square size
-		this.blockSize = new Dimension((int)((xSize*0.6/this.width)), (int)((xSize*0.6/this.height)));
+		//width of screen is normally shorter than height
+		//so block should always fit on screen
+		this.blockSize = new Dimension((int)((xSize*0.6/this.width)), (int)((xSize*0.6/this.width)));
 		this.sprites = new HashMap<String, PlayerPanel>();
 		
 		int x = (int)blockSize.getWidth();
 		int y = (int)blockSize.getHeight();
 		
 		//Add sprites to hashmap
+		//size of each sprite is determined by x and y,
+		//which is the size of each block on the maze grid
 		sprites.put(wallSprite, new PlayerPanel(wallSprite,x,y));
 		sprites.put(pathSprite, new PlayerPanel(pathSprite,x,y));
 		sprites.put(playerSprite, new PlayerPanel(playerSprite,x,y));
@@ -249,10 +253,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Fill All blocks
 		for (int y = 0; y < height; y++)
 		{
-			gbc.gridx = -y;	//update grid y pos
+			gbc.gridy = y;	//update grid y pos
 			for (int x = 0; x < width; x++)
 			{
-				gbc.gridy = x; //update grid x pos
+				gbc.gridx = x; //update grid x pos
 				
 				//Get information about current tile
 				Tile t = m.getTile(x, y);
@@ -326,15 +330,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.add(mazeGrid, gbc);
 		
 		//Create SidePanel components using gridbag layout 
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		
 		//Add Score Panel
 		JPanel scorePanel = new JPanel(new GridLayout(2,1));
 		scorePanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		
 		//Add player image
-		PlayerPanel player = new PlayerPanel(playerSprite,(int)blockSize.getWidth(),(int)blockSize.getHeight());	
+		PlayerPanel player = new PlayerPanel(playerSprite,96,96);	
 		JLabel playerImage = new JLabel(player.getPlayerSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		scorePanel.add(playerImage);
