@@ -26,8 +26,8 @@ public class Game {
         this.inGame = false;
         
         //Hard coded for now until difficulty is set by levels etc
-        this.width = 15;
-        this.height = 15;
+        this.width = 21;
+        this.height = 21;
         
         this.gameFrame = new GameFrame(this, width, height);
         

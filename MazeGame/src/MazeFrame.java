@@ -37,13 +37,13 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private static String doorSprite = "locked_door";
 	private static String playerSprite = "link";
 	private static String keySprite = "key";
-	private static String coinSprite = "coin";
+	private static String coinSprite = "coin2";
 	private static String enemySprite = "dead_pacman_monster";
 	private static String swordSprite = "sword";
 	
 	public MazeFrame(Game g, int width, int height)
 	{
-		//Initilisation
+		//Initialisation
 		this.height = height + 2; 	//add 2 for border around maze
 		this.width = width + 2;
 		this.g = g;
@@ -54,33 +54,37 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.exitButton = new JButton("Exit");
 		this.exitButton.addActionListener(this);
 		
-		//Initilise character spites
-		this.blockSize = new Dimension(48, 48);
-		this.sprites = new HashMap<String, PlayerPanel>();
-		
-		//Add sprites to hashmap
-		sprites.put(wallSprite, new PlayerPanel(wallSprite));
-		sprites.put(pathSprite, new PlayerPanel(pathSprite));
-		sprites.put(playerSprite, new PlayerPanel(playerSprite));
-		sprites.put(doorSprite, new PlayerPanel(doorSprite));
-		sprites.put(keySprite, new PlayerPanel(keySprite));
-		sprites.put(enemySprite, new PlayerPanel(enemySprite));
-		sprites.put(coinSprite, new PlayerPanel(coinSprite));
-		sprites.put(swordSprite, new PlayerPanel(swordSprite));
-		
-		//Initilise side panel looks
-		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
-														(int) (this.height * blockSize.getHeight()))); //height is matched exactly
-		this.sidePanel.setBackground(new Color(240, 240, 240));
-		this.sidePanel.setLayout(new GridBagLayout());
-		this.sidePanel.setBorder(new LineBorder(Color.black, 2));
-		
 		//Make maze take up full screen
 		Toolkit tk = Toolkit.getDefaultToolkit();  
 		int xSize = ((int) tk.getScreenSize().getWidth());  
 		int ySize = ((int) tk.getScreenSize().getHeight()); 
 		Dimension fullscreen = new Dimension(xSize, ySize);
 		this.setPreferredSize(fullscreen);
+		
+		//Initialise character spites
+		//block is made into a square size
+		this.blockSize = new Dimension((int)((xSize*0.6/this.width)), (int)((xSize*0.6/this.height)));
+		this.sprites = new HashMap<String, PlayerPanel>();
+		
+		int x = (int)blockSize.getWidth();
+		int y = (int)blockSize.getHeight();
+		
+		//Add sprites to hashmap
+		sprites.put(wallSprite, new PlayerPanel(wallSprite,x,y));
+		sprites.put(pathSprite, new PlayerPanel(pathSprite,x,y));
+		sprites.put(playerSprite, new PlayerPanel(playerSprite,x,y));
+		sprites.put(doorSprite, new PlayerPanel(doorSprite,x,y));
+		sprites.put(keySprite, new PlayerPanel(keySprite,x,y));
+		sprites.put(enemySprite, new PlayerPanel(enemySprite,x,y));
+		sprites.put(coinSprite, new PlayerPanel(coinSprite,x,y));
+		sprites.put(swordSprite, new PlayerPanel(swordSprite,x,y));
+		
+		//Initialise side panel looks
+		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
+														(int) (this.height * blockSize.getHeight()))); //height is matched exactly
+		this.sidePanel.setBackground(new Color(240, 240, 240));
+		this.sidePanel.setLayout(new GridBagLayout());
+		this.sidePanel.setBorder(new LineBorder(Color.black, 2));
 		
 		//Update state
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);  
@@ -330,7 +334,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		scorePanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		
 		//Add player image
-		PlayerPanel player = new PlayerPanel(playerSprite);	
+		PlayerPanel player = new PlayerPanel(playerSprite,(int)blockSize.getWidth(),(int)blockSize.getHeight());	
 		JLabel playerImage = new JLabel(player.getPlayerSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		scorePanel.add(playerImage);

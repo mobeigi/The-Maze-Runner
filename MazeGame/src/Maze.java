@@ -155,6 +155,7 @@ public class Maze {
 				i++;
 			}
 		}
+
 		playerLoc = grid[1][1];	//origin at (1,1), 
 		enemyLoc = grid[width-2][height-2];	//enemy starts at destination
 		//width and height should be big enough to allow this to be valid
