@@ -134,12 +134,35 @@ public class MazeFrame extends JFrame implements ActionListener {
 				updateBlock(m,m.getDestDoor());
 			}
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
+		} else {
+			Object[] options = {"End campaign"};
+			int dialogResult = JOptionPane.showOptionDialog (this, "Dead Pacman monster killed you!","OH NO!", 
+								1,0,new ImageIcon(this.getClass().getResource("/sprites/" + enemySprite + ".gif")),options,0);
+			//when user clicks the exit button
+			if (dialogResult == 0) {
+				g.setIsGameOver(true);
+				g.setIsInGame(false);
+			} else {
+				this.requestFocus();	//request focus again
+			}
 		}
 		
 		if (!m.enemyDied()) {	//if enemy is not dead, update its position
 			updateBlock(m, lastEnemyPos);
 			updateBlock(m, curEnemyPos);
 			lastEnemyPos = curEnemyPos;
+		} else if (lastEnemyPos != null) {
+			updateBlock(m, lastEnemyPos);
+			Object[] options = {"Continue campaign"};
+			int dialogResult = JOptionPane.showOptionDialog (this, "You destroyed Dead Pacman monster!","HOORAH!", 
+								1,0,new ImageIcon(this.getClass().getResource("/sprites/" + playerSprite + ".gif")),options,0);
+			//when user clicks the exit button
+			if (dialogResult == 0) {
+				//do nothing
+			} else {
+				this.requestFocus();	//request focus again
+			}
+			lastEnemyPos = null;
 		}
 	}
 	
