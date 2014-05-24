@@ -144,8 +144,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 		if (!m.playerDied()) {
 			updateBlock(m, lastPlayerPos);
 			updateBlock(m, curPlayerPos);
-			
 			lastPlayerPos = curPlayerPos;
+			if (m.checkReachedEnd()) {
+				updateBlock(m,m.getDestDoor());
+			}
 		}
 		
 		

@@ -33,9 +33,11 @@ public class Maze {
 	private Tile enemyLoc;	//location of the enemy, null if dead
 	private boolean isEnemyDead;
 	private boolean isPlayerDead;
+	
 	private boolean keyCollected;
 	private boolean swordCollected;
 	private int numTreasureCollected;
+	
 	private HashMap<Tile,Tile> mazeSolution;
 			
 	public Maze (int width, int height) {
@@ -313,6 +315,10 @@ public class Maze {
 		return enemyLoc;
 	}
 	
+	public Tile getDestDoor() {
+		return grid[width-2][height-1];
+	}
+	
 	/**
 	 * Updates the player location if a valid move is taken.
 	 * See isValid() for conditions.
@@ -464,11 +470,6 @@ public class Maze {
 	 * @return the length of the maze, as per the number of tiles.
 	 */
 	public int getHeight() { return this.height; }
-	/**
-	 * Get the current player location in the maze.
-	 * @return the tile where the player is situated, or null if player is dead
-	 */
-	public Tile getPlayerLoc() { return this.playerLoc; }
 	/**
 	 * Gets the grid of tiles of the maze.
 	 * @return the grid of tiles of the maze.
