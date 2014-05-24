@@ -59,23 +59,14 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.sprites = new HashMap<String, PlayerPanel>();
 		
 		//Add sprites to hashmap
-		PlayerPanel sprite = new PlayerPanel(wallSprite);	
-		sprites.put(wallSprite, sprite);
-		
-		sprite = new PlayerPanel(pathSprite);	
-		sprites.put(pathSprite, sprite);
-		sprite = new PlayerPanel(playerSprite);	
-		sprites.put(playerSprite, sprite);
-		sprite = new PlayerPanel(doorSprite);	
-		sprites.put(doorSprite, sprite);
-		sprite = new PlayerPanel(keySprite);	
-		sprites.put(keySprite, sprite);
-		sprite = new PlayerPanel(enemySprite);	
-		sprites.put(enemySprite, sprite);
-		sprite = new PlayerPanel(coinSprite);	
-		sprites.put(coinSprite, sprite);
-		sprite = new PlayerPanel(swordSprite);
-		sprites.put(swordSprite, sprite);
+		sprites.put(wallSprite, new PlayerPanel(wallSprite));
+		sprites.put(pathSprite, new PlayerPanel(pathSprite));
+		sprites.put(playerSprite, new PlayerPanel(playerSprite));
+		sprites.put(doorSprite, new PlayerPanel(doorSprite));
+		sprites.put(keySprite, new PlayerPanel(keySprite));
+		sprites.put(enemySprite, new PlayerPanel(enemySprite));
+		sprites.put(coinSprite, new PlayerPanel(coinSprite));
+		sprites.put(swordSprite, new PlayerPanel(swordSprite));
 		
 		//Initilise side panel looks
 		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -114,7 +105,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	{
 		//Detect object who performed action
 		if (e.getSource() == this.exitButton) {
-			int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure you want to exit to the main menu?\n\nAll game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
+			int dialogResult = JOptionPane.showConfirmDialog (this, "Are you sure you want to exit to the main menu?\n\nAll game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
 			
 			//If user wishes to quit
 			if (dialogResult == JOptionPane.YES_OPTION) {
@@ -126,23 +117,23 @@ public class MazeFrame extends JFrame implements ActionListener {
 		}
 	}
 
-	//Update only the player position in maze
+	//updates all changed blocks including player, enemy and unlocked door
 	public void update(Maze m) 
 	{
 		Tile curPlayerPos = m.getPlayerTile();
 		Tile curEnemyPos = m.getEnemyTile();
 		
-		if (!m.playerDied()) {
+		if (!m.playerDied()) {	//if player is not dead, update its position
 			updateBlock(m, lastPlayerPos);
 			updateBlock(m, curPlayerPos);
 			lastPlayerPos = curPlayerPos;
-			if (m.checkReachedEnd()) {
+			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
 				updateBlock(m,m.getDestDoor());
 			}
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
 		}
 			
-		if (!m.enemyDied()) {
+		if (!m.enemyDied()) {	//if enemy is not dead, update its position
 			updateBlock(m, lastEnemyPos);
 			updateBlock(m, curEnemyPos);
 			lastEnemyPos = curEnemyPos;
