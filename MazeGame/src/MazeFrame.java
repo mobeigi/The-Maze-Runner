@@ -123,23 +123,24 @@ public class MazeFrame extends JFrame implements ActionListener {
 		Tile curPlayerPos = m.getPlayerTile();
 		Tile curEnemyPos = m.getEnemyTile();
 		
-		if (!m.playerDied()) {	//if player is not dead, update its position
+		//if player is not dead or if he just died, update its position
+		if (!m.playerDied() || lastPlayerPos != null) {
 			updateBlock(m, lastPlayerPos);
-			updateBlock(m, curPlayerPos);
+			if (!m.playerDied()) {
+				updateBlock(m, curPlayerPos);
+			}
 			lastPlayerPos = curPlayerPos;
 			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
 				updateBlock(m,m.getDestDoor());
 			}
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
 		}
-			
+		
 		if (!m.enemyDied()) {	//if enemy is not dead, update its position
 			updateBlock(m, lastEnemyPos);
 			updateBlock(m, curEnemyPos);
 			lastEnemyPos = curEnemyPos;
 		}
-		
-		this.pack();
 	}
 	
 	private void updateBlock(Maze m, Tile old)
@@ -189,6 +190,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 			JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
 			this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, 0);
 		}
+		
+		this.pack();
 	}
 	
 	//Initilise maze GUI and pack it
@@ -236,6 +239,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 				//Check if enemy unit
 				else if (m.getEnemyTile().equals(t)) {
 					overLaySprite = enemySprite;
+					this.lastEnemyPos = t;
 				}
 				//Check if this is a door
 				else if (t.getType() == Tile.DOOR) {
