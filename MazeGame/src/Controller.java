@@ -15,22 +15,22 @@ public class Controller implements KeyListener {
 		
 	@Override
 	public void keyPressed(KeyEvent e) {
-		 double dx = 0;
-		 double dy = 0;
+		 int dx = 0;
+		 int dy = 0;
 		 
-		 if (e.getKeyCode() == KeyEvent.VK_D){
+		 if (e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT){
 			 //System.out.println("right");
 			 dx = 1;
 			 dy = 0;
-		 } else if (e.getKeyCode() == KeyEvent.VK_A){
+		 } else if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT){
 			 //System.out.println("left");
 			 dx = -1;
 			 dy = 0;
-		 } else if (e.getKeyCode() == KeyEvent.VK_W) {
+		 } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP) {
 			 //System.out.println("up");
 			 dx = 0;
 			 dy = -1;
-		 } else if (e.getKeyCode() == KeyEvent.VK_S){
+		 } else if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN){
 			 //System.out.println("down");
 			 dx = 0;
 			 dy = +1;
@@ -39,8 +39,8 @@ public class Controller implements KeyListener {
 		 }
 		 
 		 //Update the player location
-		 if (game.getMaze().isValid((int)dx, (int)dy)) {
-			 game.getMaze().updatePlayerLoc((int)dx, (int)dy);
+		 if (game.getMaze().isValid(dx, dy)) {
+			 game.getMaze().updatePlayerLoc(dx, dy);
 		 }
 	}
 
