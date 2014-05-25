@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -20,21 +17,12 @@ public class Game {
     private volatile boolean inGame;
     private volatile boolean isGameOver;
     
-    private int width;
-    private int height;
-    
-    /**
-     * 
-     */
     public Game() {
         this.isGameOver = false;
         this.inGame = false;
         
-        //Level 1 is 11 x 11
-        this.width = 11;
-        this.height = 11;
-        
-        this.gameFrame = new GameFrame(this, width, height);
+        //Level 1 is 11 x 11       
+        this.gameFrame = new GameFrame(this,11,11);
         
         this.score = 0;
     }
