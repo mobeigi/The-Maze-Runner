@@ -290,12 +290,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 				
 				//Determine block graphics based on type of tile
 				//If player is at this tile
-				if (m.getPlayerTile().equals(t)) {
+				if (m.getPlayerTile() != null && m.getPlayerTile().equals(t)) {
 					overLaySprite = playerSprite;
 					this.lastPlayerPos = t; //update last position
 				}
 				//Check if enemy unit
-				else if (m.getEnemyTile().equals(t)) {
+				else if (m.getEnemyTile() != null && m.getEnemyTile().equals(t)) {
 					overLaySprite = enemySprite;
 					this.lastEnemyPos = t;
 				}
