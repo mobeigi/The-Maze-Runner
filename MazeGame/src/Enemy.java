@@ -11,9 +11,8 @@ public class Enemy {
 		//nothing, used by maze with no location is decided yet
 	}
 	
-	public void setDead () {
-		isDead = true;
-		location = null;
+	public void setDead (boolean dead) {
+		isDead = dead;
 	}
 
 	public boolean isDead() {
