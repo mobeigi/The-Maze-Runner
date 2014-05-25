@@ -43,6 +43,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	public static String keySprite = "key";
 	public static String coinSprite = "coin";
 	public static String enemySprite = "dead_pacman_monster";
+	public static String killableEnemySprite = "cyan_pacman_monster";
 	public static String swordSprite = "sword";
 	public static String snowflakeSprite = "snowflake";
 	
@@ -88,6 +89,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sprites.put(coinSprite, new PlayerPanel(coinSprite,x,y));
 		sprites.put(swordSprite, new PlayerPanel(swordSprite,x,y));
 		sprites.put(snowflakeSprite, new PlayerPanel(snowflakeSprite,x,y));
+		sprites.put(killableEnemySprite, new PlayerPanel(killableEnemySprite,x,y));
 		
 		//Initialise side panel looks
 		//this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -222,7 +224,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 		}
 		//Check if enemy unit
 		else if (m.getEnemyTile() != null && m.getEnemyTile().equals(old)) {
-			overLaySprite = enemySprite;
+			if (m.icePowerCollected()) {
+				overLaySprite = killableEnemySprite;
+			} else {
+				overLaySprite = enemySprite;
+			}
 		}
 		//Check if this is a door
 		else if (old.getType() == Tile.DOOR) {

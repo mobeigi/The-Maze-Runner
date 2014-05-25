@@ -150,6 +150,10 @@ public class Maze {
 			curr.getTile1().setWalkable();
 			curr.getTile2().setWalkable();
 		}
+		//set player and enemy locations
+		player.setLocation(grid[1][1]);	//origin at (1,1), 
+		enemy.setLocation(grid[width-2][height-2]);	//enemy starts at destination
+		
 		//set special tiles
 		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
 		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
@@ -177,9 +181,6 @@ public class Maze {
 				i++;
 			}
 		}
-
-		player.setLocation(grid[1][1]);	//origin at (1,1), 
-		enemy.setLocation(grid[width-2][height-2]);	//enemy starts at destination
 		//width and height should be big enough to allow this to be valid
 		mazeSolution = new HashMap<Tile,Tile>();
 		mazeSolution.put(grid[1][1], null);
@@ -384,7 +385,7 @@ public class Maze {
 			Tile playerLoc = player.getLocation();	//get updated player location
 			Tile enemyLoc = enemy.getLocation();	//get enemy location
 			if (playerLoc.equals(enemyLoc)) {
-				if (!swordCollected()) {
+				if (!swordCollected() && !icePowerCollected() && !enemy.isDead()) {
 					player.setDead(true);	//player dies and enemy stops moving
 				} else {
 					enemy.setDead(true);
