@@ -2,12 +2,16 @@
 public class Player {
 	private String name;
 	private String character;
-	private int x;
-	private int y;
+	private Tile location;
+	private boolean isDead;
 
 	public Player(String name, String character){
 		this.name = name;
 		this.character = character;
+	}
+	
+	public Player() {
+		//nothing, used by maze when character and name is not important
 	}
 	
 	//Return the name of the player
@@ -25,11 +29,19 @@ public class Player {
 		this.character = character;
 	}
 	
-	public int getX(){
-		return this.x;
+	public Tile getLocation () {
+		return location;
 	}
 	
-	public int getY(){
-		return this.y;
+	public void setLocation (Tile t) {
+		location = t;
+	}
+	
+	public void setDead () {
+		isDead = true;
+	}
+
+	public boolean isDead() {
+		return isDead;
 	}
 }

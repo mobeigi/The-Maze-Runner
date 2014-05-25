@@ -29,10 +29,8 @@ public class Maze {
 	private Tile[][] grid;
 	private int width;
 	private int height;
-	private Tile playerLoc;	//location of the current player, null if dead
-	private Tile enemyLoc;	//location of the enemy, null if dead
-	private boolean isEnemyDead;
-	private boolean isPlayerDead;
+	private Player player;	//location of the current player, null if dead
+	private Enemy enemy;	//location of the enemy, null if dead
 	
 	private boolean keyCollected;
 	private boolean swordCollected;
@@ -46,23 +44,26 @@ public class Maze {
 		grid = new Tile[width+2][height+2];
 		this.width = width+2;
 		this.height = height+2;
+		player = new Player();	//make new player
+		enemy = new Enemy();	//make new enemy
 		createMaze();	//initialise all tiles
 		
 		final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
-				if (isEnemyDead) {
+				if (enemy.isDead()) {
 					timer.cancel();
-				} else if (!enemyLoc.equals(grid[1][1])) {
+				} else if (!enemy.getLocation().equals(grid[1][1])) {
 					//dumb logic for now
 					//enemy moves from destination to origin
-					enemyLoc = mazeSolution.get(enemyLoc);
+					Tile enemyLoc = enemy.getLocation();
+					enemy.setLocation(mazeSolution.get(enemyLoc));
 					
-					if (enemyLoc.equals(playerLoc)) {
+					if (enemyLoc.equals(player.getLocation())) {
 						if (!swordCollected) {
-							isPlayerDead = true;	//player dies and enemy stops moving
+							player.setDead();	//player dies and enemy stops moving
 						} else {
-							isEnemyDead = true;
+							enemy.setDead();
 						}
 					}
 				} //else don't move enemy
@@ -150,14 +151,14 @@ public class Maze {
 			int randomX = 1 + (int)(Math.random()*((width-2)));
 			int randomY = 1 + (int)(Math.random()*((height-2)));
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
-				!grid[randomX][randomY].equals(playerLoc)) {		//and not the origin
+				!grid[randomX][randomY].equals(player.getLocation())) {		//and not the origin
 				grid[randomX][randomY].setType(Tile.TREASURE);
 				i++;
 			}
 		}
 
-		playerLoc = grid[1][1];	//origin at (1,1), 
-		enemyLoc = grid[width-2][height-2];	//enemy starts at destination
+		player.setLocation(grid[1][1]);	//origin at (1,1), 
+		enemy.setLocation(grid[width-2][height-2]);	//enemy starts at destination
 		//width and height should be big enough to allow this to be valid
 		mazeSolution = new HashMap<Tile,Tile>();
 		mazeSolution.put(grid[1][1], null);
@@ -169,6 +170,8 @@ public class Maze {
 	}
 	
 	public void showMaze () {
+		Tile playerLoc = player.getLocation();
+		Tile enemyLoc = enemy.getLocation();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
@@ -294,10 +297,10 @@ public class Maze {
 	 * @return the tile in which the player is on.
 	 */
 	public Tile getPlayerTile() {
-		if (isPlayerDead) {
+		if (player.isDead()) {
 			return null;
 		}
-		return playerLoc;
+		return player.getLocation();
 	}
 	
 	/**
@@ -305,10 +308,10 @@ public class Maze {
 	 * @return the tile in which the enemy is on.
 	 */
 	public Tile getEnemyTile() {
-		if (isEnemyDead) {
+		if (enemy.isDead()) {
 			return null;
 		}
-		return enemyLoc;
+		return enemy.getLocation();
 	}
 	
 	public Tile getDestDoor() {
@@ -324,13 +327,15 @@ public class Maze {
 	 * The number is negative if the movement is to the up direction.
 	 */
 	public void updatePlayerLoc (int x, int y) {
-		if (isValid(x,y) && !isPlayerDead) {
-			playerLoc = grid[playerLoc.getX()+x][playerLoc.getY()+y];
+		Tile playerLoc = player.getLocation();
+		Tile enemyLoc = enemy.getLocation();
+		if (isValid(x,y) && !player.isDead()) {
+			player.setLocation(grid[playerLoc.getX()+x][playerLoc.getY()+y]);
 			if (playerLoc.equals(enemyLoc)) {
 				if (!swordCollected) {
-					isPlayerDead = true;	//player dies and enemy stops moving
+					player.setDead();	//player dies and enemy stops moving
 				} else {
-					isEnemyDead = true;
+					enemy.setDead();
 				}
 			} else if (playerLoc.getType() == Tile.KEY) {
 				keyCollected = true;
@@ -351,8 +356,8 @@ public class Maze {
 	 * A player is dead if it encounters the enemy.
 	 * @return true if the player is dead.
 	 */
-	public boolean playerDied () { return isPlayerDead; }
-	public boolean enemyDied () { return isEnemyDead; }
+	public boolean playerDied () { return player.isDead(); }
+	public boolean enemyDied () { return enemy.isDead(); }
 	
 	/**
 	 * Checks if a player move is valid.
@@ -367,6 +372,7 @@ public class Maze {
 	 * @return true if the player move is valid.
 	 */
 	public boolean isValid (int x, int y) {
+		Tile playerLoc = player.getLocation();
 		if (x > 1 || x < -1 || y > 1 || y < -1) {	//can only move at most one tile per turn
 			return false;
 		} else if (x != 0 && y != 0) {	//can only move in one direction
@@ -389,6 +395,7 @@ public class Maze {
 	 * @return true if the player has reached the destination.
 	 */
 	public boolean checkReachedEnd() {
+		Tile playerLoc = player.getLocation();
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
@@ -408,7 +415,7 @@ public class Maze {
 	 * @return true if the player is at the origin.
 	 */
 	public boolean atStart() {
-		return (playerLoc.getX() == 1 && playerLoc.getY() == 1);
+		return (player.getLocation().getX() == 1 && player.getLocation().getY() == 1);
 	}
 	
 	/**
@@ -420,7 +427,7 @@ public class Maze {
 	 */
 	//see if player unlocked door and took the exit
 	public boolean exitedMaze() {
-		return (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-1));
+		return (player.getLocation().getX() == (width-2) && player.getLocation().getY() == (height-1));
 	}
 	
 	public int getNumTreasureCollected() { return numTreasureCollected; }

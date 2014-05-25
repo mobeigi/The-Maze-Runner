@@ -350,7 +350,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		JPanel scorePanel = new JPanel(new GridLayout(2,1));
 		scorePanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		
-		//Add player image
+		//Add player image (set size 96 x 96)
 		PlayerPanel player = new PlayerPanel(playerSprite,96,96);	
 		JLabel playerImage = new JLabel(player.getPlayerSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
@@ -387,9 +387,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 		exitButton.setToolTipText("Click here to exit to main menu.");
 		sidePanel.add(exitButton, gbc);
 		
-		//Add key and sword
-		inventorySword = new JLabel(sprites.get(swordSprite).getPlayerSprite());
-		inventoryKey = new JLabel(sprites.get(keySprite).getPlayerSprite());
+		//Add key and sword (set size 48 x 48)
+		PlayerPanel sword = new PlayerPanel(swordSprite,48,48);
+		inventorySword = new JLabel(sword.getPlayerSprite());
+		PlayerPanel key = new PlayerPanel(keySprite,48,48);
+		inventoryKey = new JLabel(key.getPlayerSprite());
 		
 		gbc.gridwidth = 1;
 		gbc.gridy = 3;

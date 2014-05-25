@@ -66,6 +66,7 @@ public class Game {
 						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,0);
     	} //otherwise no special dialog is displayed
     	level = 0;	//restart game
+    	score = 0;	//restart score
     	this.mazeFrame.dispose(); //remove maze
     	this.gameFrame.setVisible(true);
     }
