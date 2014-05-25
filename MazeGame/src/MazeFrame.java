@@ -198,7 +198,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		} else if (lastEnemyPos != null) {
 			updateBlock(m, lastEnemyPos);
 			Object[] options = {"Continue campaign"};
-			int dialogResult = JOptionPane.showOptionDialog (this, "You destroyed Dead Pacman monster!","HOORAH!", 
+			int dialogResult = JOptionPane.showOptionDialog (this, "You destroyed the Pacman monster!","HOORAH!", 
 								1,0,new ImageIcon(this.getClass().getResource("/sprites/" + playerSprite + ".gif")),options,0);
 			//when user clicks the exit button
 			if (dialogResult == 0) {
