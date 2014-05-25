@@ -24,6 +24,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JLabel score;	//the score of the player
 	private JPanel sidePanel;
 	private JButton exitButton;
+	private JLabel inventorySword;
+	private JLabel inventoryKey;
+	
+	private boolean keyAdded;
+	private boolean swordAdded;
 
 	private Tile lastPlayerPos;
 	private Tile lastEnemyPos;
@@ -86,11 +91,17 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sprites.put(swordSprite, new PlayerPanel(swordSprite,x,y));
 		
 		//Initialise side panel looks
-		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
-														(int) (this.height * blockSize.getHeight()))); //height is matched exactly
+		//this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
+		//												(int) (this.height * blockSize.getHeight()))); //height is matched exactly
 		this.sidePanel.setBackground(new Color(240, 240, 240));
 		this.sidePanel.setLayout(new GridBagLayout());
-		this.sidePanel.setBorder(new LineBorder(Color.black, 2));
+		this.sidePanel.setBorder(new LineBorder(Color.WHITE, 2));
+		
+		//initialise inventoryPanel
+		//this.inventoryPanel = new JPanel(new GridLayout(2,1));
+		//inventoryPanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+		this.keyAdded = false;
+		this.swordAdded = false;
 		
 		//Update state
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);  
@@ -119,6 +130,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 			
 			//If user wishes to quit
 			if (dialogResult == JOptionPane.YES_OPTION) {
+				g.setKeyCollected(false);
+				g.setSwordCollected(false);
 				g.setIsGameOver(true);
 				g.setIsInGame(false);
 			} else {
@@ -141,6 +154,17 @@ public class MazeFrame extends JFrame implements ActionListener {
 			}
 			lastPlayerPos = curPlayerPos;
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
+			// Add things to inventory
+			if (this.swordAdded==false && g.swordCollected()){
+				inventorySword.setVisible(true);
+				this.swordAdded = true;
+			}
+			
+			if (this.keyAdded==false && g.keyCollected()){
+				inventoryKey.setVisible(true);
+				this.keyAdded = true;
+			}
+			
 			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
 				updateBlock(m,m.getDestDoor());
 			} else if (m.exitedMaze()) {
@@ -152,6 +176,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 				if (dialogResult == 0) {
 					//do nothing for now, change so that next level is reached
 				} else {
+
 					this.requestFocus();	//request focus again
 				}
 			}
@@ -163,6 +188,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 			if (dialogResult == 0) {
 				g.setIsGameOver(true);
 				g.setIsInGame(false);
+				g.setKeyCollected(false);
+				g.setSwordCollected(false);
 			} else {
 				this.requestFocus();	//request focus again
 			}
@@ -348,6 +375,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 		JLabel character = new JLabel("Character: " + g.getPlayer().getCharacter().substring(0, 1).toUpperCase() + g.getPlayer().getCharacter().substring(1));
 		score = new JLabel("Score: " + Integer.toString(g.getScore()));
 		
+		
+		
 		Font font = new Font("Arial", Font.PLAIN, 16);
 		name.setFont(font);
 		character.setFont(font);
@@ -359,8 +388,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 		
 		scorePanel.add(playerScore);
 		
+		gbc.gridwidth = 4;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
 		sidePanel.add(scorePanel);
-		
 		gbc.gridx = 0;
 		gbc.gridy = -2;
 		
@@ -368,7 +399,25 @@ public class MazeFrame extends JFrame implements ActionListener {
 		exitButton.setMargin(new Insets(5, 10, 5, 10));
 		exitButton.setToolTipText("Click here to exit to main menu.");
 		sidePanel.add(exitButton, gbc);
-	
+		
+		//Add key and sword
+		inventorySword = new JLabel(sprites.get(swordSprite).getPlayerSprite());
+		inventoryKey = new JLabel(sprites.get(keySprite).getPlayerSprite());
+		
+		gbc.gridwidth = 1;
+		gbc.gridy = 3;
+		gbc.gridx = 0;
+		//gbc.insets = new Insets(0,10,0,0);
+		sidePanel.add(inventorySword,gbc);
+		
+		//gbc.insets = new Insets(0,0,0,10);
+		gbc.gridy = 4;
+		gbc.gridx = 0;
+		sidePanel.add(inventoryKey,gbc);
+		
+		inventorySword.setVisible(false);
+		inventoryKey.setVisible(false);
+		
 		//Add sidePanel to this frame
 		gbc.gridx = 1;
 		gbc.gridy = 0;

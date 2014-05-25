@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class Game {
@@ -8,7 +9,8 @@ public class Game {
     private MazeFrame mazeFrame;
     private Player player;
     private Controller c;
-    private ArrayList<Tile> inventory;
+    private boolean keyCollected;
+    private boolean swordCollected;
     private int score;
     
     //Flow control
@@ -113,6 +115,24 @@ public class Game {
     public void updateScore(){
     	//score just determined by treasure
     	score = maze.getNumTreasureCollected();
+    	keyCollected = maze.keyCollected();
+    	swordCollected = maze.swordCollected();
+    }
+    
+    public void setKeyCollected(boolean collected){
+    	this.keyCollected = collected;
+    }
+    
+    public void setSwordCollected(boolean collected){
+    	this.swordCollected = collected;
+    }
+    
+    public boolean keyCollected(){
+    	return keyCollected;
+    }
+    
+    public boolean swordCollected(){
+    	return swordCollected;
     }
     
 	public int getScore() {

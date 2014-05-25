@@ -66,11 +66,11 @@ public class InstructionFrame extends JFrame implements ActionListener{
 		JLabel enemy = new JLabel((new PlayerPanel(MazeFrame.enemySprite,48,48).getPlayerSprite()));
 		JLabel keyboard = new JLabel(new ImageIcon(wasd));
 		
-		sword.setText("Pick this up to kill ghosts, like in Pacman lelz");
-		player.setText("This is you, nice hat nurd");
+		sword.setText("Pick this up to kill the ghosts!");
+		player.setText("This is you, nice hat");
 		key.setText("Pick this up to open the door at the end of the maze");
 		coin.setText("Cash money, Cash money");
-		enemy.setText("Oh dis muthafcka gon fck u uuuppppp");
+		enemy.setText("Game over if you get too close");
 		keyboard.setText("(Use the WASD keys to move around)");
 		keyboard.setVerticalTextPosition(JLabel.BOTTOM);
 		keyboard.setHorizontalTextPosition(JLabel.CENTER);
