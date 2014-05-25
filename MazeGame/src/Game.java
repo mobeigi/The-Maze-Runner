@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 
 public class Game {
 	//Private fields
@@ -9,9 +12,9 @@ public class Game {
     private MazeFrame mazeFrame;
     private Player player;
     private Controller c;
-    private boolean keyCollected;
-    private boolean swordCollected;
+   
     private int score;
+    private int level;
     
     //Flow control
     private volatile boolean inGame;
@@ -27,18 +30,21 @@ public class Game {
         this.isGameOver = false;
         this.inGame = false;
         
-        //Hard coded for now until difficulty is set by levels etc
-        this.width = 21;
-        this.height = 21;
+        //Level 1 is 11 x 11
+        this.width = 11;
+        this.height = 11;
         
         this.gameFrame = new GameFrame(this, width, height);
         
         this.score = 0;
     }
     
-    public void createMaze(int width, int height) {
-    	this.maze =  new Maze(width, height);
-    	this.mazeFrame = new MazeFrame(this, width, height); //make new maze frame
+    public void createMaze(int level) {
+    	if (mazeFrame != null) {
+    		this.mazeFrame.dispose();
+    	}
+    	this.maze =  new Maze(11+2*level, 11+2*level);
+    	this.mazeFrame = new MazeFrame(this, 11+2*level, 11+2*level); //make new maze frame
     	
     	//Init maze that was created
     	initMazeFrame();
@@ -63,6 +69,15 @@ public class Game {
     }
     
     public void showUI() {
+    	//end game dialog if user finishes all levels
+    	if (level == 10) {
+    		Object[] options = {"Exit"};
+			JOptionPane.showOptionDialog (this.mazeFrame, "Congratulations, warrior!\n" +
+						"Your skill is worthy of mention but who knows\n" + "what challenges we may see ahead?\n"
+						+ "We will require your assistance when the time comes...",
+						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,0);
+    	} //otherwise no special dialog is displayed
+    	level = 0;	//restart game
     	this.mazeFrame.dispose(); //remove maze
     	this.gameFrame.setVisible(true);
     }
@@ -115,27 +130,17 @@ public class Game {
     public void updateScore(){
     	//score just determined by treasure
     	score = maze.getNumTreasureCollected();
-    	keyCollected = maze.keyCollected();
-    	swordCollected = maze.swordCollected();
-    }
-    
-    public void setKeyCollected(boolean collected){
-    	this.keyCollected = collected;
-    }
-    
-    public void setSwordCollected(boolean collected){
-    	this.swordCollected = collected;
-    }
-    
-    public boolean keyCollected(){
-    	return keyCollected;
-    }
-    
-    public boolean swordCollected(){
-    	return swordCollected;
     }
     
 	public int getScore() {
 		return score;
+	}
+	
+	public void setLevel (int level) {
+		this.level = level;
+	}
+	
+	public int getLevel () {
+		return level;
 	}
 }

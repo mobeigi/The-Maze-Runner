@@ -115,7 +115,7 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
 			//Make maze and mazeframe
-			g.createMaze(width, height); //based on user options
+			g.createMaze(g.getLevel()); //based on user options
 			g.setIsInGame(true);
 			g.setIsGameOver(false);
 			g.setGameFrameVisible(false);

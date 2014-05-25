@@ -31,10 +31,16 @@ public class Run
 					 g.getMazeFrame().repaint(); //paint
 					 g.updateScore();
 					 
-					 //If game is over
+					 //If level is complete
 					 if (g.getMaze().exitedMaze()) {
-						 g.setIsGameOver(true);
-						 g.setIsInGame(false);
+						 g.setLevel(g.getLevel()+1);
+						 if (g.getLevel() == 10) {		//maximum of 10 levels
+							 g.setIsGameOver(true);	//end game if passed all 10 levels
+							 g.setIsInGame(false);
+						 } else {
+							 g.createMaze(g.getLevel());
+							 g.setMazeKeyListener();
+						 }
 					 }
 				
 					 lastUpdateTime = System.currentTimeMillis(); //update time
@@ -43,12 +49,7 @@ public class Run
 			}
 			
 			//We have finished game, show game UI and repeat
-			g.showUI();
-			
+			g.showUI();	
 		}
-		
-		
-		
 	}
-
 }

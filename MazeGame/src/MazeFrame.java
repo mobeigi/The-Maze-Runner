@@ -27,9 +27,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JLabel inventorySword;
 	private JLabel inventoryKey;
 	
-	private boolean keyAdded;
-	private boolean swordAdded;
-
 	private Tile lastPlayerPos;
 	private Tile lastEnemyPos;
 	private Dimension blockSize;	//the size of each tile in the maze grid
@@ -100,8 +97,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//initialise inventoryPanel
 		//this.inventoryPanel = new JPanel(new GridLayout(2,1));
 		//inventoryPanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
-		this.keyAdded = false;
-		this.swordAdded = false;
 		
 		//Update state
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);  
@@ -130,8 +125,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 			
 			//If user wishes to quit
 			if (dialogResult == JOptionPane.YES_OPTION) {
-				g.setKeyCollected(false);
-				g.setSwordCollected(false);
 				g.setIsGameOver(true);
 				g.setIsInGame(false);
 			} else {
@@ -155,14 +148,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 			lastPlayerPos = curPlayerPos;
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
 			// Add things to inventory
-			if (this.swordAdded==false && g.swordCollected()){
+			if (m.swordCollected()){
 				inventorySword.setVisible(true);
-				this.swordAdded = true;
 			}
-			
-			if (this.keyAdded==false && g.keyCollected()){
+			if (m.keyCollected()){
 				inventoryKey.setVisible(true);
-				this.keyAdded = true;
 			}
 			
 			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
@@ -176,7 +166,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 				if (dialogResult == 0) {
 					//do nothing for now, change so that next level is reached
 				} else {
-
 					this.requestFocus();	//request focus again
 				}
 			}
@@ -188,8 +177,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 			if (dialogResult == 0) {
 				g.setIsGameOver(true);
 				g.setIsInGame(false);
-				g.setKeyCollected(false);
-				g.setSwordCollected(false);
 			} else {
 				this.requestFocus();	//request focus again
 			}
