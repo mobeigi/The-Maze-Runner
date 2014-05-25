@@ -34,12 +34,12 @@ public class Maze {
 	
 	private HashMap<Tile,Tile> mazeSolution;
 			
-	public Maze (int width, int height, Player p) {
+	public Maze (int w, int h, Player p) {
 		//width and height should be an odd number
 		//width and height is assumed to be greater than 1
-		grid = new Tile[width+2][height+2];
-		this.width = width+2;
-		this.height = height+2;
+		grid = new Tile[w+2][h+2];
+		this.width = w+2;
+		this.height = h+2;
 		player = p;	//use input player
 		enemy = new Enemy();	//make new enemy
 		createMaze();	//initialise all tiles
@@ -47,13 +47,21 @@ public class Maze {
 		final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
-				if (enemy.isDead()) {
+				if (enemy.isDead() || player.isDead()) {
 					timer.cancel();
-				} else if (!enemy.getLocation().equals(grid[1][1])) {
-					//dumb logic for now
-					//enemy moves from destination to origin
-					enemy.setLocation(mazeSolution.get(enemy.getLocation()));
-					
+				} else if (player.getLocation() != null && !player.isDead()) {
+					//enemy follows player
+					HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
+					path.put(grid[enemy.getLocation().getX()][enemy.getLocation().getY()], null);
+					boolean[][] visitedTile = new boolean[width][height];
+					findPath(enemy.getLocation().getX(), enemy.getLocation().getY(),
+							player.getLocation().getX(), player.getLocation().getY(),
+							visitedTile,path);
+					Tile curr = player.getLocation();
+					while (!path.get(curr).equals(enemy.getLocation())) {	//if we haven't reached the starting state yet
+						curr = path.get(curr);
+					}
+					enemy.setLocation(curr);
 					if (enemy.getLocation().equals(player.getLocation())) {
 						if (!swordCollected()) {
 							player.setDead(true);	//player dies and enemy stops moving
@@ -65,7 +73,8 @@ public class Maze {
 				} //else don't move enemy
 				//showMaze();	//for debugging
 			}
-		},500,500);	//enemy moves every 0.5 seconds
+		},1000,1000);	//enemy moves every 1 second 
+						//if too fast, player cannot reach sword and will eventually die
 	}
 	
 	/**
@@ -257,6 +266,37 @@ public class Maze {
 		}
 		if (y != height-1) {
 			if (findPath(x,y+1,visited,parent)) {
+				parent.put(grid[x][y+1], grid[x][y]);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean findPath (int x, int y, int x1, int y1, boolean[][] visited, HashMap<Tile,Tile> parent) {
+		if (x == x1 && y == y1) return true;
+		if (!grid[x][y].isWalkable() || visited[x][y]) return false;
+		visited[x][y] = true;
+		if (x != 0) {
+			if (findPath(x-1,y,x1,y1,visited,parent)) {
+				parent.put(grid[x-1][y], grid[x][y]);
+				return true;
+			}
+		}
+		if (x != width-1) {
+			if (findPath(x+1,y,x1,y1,visited,parent)) {
+				parent.put(grid[x+1][y], grid[x][y]);
+				return true;
+			}
+		}
+		if (y != 0) {
+			if (findPath(x,y-1,x1,y1,visited,parent)) {
+				parent.put(grid[x][y-1], grid[x][y]);
+				return true;
+			}
+		}
+		if (y != height-1) {
+			if (findPath(x,y+1,x1,y1,visited,parent)) {
 				parent.put(grid[x][y+1], grid[x][y]);
 				return true;
 			}
