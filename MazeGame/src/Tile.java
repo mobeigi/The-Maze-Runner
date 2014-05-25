@@ -7,6 +7,7 @@ public class Tile {
 	public static final int TREASURE = 3;
 	public static final int DOOR = 4;
 	public static final int SWORD = 5;
+	public static final int ICE_POWER = 6;
 	
 	private int x;
 	private int y;
@@ -26,7 +27,7 @@ public class Tile {
 	
 	//returns boolean if setting type was successful
 	public boolean setType (int newType) {
-		if (newType >= 0 && newType <= 5) {
+		if (newType >= 0 && newType <= 6) {
 			this.type = newType;
 			return true;
 		}

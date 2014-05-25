@@ -49,6 +49,13 @@ public class Maze {
 			public void run() {
 				if (enemy.isDead() || player.isDead()) {
 					timer.cancel();
+				} else if (player.isIcePowerCollected()) {
+					try {
+						Thread.sleep(5000);	//enemy freezes for 5 seconds
+						player.setIcePowerCollected(false);
+					} catch (InterruptedException e) {
+						//do nothing
+					}
 				} else if (player.getLocation() != null && !player.isDead()) {
 					//enemy follows player
 					HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
@@ -149,6 +156,15 @@ public class Maze {
 
 		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
 		grid[width-2][1].setType(Tile.SWORD);
+		while (true) {
+			int randomX = 1 + (int)(Math.random()*((width-2)/2));
+			int randomY = 1 + (int)(Math.random()*((height-2)/2));
+			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
+				!grid[randomX][randomY].equals(player.getLocation())) {
+				grid[randomX][randomY].setType(Tile.ICE_POWER);
+				break;
+			}
+		}
 		
 		//sets three random tiles to treasure
 		int i = 0;
@@ -383,6 +399,9 @@ public class Maze {
 			} else if (playerLoc.getType() == Tile.SWORD) {
 				player.setSwordCollected(true);
 				playerLoc.setType(Tile.PATH);
+			} else if (playerLoc.getType() == Tile.ICE_POWER) {
+				player.setIcePowerCollected(true);
+				playerLoc.setType(Tile.PATH);
 			}
 			checkReachedEnd();	//unlock door if player has reached end tile
 		}
@@ -473,6 +492,7 @@ public class Maze {
 	public int getNumTreasureCollected() { return player.getNumTreasureCollected(); }
 	public boolean keyCollected() { return player.isKeyCollected(); }
 	public boolean swordCollected() { return player.isSwordCollected(); }
+	public boolean icePowerCollected() { return player.isIcePowerCollected(); }
 	
 	/**
 	 * Get the tile of a specific set of x and y coordinates.

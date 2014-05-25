@@ -9,6 +9,7 @@ public class Player {
 	private boolean swordCollected;
 	private int numTreasureCollected;
 	private int enemyKilled;
+	private boolean icePowerCollected;
 
 	public Player(String name, String character){
 		this.name = name;
@@ -80,6 +81,14 @@ public class Player {
 
 	public void addEnemyKilled() {
 		this.enemyKilled++;
+	}
+	
+	public boolean isIcePowerCollected() {
+		return icePowerCollected;
+	}
+
+	public void setIcePowerCollected(boolean icePowerCollected) {
+		this.icePowerCollected = icePowerCollected;
 	}
 	
 	public void clearStats() {

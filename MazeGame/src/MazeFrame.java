@@ -26,6 +26,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JButton exitButton;
 	private JLabel inventorySword;
 	private JLabel inventoryKey;
+	private JLabel inventoryIcePower;
 	
 	private Tile lastPlayerPos;
 	private Tile lastEnemyPos;
@@ -43,7 +44,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	public static String coinSprite = "coin";
 	public static String enemySprite = "dead_pacman_monster";
 	public static String swordSprite = "sword";
-
+	public static String snowflakeSprite = "snowflake";
 	
 	public MazeFrame(Game g, int width, int height)
 	{
@@ -86,6 +87,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sprites.put(enemySprite, new PlayerPanel(enemySprite,x,y));
 		sprites.put(coinSprite, new PlayerPanel(coinSprite,x,y));
 		sprites.put(swordSprite, new PlayerPanel(swordSprite,x,y));
+		sprites.put(snowflakeSprite, new PlayerPanel(snowflakeSprite,x,y));
 		
 		//Initialise side panel looks
 		//this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -153,6 +155,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 			}
 			if (m.keyCollected()){
 				inventoryKey.setVisible(true);
+			}
+			if (m.icePowerCollected()){
+				inventoryIcePower.setVisible(true);
+			} else {
+				inventoryIcePower.setVisible(false);	//disappears according to maze settings (after 5 seconds)
 			}
 			
 			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
@@ -231,6 +238,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 		}
 		else if (old.getType() == Tile.SWORD){
 			overLaySprite = swordSprite;
+		}
+		else if (old.getType() == Tile.ICE_POWER) {
+			overLaySprite = snowflakeSprite;
 		}
 		//Else must be wall
 		else if (old.getType() == Tile.WALL){
@@ -314,6 +324,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 				else if (t.getType() == Tile.SWORD){
 					overLaySprite = swordSprite;
 				}
+				else if (t.getType() == Tile.ICE_POWER) {
+					overLaySprite = snowflakeSprite;
+				}
 				//Else if wall
 				else if (t.getType() == Tile.WALL){
 					blockSprite = wallSprite;
@@ -392,6 +405,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 		inventorySword = new JLabel(sword.getPlayerSprite());
 		PlayerPanel key = new PlayerPanel(keySprite,48,48);
 		inventoryKey = new JLabel(key.getPlayerSprite());
+		PlayerPanel snowflake = new PlayerPanel(snowflakeSprite,48,48);
+		inventoryIcePower = new JLabel(snowflake.getPlayerSprite());
 		
 		gbc.gridwidth = 1;
 		gbc.gridy = 3;
@@ -404,8 +419,13 @@ public class MazeFrame extends JFrame implements ActionListener {
 		gbc.gridx = 0;
 		sidePanel.add(inventoryKey,gbc);
 		
+		gbc.gridy = 5;
+		gbc.gridx = 0;
+		sidePanel.add(inventoryIcePower,gbc);
+		
 		inventorySword.setVisible(false);
 		inventoryKey.setVisible(false);
+		inventoryIcePower.setVisible(false);
 		
 		//Add sidePanel to this frame
 		gbc.gridx = 1;
