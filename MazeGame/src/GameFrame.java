@@ -12,8 +12,6 @@ import javax.swing.*;
 public class GameFrame extends JFrame implements ActionListener {
 	//Private Fields
 	private static final long serialVersionUID = 1L;
-	private int width;
-	private int height;
 	private Game g;
 	private InstructionFrame instructions;
 	
@@ -29,8 +27,6 @@ public class GameFrame extends JFrame implements ActionListener {
 		this.setMinimumSize(minSize);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		this.width = width;
-		this.height = height;
 		this.g = g;
 		
 		//make instruction frame
