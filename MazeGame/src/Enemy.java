@@ -13,6 +13,7 @@ public class Enemy {
 	
 	public void setDead () {
 		isDead = true;
+		location = null;
 	}
 
 	public boolean isDead() {

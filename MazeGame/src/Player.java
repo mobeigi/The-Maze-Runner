@@ -4,6 +4,11 @@ public class Player {
 	private String character;
 	private Tile location;
 	private boolean isDead;
+	
+	private boolean keyCollected;
+	private boolean swordCollected;
+	private int numTreasureCollected;
+	private int enemyKilled;
 
 	public Player(String name, String character){
 		this.name = name;
@@ -39,9 +44,42 @@ public class Player {
 	
 	public void setDead () {
 		isDead = true;
+		location = null;
 	}
 
 	public boolean isDead() {
 		return isDead;
+	}
+
+	public boolean isKeyCollected() {
+		return keyCollected;
+	}
+
+	public void setKeyCollected(boolean keyCollected) {
+		this.keyCollected = keyCollected;
+	}
+
+	public boolean isSwordCollected() {
+		return swordCollected;
+	}
+
+	public void setSwordCollected(boolean swordCollected) {
+		this.swordCollected = swordCollected;
+	}
+
+	public int getNumTreasureCollected() {
+		return numTreasureCollected;
+	}
+
+	public void addNumTreasureCollected() {
+		this.numTreasureCollected++;
+	}
+	
+	public int getEnemyKilled() {
+		return enemyKilled;
+	}
+
+	public void addEnemyKilled() {
+		this.enemyKilled++;
 	}
 }
