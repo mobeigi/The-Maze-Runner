@@ -67,6 +67,8 @@ public class Game {
     	} //otherwise no special dialog is displayed
     	level = 0;	//restart game
     	score = 0;	//restart score
+    	this.maze = new Maze(11,11,player);	//level 1 maze
+    	player.clearStats();
     	this.mazeFrame.dispose(); //remove maze
     	this.gameFrame.setVisible(true);
     }
