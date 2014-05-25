@@ -42,9 +42,8 @@ public class Player {
 		location = t;
 	}
 	
-	public void setDead () {
-		isDead = true;
-		location = null;
+	public void setDead (boolean dead) {
+		isDead = dead;
 	}
 
 	public boolean isDead() {
@@ -81,5 +80,14 @@ public class Player {
 
 	public void addEnemyKilled() {
 		this.enemyKilled++;
+	}
+	
+	public void clearStats() {
+		location = null;
+		isDead = false;	
+		keyCollected = false;
+		swordCollected = false;
+		numTreasureCollected = 0;
+		enemyKilled = 0;
 	}
 }
