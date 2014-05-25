@@ -33,7 +33,7 @@ public class Run
 					 
 					 //If level is complete
 					 if (g.getMaze().exitedMaze()) {
-						 g.setLevel(g.getLevel()+1);
+						 g.nextLevel();
 						 if (g.getLevel() == 10) {		//maximum of 10 levels
 							 g.setIsGameOver(true);	//end game if passed all 10 levels
 							 g.setIsInGame(false);

@@ -32,19 +32,15 @@ public class Maze {
 	private Player player;	//location of the current player, null if dead
 	private Enemy enemy;	//location of the enemy, null if dead
 	
-	private boolean keyCollected;
-	private boolean swordCollected;
-	private int numTreasureCollected;
-	
 	private HashMap<Tile,Tile> mazeSolution;
 			
-	public Maze (int width, int height) {
+	public Maze (int width, int height, Player p) {
 		//width and height should be an odd number
 		//width and height is assumed to be greater than 1
 		grid = new Tile[width+2][height+2];
 		this.width = width+2;
 		this.height = height+2;
-		player = new Player();	//make new player
+		player = p;	//use input player
 		enemy = new Enemy();	//make new enemy
 		createMaze();	//initialise all tiles
 		
@@ -60,10 +56,11 @@ public class Maze {
 					enemy.setLocation(mazeSolution.get(enemyLoc));
 					
 					if (enemyLoc.equals(player.getLocation())) {
-						if (!swordCollected) {
+						if (!swordCollected()) {
 							player.setDead();	//player dies and enemy stops moving
 						} else {
 							enemy.setDead();
+							player.addEnemyKilled();
 						}
 					}
 				} //else don't move enemy
@@ -332,19 +329,20 @@ public class Maze {
 		if (isValid(x,y) && !player.isDead()) {
 			player.setLocation(grid[playerLoc.getX()+x][playerLoc.getY()+y]);
 			if (playerLoc.equals(enemyLoc)) {
-				if (!swordCollected) {
+				if (!swordCollected()) {
 					player.setDead();	//player dies and enemy stops moving
 				} else {
 					enemy.setDead();
+					player.addEnemyKilled();
 				}
 			} else if (playerLoc.getType() == Tile.KEY) {
-				keyCollected = true;
+				player.setKeyCollected(true);
 				playerLoc.setType(Tile.PATH);	//set key tile to normal path
 			} else if (playerLoc.getType() == Tile.TREASURE) {
-				numTreasureCollected++;
+				player.addNumTreasureCollected();
 				playerLoc.setType(Tile.PATH);	//if we collected the treasure
 			} else if (playerLoc.getType() == Tile.SWORD) {
-				swordCollected = true;
+				player.setSwordCollected(true);
 				playerLoc.setType(Tile.PATH);
 			}
 			checkReachedEnd();	//unlock door if player has reached end tile
@@ -400,7 +398,7 @@ public class Maze {
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
 			atEnd = true;
-			if (keyCollected) {	//if key is collected, unlock door
+			if (keyCollected()) {	//if key is collected, unlock door
 				grid[width-2][height-1].setType(Tile.PATH);	//set door to walkable path
 				grid[width-2][height-1].setWalkable();
 			}
@@ -430,9 +428,9 @@ public class Maze {
 		return (player.getLocation().getX() == (width-2) && player.getLocation().getY() == (height-1));
 	}
 	
-	public int getNumTreasureCollected() { return numTreasureCollected; }
-	public boolean keyCollected() { return keyCollected; }
-	public boolean swordCollected() { return swordCollected; }
+	public int getNumTreasureCollected() { return player.getNumTreasureCollected(); }
+	public boolean keyCollected() { return player.isKeyCollected(); }
+	public boolean swordCollected() { return player.isSwordCollected(); }
 	
 	/**
 	 * Get the tile of a specific set of x and y coordinates.

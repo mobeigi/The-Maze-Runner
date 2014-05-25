@@ -31,7 +31,7 @@ public class Game {
     	if (mazeFrame != null) {
     		this.mazeFrame.dispose();
     	}
-    	this.maze =  new Maze(11+2*level, 11+2*level);
+    	this.maze =  new Maze(11+2*level, 11+2*level,player);
     	this.mazeFrame = new MazeFrame(this, 11+2*level, 11+2*level); //make new maze frame
     	
     	//Init maze that was created
@@ -117,16 +117,19 @@ public class Game {
     }
     
     public void updateScore(){
-    	//score just determined by treasure
-    	score = maze.getNumTreasureCollected();
+    	//1 point for each treasure collected
+    	//10 points for each enemy killed
+    	score = player.getNumTreasureCollected() + 10*player.getEnemyKilled();
     }
     
 	public int getScore() {
 		return score;
 	}
 	
-	public void setLevel (int level) {
-		this.level = level;
+	public void nextLevel () {
+		level++;
+		player.setSwordCollected(false);	//clear inventory once next level
+		player.setKeyCollected(false);
 	}
 	
 	public int getLevel () {
