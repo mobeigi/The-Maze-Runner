@@ -52,14 +52,13 @@ public class Maze {
 				} else if (!enemy.getLocation().equals(grid[1][1])) {
 					//dumb logic for now
 					//enemy moves from destination to origin
-					Tile enemyLoc = enemy.getLocation();
-					enemy.setLocation(mazeSolution.get(enemyLoc));
+					enemy.setLocation(mazeSolution.get(enemy.getLocation()));
 					
-					if (enemyLoc.equals(player.getLocation())) {
+					if (enemy.getLocation().equals(player.getLocation())) {
 						if (!swordCollected()) {
-							player.setDead();	//player dies and enemy stops moving
+							player.setDead(true);	//player dies and enemy stops moving
 						} else {
-							enemy.setDead();
+							enemy.setDead(true);
 							player.addEnemyKilled();
 						}
 					}
@@ -324,15 +323,15 @@ public class Maze {
 	 * The number is negative if the movement is to the up direction.
 	 */
 	public void updatePlayerLoc (int x, int y) {
-		Tile playerLoc = player.getLocation();
-		Tile enemyLoc = enemy.getLocation();
 		if (isValid(x,y) && !player.isDead()) {
-			player.setLocation(grid[playerLoc.getX()+x][playerLoc.getY()+y]);
+			player.setLocation(grid[player.getLocation().getX()+x][player.getLocation().getY()+y]);
+			Tile playerLoc = player.getLocation();	//get updated player location
+			Tile enemyLoc = enemy.getLocation();	//get enemy location
 			if (playerLoc.equals(enemyLoc)) {
 				if (!swordCollected()) {
-					player.setDead();	//player dies and enemy stops moving
+					player.setDead(true);	//player dies and enemy stops moving
 				} else {
-					enemy.setDead();
+					enemy.setDead(true);
 					player.addEnemyKilled();
 				}
 			} else if (playerLoc.getType() == Tile.KEY) {
@@ -394,6 +393,9 @@ public class Maze {
 	 */
 	public boolean checkReachedEnd() {
 		Tile playerLoc = player.getLocation();
+		if (player.isDead()) {
+			return false;
+		}
 		//destination is at (width-2, height-2)
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
@@ -413,7 +415,7 @@ public class Maze {
 	 * @return true if the player is at the origin.
 	 */
 	public boolean atStart() {
-		return (player.getLocation().getX() == 1 && player.getLocation().getY() == 1);
+		return (!player.isDead() && player.getLocation().getX() == 1 && player.getLocation().getY() == 1);
 	}
 	
 	/**
@@ -425,7 +427,7 @@ public class Maze {
 	 */
 	//see if player unlocked door and took the exit
 	public boolean exitedMaze() {
-		return (player.getLocation().getX() == (width-2) && player.getLocation().getY() == (height-1));
+		return (!player.isDead() && player.getLocation().getX() == (width-2) && player.getLocation().getY() == (height-1));
 	}
 	
 	public int getNumTreasureCollected() { return player.getNumTreasureCollected(); }
