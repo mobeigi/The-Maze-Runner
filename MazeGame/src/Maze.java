@@ -30,7 +30,7 @@ public class Maze {
 	private int width;
 	private int height;
 	private Player player;	//location of the current player, null if dead
-	private Enemy enemy;	//location of the enemy, null if dead
+	private Enemy[] enemy;	//location of the enemy, null if dead
 	
 	private HashMap<Tile,Tile> mazeSolution;
 			
@@ -41,46 +41,53 @@ public class Maze {
 		this.width = w+2;
 		this.height = h+2;
 		player = p;	//use input player
-		enemy = new Enemy();	//make new enemy
+		enemy = new Enemy[(int)(((width-13)/3)+1)];	//make new enemy
+		for (int i = 0; i < enemy.length; i++) {
+			enemy[i] = new Enemy();
+		}
 		createMaze();	//initialise all tiles
 		
 		final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
-				if (enemy.isDead() || player.isDead()) {
-					timer.cancel();
-				} else if (player.isIcePowerCollected()) {
-					try {
-						Thread.sleep(5000);	//enemy freezes for 5 seconds
-						player.setIcePowerCollected(false);
-					} catch (InterruptedException e) {
-						//do nothing
-					}
-				} else if (player.getLocation() != null && !player.isDead()) {
-					//enemy follows player
-					HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
-					path.put(grid[enemy.getLocation().getX()][enemy.getLocation().getY()], null);
-					boolean[][] visitedTile = new boolean[width][height];
-					findPath(enemy.getLocation().getX(), enemy.getLocation().getY(),
-							player.getLocation().getX(), player.getLocation().getY(),
-							visitedTile,path);
-					Tile curr = player.getLocation();
-					while (!path.get(curr).equals(enemy.getLocation())) {	//if we haven't reached the starting state yet
-						curr = path.get(curr);
-					}
-					enemy.setLocation(curr);
-					if (enemy.getLocation().equals(player.getLocation())) {
-						if (!swordCollected()) {
-							player.setDead(true);	//player dies and enemy stops moving
-						} else {
-							enemy.setDead(true);
-							player.addEnemyKilled();
+				for (int i = 0; i < enemy.length; i++) {
+					if (player.isDead()) {
+						timer.cancel();
+					} else if (enemy[i].isDead()) {
+						continue;
+					} else if (player.isIcePowerCollected()) {
+						try {
+							Thread.sleep(5000);	//enemy freezes for 5 seconds
+							player.setIcePowerCollected(false);
+						} catch (InterruptedException e) {
+							//do nothing
 						}
-					}
-				} //else don't move enemy
-				//showMaze();	//for debugging
+					} else if (player.getLocation() != null && !player.isDead()) {
+						//enemy follows player
+						HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
+						path.put(grid[enemy[i].getLocation().getX()][enemy[i].getLocation().getY()], null);
+						boolean[][] visitedTile = new boolean[width][height];
+						findPath(enemy[i].getLocation().getX(), enemy[i].getLocation().getY(),
+								player.getLocation().getX(), player.getLocation().getY(),
+								visitedTile,path);
+						Tile curr = player.getLocation();
+						while (!path.get(curr).equals(enemy[i].getLocation())) {	//if we haven't reached the starting state yet
+							curr = path.get(curr);
+						}
+						enemy[i].setLocation(curr);
+						if (enemy[i].getLocation().equals(player.getLocation())) {
+							if (!swordCollected()) {
+								player.setDead(true);	//player dies and enemy stops moving
+							} else {
+								enemy[i].setDead(true);
+								player.addEnemyKilled();
+							}
+						}
+					} //else don't move enemy
+					//showMaze();	//for debugging
+				}
 			}
-		},1000,1000);	//enemy moves every 1 second 
+		},1500,1500);	//enemy moves every 1 second 
 						//if too fast, player cannot reach sword and will eventually die
 	}
 	
@@ -152,7 +159,16 @@ public class Maze {
 		}
 		//set player and enemy locations
 		player.setLocation(grid[1][1]);	//origin at (1,1), 
-		enemy.setLocation(grid[width-2][height-2]);	//enemy starts at destination
+		int numEnemy = 0;
+		while (numEnemy < enemy.length) {	//enemy spawns on bottom half of the screen
+			int randomX = 1 + (int)(Math.random()*(width-2));
+			int randomY = (height-2)/2 + (int)(Math.random()*((height-2)/2));
+			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
+				!grid[randomX][randomY].equals(player.getLocation())) {
+				enemy[numEnemy].setLocation(grid[randomX][randomY]);	//enemy starts randomly
+				numEnemy++;
+			}
+		}
 		
 		//set special tiles
 		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
@@ -160,13 +176,15 @@ public class Maze {
 
 		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
 		grid[width-2][1].setType(Tile.SWORD);
-		while (true) {
+		int numIcePower = 0;
+		//ice power spawns on top left quadrant of screen
+		while (numIcePower < enemy.length-1) {	//one ice power for each enemy, minus one (harder)
 			int randomX = 1 + (int)(Math.random()*((width-2)/2));
 			int randomY = 1 + (int)(Math.random()*((height-2)/2));
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
 				!grid[randomX][randomY].equals(player.getLocation())) {
 				grid[randomX][randomY].setType(Tile.ICE_POWER);
-				break;
+				numIcePower++;
 			}
 		}
 		
@@ -193,7 +211,7 @@ public class Maze {
 	
 	public void showMaze () {
 		Tile playerLoc = player.getLocation();
-		Tile enemyLoc = enemy.getLocation();
+		//Tile enemyLoc = enemy.getLocation();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
@@ -202,9 +220,9 @@ public class Maze {
 						System.out.print("P");
 					} else if (i == (width-1)-1 && j == (height-1)-1) {
 						System.out.print("D");
-					} else if (enemyLoc.equals(grid[i][j])) {
+					} /*else if (enemyLoc.equals(grid[i][j])) {
 						System.out.print("E");
-					} else {
+					}*/ else {
 						List<Tile> path = giveHint(grid[1][height-2]);
 						if (path.contains(grid[i][j])) {
 							System.out.print("X");
@@ -360,11 +378,11 @@ public class Maze {
 	 * Finds the tile on the maze that the enemy is situated in.
 	 * @return the tile in which the enemy is on.
 	 */
-	public Tile getEnemyTile() {
-		if (enemy.isDead()) {
+	public Tile getEnemyTile(int i) {
+		if (i >= enemy.length || enemy[i].isDead()) {
 			return null;
 		}
-		return enemy.getLocation();
+		return enemy[i].getLocation();
 	}
 	
 	public Tile getDestDoor() {
@@ -383,15 +401,18 @@ public class Maze {
 		if (isValid(x,y) && !player.isDead()) {
 			player.setLocation(grid[player.getLocation().getX()+x][player.getLocation().getY()+y]);
 			Tile playerLoc = player.getLocation();	//get updated player location
-			Tile enemyLoc = enemy.getLocation();	//get enemy location
-			if (playerLoc.equals(enemyLoc)) {
-				if (!swordCollected() && !icePowerCollected() && !enemy.isDead()) {
-					player.setDead(true);	//player dies and enemy stops moving
-				} else {
-					enemy.setDead(true);
-					player.addEnemyKilled();
+			for (int i = 0; i < enemy.length; i++) {
+				Tile enemyLoc = enemy[i].getLocation();	//get enemy location
+				if (playerLoc.equals(enemyLoc) && !enemy[i].isDead()) {
+					if (!swordCollected() && !icePowerCollected()) {
+						player.setDead(true);	//player dies and enemy stops moving
+					} else {
+						enemy[i].setDead(true);
+						player.addEnemyKilled();
+					}
 				}
-			} else if (playerLoc.getType() == Tile.KEY) {
+			}
+			if (playerLoc.getType() == Tile.KEY) {
 				player.setKeyCollected(true);
 				playerLoc.setType(Tile.PATH);	//set key tile to normal path
 			} else if (playerLoc.getType() == Tile.TREASURE) {
@@ -414,7 +435,18 @@ public class Maze {
 	 * @return true if the player is dead.
 	 */
 	public boolean playerDied () { return player.isDead(); }
-	public boolean enemyDied () { return enemy.isDead(); }
+	public boolean enemyDied (int i) { return enemy[i].isDead(); }
+	public boolean allEnemyDied () { 
+		for (int i = 0; i < enemy.length; i++) {
+			if (!enemy[i].isDead()) {
+				return false;
+			}
+		}
+		return true; 
+	}
+	public int getNumEnemies () {
+		return enemy.length;
+	}
 	
 	/**
 	 * Checks if a player move is valid.

@@ -21,6 +21,10 @@ public class Tile {
 		this.type = WALL; 	//default type is WALL
 	}
 	
+	public Tile() {
+		//do nothing
+	}
+	
 	public int getType () {
 		return type;
 	}
