@@ -19,25 +19,23 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 
-public class InstructionFrame extends JFrame implements ActionListener{
+public class InstructionFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
-	private int width;
-	private int height;
-	
 	private JButton backButton;
 	private JPanel instructions;
 	private JPanel controls;
-	private GameFrame mainMenu;
+	private JFrame frame;
+
 	
-	public InstructionFrame (GameFrame mainMenu){
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public InstructionFrame (){
+		frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		backButton = new JButton("Close");
 		instructions = new JPanel(new GridBagLayout());
 		controls = new JPanel(new GridBagLayout());
-		this.mainMenu =mainMenu;
+
 		backButton.addActionListener(this);
-		//backButton.setPreferredSize(new Dimension(100,100));
-		this.getContentPane().setBackground(Color.WHITE);
+		frame.getContentPane().setBackground(Color.WHITE);
 		instructions.setBackground(Color.WHITE);
 		controls.setBackground(Color.WHITE);
 		
@@ -47,10 +45,10 @@ public class InstructionFrame extends JFrame implements ActionListener{
 		//Set user size
 		//this.setSize(width, height);
 		//Make size fixed
-		this.setResizable(true);
+		frame.setResizable(true);
 		
 		
-		this.setLayout(new GridBagLayout());
+		frame.setLayout(new GridBagLayout());
 		
 		BufferedImage wasd = null;
 	    try {
@@ -101,20 +99,30 @@ public class InstructionFrame extends JFrame implements ActionListener{
 		controls.add(keyboard);
 		
 		c.gridx=0;
-		this.add(instructions);
+		frame.add(instructions);
 		
 		c.gridx = 1;
-		this.add(controls);
-		this.pack();
-		this.setVisible(false);
+		frame.add(controls);
+		frame.pack();
+		frame.setVisible(false);
 	}
+	
+	
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==this.backButton){
-			this.setVisible(false);
+			frame.setVisible(false);
 			//mainMenu.setVisible(true);
 		}
 		
+	}
+
+
+
+
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
 	}
 }

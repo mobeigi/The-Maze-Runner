@@ -14,13 +14,15 @@ public class GameFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private Game g;
 	private InstructionFrame instructions;
+	private OptionFrame optionFrame;
 	
 	//Frame components
 	JButton playButton = new JButton("Play Game!");
 	JButton howButton = new JButton("How to Play");
 	JButton exitButton = new JButton("EXIT");
+	JButton optionButton = new JButton("options");
 	
-	public GameFrame(Game g, int width, int height)
+	public GameFrame(Game g, int width, int height, InstructionFrame instructions, OptionFrame optionFrame)
 	{
 		//Set Minimum size
 		Dimension minSize = new Dimension(600, 600);
@@ -29,8 +31,8 @@ public class GameFrame extends JFrame implements ActionListener {
 		
 		this.g = g;
 		
-		//make instruction frame
-		instructions = new InstructionFrame(this);
+		this.instructions = instructions;
+		this.optionFrame = optionFrame;
 		
 		//Set user size
 		this.setSize(width, height);
@@ -95,7 +97,12 @@ public class GameFrame extends JFrame implements ActionListener {
 		this.add(exitButton,c);		
 		this.exitButton.addActionListener(this);
 		
-
+		//Add option button
+		c.gridy =26;
+		c.gridx = 6;
+		this.optionButton.setBackground(Color.WHITE);
+		this.add(optionButton,c);		
+		this.optionButton.addActionListener(this);
 		
 		//Remove border
 		//this.setUndecorated(true);
@@ -121,6 +128,9 @@ public class GameFrame extends JFrame implements ActionListener {
 			instructions.setVisible(true);
 			//g.setGameFrameVisible(false);
 			
+		}
+		else if (e.getSource() == this.optionButton){
+			optionFrame.setVisible(true);
 		}
 		else if (e.getSource() == this.exitButton) {
 			System.exit(0);

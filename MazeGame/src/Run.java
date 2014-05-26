@@ -7,7 +7,7 @@ public class Run
 		Game g = new Game();
 		
 		//Make 1 player
-		Player player = new Player("Test User #17", "link");
+		Player player = new Player("Default", "link");
 		g.setPlayer(player);		//set player
 		
 		while (true)

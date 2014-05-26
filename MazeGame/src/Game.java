@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -7,6 +9,8 @@ public class Game {
     private Maze maze;
     private GameFrame gameFrame;
     private MazeFrame mazeFrame;
+    private InstructionFrame instrFrame;
+    private OptionFrame optionFrame;
     private Player player;
     private Controller c;
    
@@ -20,9 +24,11 @@ public class Game {
     public Game() {
         this.isGameOver = false;
         this.inGame = false;
-        
+        this.instrFrame = new InstructionFrame();
+        this.optionFrame = new OptionFrame(this);
         //Level 1 is 11 x 11       
-        this.gameFrame = new GameFrame(this,11,11);
+        this.gameFrame = new GameFrame(this,11,11,instrFrame,optionFrame);
+        
         
         this.score = 0;
     }

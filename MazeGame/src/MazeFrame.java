@@ -223,7 +223,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Determine block graphics based on type of tile
 		//If player is at this tile
 		if (m.getPlayerTile() != null && m.getPlayerTile().equals(old)) {
-			overLaySprite = playerSprite;
+			overLaySprite = g.getPlayer().getCharacter();
 		}
 		//Check if enemy unit
 		else if (!m.allEnemyDied()) {
@@ -394,7 +394,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		scorePanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		
 		//Add player image (set size 96 x 96)
-		PlayerPanel player = new PlayerPanel(playerSprite,96,96);	
+		PlayerPanel player = new PlayerPanel(g.getPlayer().getCharacter(),96,96);	
 		JLabel playerImage = new JLabel(player.getPlayerSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		scorePanel.add(playerImage);
