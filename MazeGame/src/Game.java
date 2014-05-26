@@ -132,6 +132,7 @@ public class Game {
 		level++;
 		player.setSwordCollected(false);	//clear inventory once next level
 		player.setKeyCollected(false);
+		player.setIcePowerCollected(false);
 	}
 	
 	public int getLevel () {

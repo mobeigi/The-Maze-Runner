@@ -172,7 +172,7 @@ public class Maze {
 		
 		//sets three random tiles to treasure
 		int i = 0;
-		while (i < 3) {
+		while (i < (int)(width-13)/3 + 3) {
 			int randomX = 1 + (int)(Math.random()*((width-2)));
 			int randomY = 1 + (int)(Math.random()*((height-2)));
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable

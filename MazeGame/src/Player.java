@@ -96,6 +96,7 @@ public class Player {
 		isDead = false;	
 		keyCollected = false;
 		swordCollected = false;
+		icePowerCollected = false;
 		numTreasureCollected = 0;
 		enemyKilled = 0;
 	}
