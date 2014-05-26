@@ -176,11 +176,23 @@ public class Maze {
 
 		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
 		grid[width-2][1].setType(Tile.SWORD);
+		
 		int numIcePower = 0;
-		//ice power spawns on top left quadrant of screen
-		while (numIcePower < enemy.length-1) {	//one ice power for each enemy, minus one (harder)
+		//first ice power is always in the top left quadrant
+		while (true) {
 			int randomX = 1 + (int)(Math.random()*((width-2)/2));
 			int randomY = 1 + (int)(Math.random()*((height-2)/2));
+			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
+				!grid[randomX][randomY].equals(player.getLocation())) {
+				grid[randomX][randomY].setType(Tile.ICE_POWER);
+				numIcePower++;
+				break;
+			}
+		}
+		//other ice powers can spawn elsewhere
+		while (numIcePower < enemy.length-1) {	//one ice power for each enemy, minus one (harder)
+			int randomX = 1 + (int)(Math.random()*(width-2));
+			int randomY = 1 + (int)(Math.random()*(height-2));
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
 				!grid[randomX][randomY].equals(player.getLocation())) {
 				grid[randomX][randomY].setType(Tile.ICE_POWER);
