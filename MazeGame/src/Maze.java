@@ -160,9 +160,9 @@ public class Maze {
 		//set player and enemy locations
 		player.setLocation(grid[1][1]);	//origin at (1,1), 
 		int numEnemy = 0;
-		while (numEnemy < enemy.length) {	//enemy spawns on bottom half of the screen
+		while (numEnemy < enemy.length) {	//enemy spawns on bottom third of the screen
 			int randomX = 1 + (int)(Math.random()*(width-2));
-			int randomY = (height-2)/2 + (int)(Math.random()*((height-2)/2));
+			int randomY = ((height-2)/3)*2 + (int)(Math.random()*((height-2)/3)+1);
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
 				!grid[randomX][randomY].equals(player.getLocation())) {
 				enemy[numEnemy].setLocation(grid[randomX][randomY]);	//enemy starts randomly
