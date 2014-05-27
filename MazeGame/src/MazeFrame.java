@@ -94,8 +94,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sprites.put(killableEnemySprite, new PlayerPanel(killableEnemySprite,x,y));
 		
 		//Initialise side panel looks
-		//this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
-		//												(int) (this.height * blockSize.getHeight()))); //height is matched exactly
+		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
+														(int) (this.height * blockSize.getHeight()))); //height is matched exactly
 		this.sidePanel.setBackground(new Color(240, 240, 240));
 		this.sidePanel.setLayout(new GridBagLayout());
 		this.sidePanel.setBorder(new LineBorder(Color.WHITE, 2));
@@ -171,9 +171,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 			} else if (m.exitedMaze()) {
 				Object[] options = {"Next level"};
 				int dialogResult = JOptionPane.showOptionDialog (this, "The next journey awaits you...\n" +
-									"What unknown challenges lay ahead?","Room " + g.getLevel() + " cleared!", 
+									"What unknown challenges lay ahead?","Room " + (g.getLevel()+1) + " cleared!", 	//levels count from 0, so +1 offset to count from 1
 									JOptionPane.OK_OPTION,JOptionPane.PLAIN_MESSAGE,
-									new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,"Next level");
+									new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,options[0]);
 				//when user clicks the exit button
 				if (dialogResult == 0) {
 					//do nothing for now, change so that next level is reached
@@ -185,7 +185,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 			Object[] options = {"End campaign"};
 			int dialogResult = JOptionPane.showOptionDialog (this, "Pacman monster killed you!","OH NO!", 
 								JOptionPane.CLOSED_OPTION,JOptionPane.PLAIN_MESSAGE,
-								new ImageIcon(this.getClass().getResource("/sprites/" + enemySprite + ".gif")),options,"End campaign");
+								new ImageIcon(this.getClass().getResource("/sprites/" + enemySprite + ".gif")),options,options[0]);
 			//when user clicks the exit button
 			if (dialogResult == 0) {
 				g.setIsGameOver(true);
@@ -210,10 +210,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 	
 	private void updateBlock(Maze m, Tile old)
 	{	
-		//update top layer when updating block
-		//if exited maze, the path layer will be on top so do not remove then
-		if (this.mazeGridComp[old.getX()][old.getY()].getComponentCountInLayer(0) > 1 && !m.exitedMaze()) {
-			this.mazeGridComp[old.getX()][old.getY()].remove(0);
+		//update top layers when updating block
+		//leave bottom background layer
+		for (int i = 0; i < this.mazeGridComp[old.getX()][old.getY()].getComponentCountInLayer(0)-1; i++) {
+			this.mazeGridComp[old.getX()][old.getY()].remove(i);
 		}
 		
 		String overLaySprite = pathSprite;	//Overlay sprite that goes on top of block sprite
@@ -222,7 +222,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//If player is at this tile
 		if (m.getPlayerTile() != null && m.getPlayerTile().equals(old)) {
 			overLaySprite = g.getPlayer().getCharacter();
-		}
+		} 
 		//Check if enemy unit
 		else if (m.isEnemyTile(old)) {
 			if (m.icePowerCollected()) {
@@ -230,6 +230,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 			} else {
 				overLaySprite = enemySprite;
 			}
+		}
+		//if the tile is door and is a path now (key collected)
+		else if (m.getDestDoor().equals(old) && m.getDestDoor().getType() == Tile.PATH) {
+			this.mazeGridComp[old.getX()][old.getY()].remove(0);
 		}
 		//Check if this is a door
 		else if (old.getType() == Tile.DOOR) {
@@ -247,9 +251,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 		}
 		else if (old.getType() == Tile.ICE_POWER) {
 			overLaySprite = snowflakeSprite;
-		}
-		else if (old.getType() == Tile.WALL){ 		//Else must be wall
-			//do nothing
 		}
 		JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
 		this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, 0);
@@ -334,9 +335,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 				//Else if wall
 				else if (t.getType() == Tile.WALL){
 					blockSprite = wallSprite;
-				} else {	//else it is a path
-					//do nothing
 				}
+				//else, path so default block sprite is used
 			
 				//Always add block sprite
 				JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
