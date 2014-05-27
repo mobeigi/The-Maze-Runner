@@ -1,19 +1,31 @@
+import java.util.ArrayList;
 
+/**
+ * Player of the maze game.
+ * @author Gavin Tam
+ */
 public class Player {
 	private String name;
 	private String character;
 	private Tile location;
 	private boolean isDead;
 	
-	private boolean keyCollected;
-	private boolean swordCollected;
+	private ArrayList<Boolean> inventory;
 	private int numTreasureCollected;
 	private int enemyKilled;
-	private boolean icePowerCollected;
+	
+	private static final int KEY = 0;
+	private static final int SWORD = 1;
+	private static final int ICE_POWER = 2;
+	private static final int NUM_INVENTORY_ITEMS = 3;
 
 	public Player(String name, String character){
 		this.name = name;
 		this.character = character;
+		inventory = new ArrayList<Boolean>();
+		for (int i = 0; i < NUM_INVENTORY_ITEMS; i++) {
+			inventory.add(false);	//no item at start
+		}
 	}
 	
 	public Player() {
@@ -52,19 +64,27 @@ public class Player {
 	}
 
 	public boolean isKeyCollected() {
-		return keyCollected;
+		return inventory.get(KEY);
 	}
 
 	public void setKeyCollected(boolean keyCollected) {
-		this.keyCollected = keyCollected;
+		inventory.set(KEY,keyCollected);
 	}
 
 	public boolean isSwordCollected() {
-		return swordCollected;
+		return inventory.get(SWORD);
 	}
 
 	public void setSwordCollected(boolean swordCollected) {
-		this.swordCollected = swordCollected;
+		inventory.set(SWORD,swordCollected);
+	}
+	
+	public boolean isIcePowerCollected() {
+		return inventory.get(ICE_POWER);
+	}
+
+	public void setIcePowerCollected(boolean icePowerCollected) {
+		inventory.set(ICE_POWER,icePowerCollected);
 	}
 
 	public int getNumTreasureCollected() {
@@ -83,20 +103,12 @@ public class Player {
 		this.enemyKilled++;
 	}
 	
-	public boolean isIcePowerCollected() {
-		return icePowerCollected;
-	}
-
-	public void setIcePowerCollected(boolean icePowerCollected) {
-		this.icePowerCollected = icePowerCollected;
-	}
-	
 	public void clearStats() {
 		location = null;
 		isDead = false;	
-		keyCollected = false;
-		swordCollected = false;
-		icePowerCollected = false;
+		for (int i = 0; i < NUM_INVENTORY_ITEMS; i++) {
+			inventory.set(i,false);	//clear inventory
+		}
 		numTreasureCollected = 0;
 		enemyKilled = 0;
 	}
