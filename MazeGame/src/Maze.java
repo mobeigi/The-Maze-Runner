@@ -411,6 +411,15 @@ public class Maze {
 		return enemy[i].getLocation();
 	}
 	
+	public boolean isEnemyTile (Tile t) {
+		for (int i = 0; i < enemy.length; i++) {
+			if (enemy[i].getLocation() != null && enemy[i].getLocation().equals(t)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Get the tile where the destination door is situated on
 	 * @return the tile where the destination door is situated on
