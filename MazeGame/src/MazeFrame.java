@@ -20,6 +20,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	//Frame components
 	private JPanel mazeGrid;	//panel where maze grid is placed in
 	private JLayeredPane[][] mazeGridComp;	//allows access to each tile in the grid
+	private Dimension blockSize;	//the size of each tile in the maze grid
 	
 	private JLabel score;	//the score of the player
 	private JLabel level;	//level of game
@@ -32,22 +33,21 @@ public class MazeFrame extends JFrame implements ActionListener {
 	
 	private Tile lastPlayerPos;
 	private Tile[] lastEnemyPos;
-	private Dimension blockSize;	//the size of each tile in the maze grid
 	
 	//Store sprites once
 	private HashMap<String, PlayerPanel> sprites;
 	
 
-	public static String wallSprite = "steel_wall";
-	public static String pathSprite = "carpet";
-	public static String doorSprite = "locked_door";
-	public static String playerSprite = "link";
-	public static String keySprite = "key";
-	public static String coinSprite = "coin";
-	public static String enemySprite = "dead_pacman_monster";
-	public static String killableEnemySprite = "cyan_pacman_monster";
-	public static String swordSprite = "sword";
-	public static String snowflakeSprite = "snowflake";
+	public static final String wallSprite = "steel_wall";
+	public static final String pathSprite = "carpet";
+	public static final String doorSprite = "locked_door";
+	public static final String playerSprite = "link";
+	public static final String keySprite = "key";
+	public static final String coinSprite = "coin";
+	public static final String enemySprite = "cyan_pacman_monster";
+	public static final String killableEnemySprite = "dead_pacman_monster";
+	public static final String swordSprite = "sword";
+	public static final String snowflakeSprite = "snowflake";
 	
 	public MazeFrame(Game g, int width, int height)
 	{
@@ -127,7 +127,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 	{
 		//Detect object who performed action
 		if (e.getSource() == this.exitButton) {
-			int dialogResult = JOptionPane.showConfirmDialog (this, "Are you sure you want to exit to the main menu?\n\nAll game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
+			int dialogResult = JOptionPane.showConfirmDialog (this, "Are you sure you want to exit to the main menu?\n\n" +
+					"										All game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
 			
 			//If user wishes to quit
 			if (dialogResult == JOptionPane.YES_OPTION) {
@@ -171,7 +172,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 				Object[] options = {"Next level"};
 				int dialogResult = JOptionPane.showOptionDialog (this, "The next journey awaits you...\n" +
 									"What unknown challenges lay ahead?","Room " + g.getLevel() + " cleared!", 
-									1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,0);
+									JOptionPane.OK_OPTION,JOptionPane.PLAIN_MESSAGE,
+									new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,"Next level");
 				//when user clicks the exit button
 				if (dialogResult == 0) {
 					//do nothing for now, change so that next level is reached
@@ -181,8 +183,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 			}
 		} else {
 			Object[] options = {"End campaign"};
-			int dialogResult = JOptionPane.showOptionDialog (this, "Dead Pacman monster killed you!","OH NO!", 
-								1,0,new ImageIcon(this.getClass().getResource("/sprites/" + enemySprite + ".gif")),options,0);
+			int dialogResult = JOptionPane.showOptionDialog (this, "Pacman monster killed you!","OH NO!", 
+								JOptionPane.CLOSED_OPTION,JOptionPane.PLAIN_MESSAGE,
+								new ImageIcon(this.getClass().getResource("/sprites/" + enemySprite + ".gif")),options,"End campaign");
 			//when user clicks the exit button
 			if (dialogResult == 0) {
 				g.setIsGameOver(true);
@@ -200,15 +203,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 				lastEnemyPos[i] = curEnemyPos;
 			} else if (lastEnemyPos[i] != null) {
 				updateBlock(m, lastEnemyPos[i]);
-				/*Object[] options = {"Continue campaign"};
-				int dialogResult = JOptionPane.showOptionDialog (this, "You destroyed the Pacman monster!","HOORAH!", 
-									1,0,new ImageIcon(this.getClass().getResource("/sprites/" + playerSprite + ".gif")),options,0);
-				//when user clicks the exit button
-				if (dialogResult == 0) {
-					//do nothing
-				} else {
-					this.requestFocus();	//request focus again
-				}*/		//removed dialogue box pop-up
 				lastEnemyPos[i] = null;
 			}
 		}
