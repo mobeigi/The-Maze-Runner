@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -27,9 +28,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JPanel sidePanel;
 	private JButton exitButton;
 	
-	private JLabel inventorySword;
-	private JLabel inventoryKey;
-	private JLabel inventoryIcePower;
+	private ArrayList<JLabel> inventory;
 	
 	private Tile lastPlayerPos;
 	private Tile[] lastEnemyPos;
@@ -61,6 +60,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		this.sidePanel = new JPanel();
 		this.exitButton = new JButton("Exit");
 		this.exitButton.addActionListener(this);
+		this.inventory = new ArrayList<JLabel>();
 		
 		//Make maze take up full screen
 		Toolkit tk = Toolkit.getDefaultToolkit();  
@@ -155,15 +155,15 @@ public class MazeFrame extends JFrame implements ActionListener {
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
 			// Add things to inventory
 			if (m.itemCollected(Player.SWORD)){
-				inventorySword.setVisible(true);
+				inventory.get(Player.SWORD).setVisible(true);
 			}
 			if (m.itemCollected(Player.KEY)){
-				inventoryKey.setVisible(true);
+				inventory.get(Player.KEY).setVisible(true);
 			}
 			if (m.itemCollected(Player.ICE_POWER)){
-				inventoryIcePower.setVisible(true);
+				inventory.get(Player.ICE_POWER).setVisible(true);
 			} else {
-				inventoryIcePower.setVisible(false);	//disappears according to maze settings (after 5 seconds)
+				inventory.get(Player.ICE_POWER).setVisible(false);	//disappears according to maze settings (after 5 seconds)
 			}
 			
 			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
@@ -411,28 +411,28 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sidePanel.add(exitButton, gbc);
 		
 		//Add key and sword (set size 48 x 48)
-		inventorySword = new JLabel(new PlayerPanel(swordSprite,48,48).getPlayerSprite());
-		inventoryKey = new JLabel(new PlayerPanel(keySprite,48,48).getPlayerSprite());
-		inventoryIcePower = new JLabel(new PlayerPanel(snowflakeSprite,48,48).getPlayerSprite());
+		inventory.add(Player.KEY, new JLabel(new PlayerPanel(keySprite,48,48).getPlayerSprite()));
+		inventory.add(Player.SWORD, new JLabel(new PlayerPanel(swordSprite,48,48).getPlayerSprite()));
+		inventory.add(Player.ICE_POWER, new JLabel(new PlayerPanel(snowflakeSprite,48,48).getPlayerSprite()));
 		
 		gbc.gridwidth = 1;
 		gbc.gridy = 3;
 		gbc.gridx = 0;
 		//gbc.insets = new Insets(0,10,0,0);
-		sidePanel.add(inventorySword,gbc);
+		sidePanel.add(inventory.get(Player.SWORD),gbc);
 		
 		//gbc.insets = new Insets(0,0,0,10);
 		gbc.gridy = 4;
 		gbc.gridx = 0;
-		sidePanel.add(inventoryKey,gbc);
+		sidePanel.add(inventory.get(Player.KEY),gbc);
 		
 		gbc.gridy = 5;
 		gbc.gridx = 0;
-		sidePanel.add(inventoryIcePower,gbc);
+		sidePanel.add(inventory.get(Player.ICE_POWER),gbc);
 		
-		inventorySword.setVisible(false);
-		inventoryKey.setVisible(false);
-		inventoryIcePower.setVisible(false);
+		for (int i = 0; i < Player.NUM_INVENTORY_ITEMS; i++) {
+			inventory.get(i).setVisible(false);
+		}
 		
 		//Add sidePanel to this frame
 		gbc.gridx = 1;
