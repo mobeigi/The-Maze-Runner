@@ -7,15 +7,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
-/*
- * IDEAS:
- * Enemy player
- * Weapons for player to collect to kill enemy
- * Collecting items for the next level (powerups)
- * Treasure chest to get high scores for a maze
- * Score dependent on time taken to finish maze
- * Have a plot with dialogue boxes coming up for each level with picture displayed
- */
 
 /**
  * Contains the board of the maze.
@@ -26,43 +17,45 @@ import java.util.TimerTask;
  * @see Player
  */
 public class Maze {
-	private Tile[][] grid;
-	private int width;
-	private int height;
-	private Player player;	//location of the current player, null if dead
-	private Enemy[] enemy;	//location of the enemy, null if dead
+	private Tile[][] grid;	//all tiles in the grid
+	private int width;	//width of maze including border
+	private int height;	//height of maze including border
+	private Player player;	//the current player
+	private Enemy[] enemy;	//all the enemies
 	
 	private HashMap<Tile,Tile> mazeSolution;
 			
 	public Maze (int w, int h, Player p) {
-		//width and height should be an odd number
 		//width and height is assumed to be greater than 1
-		grid = new Tile[w+2][h+2];
+		grid = new Tile[w+2][h+2];	//add 2 for border around maze
 		this.width = w+2;
 		this.height = h+2;
+		
 		player = p;	//use input player
-		enemy = new Enemy[(int)(((width-13)/3)+1)];	//make new enemy
+		//formula for number of enemies is 1 more enemy per 1.5 levels
+		enemy = new Enemy[(int)(((width-13)/3)+1)];
 		for (int i = 0; i < enemy.length; i++) {
-			enemy[i] = new Enemy();
+			enemy[i] = new Enemy(); 	//make new enemy
 		}
-		createMaze();	//initialise all tiles
+		createMaze();	//initialise all tiles including
+						//player location, enemy locations, coins, powerups, doors
 		
 		final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
-				for (int i = 0; i < enemy.length; i++) {
+				for (int i = 0; i < enemy.length; i++) {	//update location of all enemies
 					if (player.isDead()) {
 						timer.cancel();
-					} else if (enemy[i].isDead()) {
+					} else if (enemy[i].isDead()) {	//if enemy is already dead
 						continue;
 					} else if (player.isIcePowerCollected()) {
 						try {
 							Thread.sleep(5000);	//enemy freezes for 5 seconds
-							player.setIcePowerCollected(false);
+							player.setIcePowerCollected(false);	//ice power disappears after 5 seconds
 						} catch (InterruptedException e) {
 							//do nothing
 						}
-					} else if (player.getLocation() != null && !player.isDead()) {
+					} else if (player.getLocation() != null && !player.isDead()) {	//if player is not dead
 						//enemy follows player
 						HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
 						path.put(grid[enemy[i].getLocation().getX()][enemy[i].getLocation().getY()], null);
@@ -71,15 +64,16 @@ public class Maze {
 								player.getLocation().getX(), player.getLocation().getY(),
 								visitedTile,path);
 						Tile curr = player.getLocation();
-						while (!path.get(curr).equals(enemy[i].getLocation())) {	//if we haven't reached the starting state yet
+						//backtracking through path to find next tile to go
+						while (!path.get(curr).equals(enemy[i].getLocation())) {	//if we haven't found the next tile to go
 							curr = path.get(curr);
 						}
-						enemy[i].setLocation(curr);
+						enemy[i].setLocation(curr);	//update enemy location
 						if (enemy[i].getLocation().equals(player.getLocation())) {
 							if (!swordCollected()) {
 								player.setDead(true);	//player dies and enemy stops moving
 							} else {
-								enemy[i].setDead(true);
+								enemy[i].setDead(true);	//player can kill enemies with sword
 								player.addEnemyKilled();
 							}
 						}
@@ -87,7 +81,7 @@ public class Maze {
 					//showMaze();	//for debugging
 				}
 			}
-		},1500,1500);	//enemy moves every 1 second 
+		},1500,1500);	//enemy moves every 1.5 seconds
 						//if too fast, player cannot reach sword and will eventually die
 	}
 	
@@ -127,10 +121,10 @@ public class Maze {
 		HashSet<Tile> visited = new HashSet<Tile>();
 		ArrayList<TileEdge> neighbours = getNeighbouringEdges(grid[1][1]);
 		for (int i = 0; i < neighbours.size(); i++) {
-			edges.add(neighbours.get(i));
-			edgesAdded.add(neighbours.get(i));
+			edges.add(neighbours.get(i));	//add all neighbouring edges to the origin
+			edgesAdded.add(neighbours.get(i));	//update edges added
 		}
-		visited.add(grid[1][1]);
+		visited.add(grid[1][1]);	//visited origin
 		int numVertices = ((width-1)/2)*((height-1)/2);
 		//while not all vertices have been visited
 		while (visited.size() < numVertices) {
@@ -149,8 +143,8 @@ public class Maze {
 			}
 			for (int i = 0; i < neighbours.size(); i++) {
 				if (!edgesAdded.contains(neighbours.get(i))) {
-					edges.add(neighbours.get(i));
-					edgesAdded.add(neighbours.get(i));
+					edges.add(neighbours.get(i));	//add all neighouring edges that haven't been added
+					edgesAdded.add(neighbours.get(i));	//update edges added
 				}
 			}
 			curr.getTile0().setWalkable();		//set the edge as a walkable path
@@ -161,9 +155,9 @@ public class Maze {
 		player.setLocation(grid[1][1]);	//origin at (1,1), 
 		int numEnemy = 0;
 		while (numEnemy < enemy.length) {	//enemy spawns on bottom third of the screen
-			int randomX = 1 + (int)(Math.random()*(width-2));
-			int randomY = ((height-2)/3)*2 + (int)(Math.random()*((height-2)/3)+1);
-			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
+			int randomX = 1 + (int)(Math.random()*(width-2));	//any random x value
+			int randomY = ((height-2)/3)*2 + (int)(Math.random()*((height-2)/3)+1);	//y value on bottom third
+			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable and not where player is
 				!grid[randomX][randomY].equals(player.getLocation())) {
 				enemy[numEnemy].setLocation(grid[randomX][randomY]);	//enemy starts randomly
 				numEnemy++;
@@ -174,41 +168,42 @@ public class Maze {
 		grid[1][0].setType(Tile.DOOR);	//set tile just above the origin to a door
 		grid[width-2][height-1].setType(Tile.DOOR);	//set tile just below the destination to a door
 
-		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door for now
-		grid[width-2][1].setType(Tile.SWORD);
+		grid[1][height-2].setType(Tile.KEY);	//set bottom left corner to key to door
+		grid[width-2][1].setType(Tile.SWORD);	//set top right to sword
 		
 		int numIcePower = 0;
 		//first ice power is always in the top left quadrant
 		while (true) {
-			int randomX = 1 + (int)(Math.random()*((width-2)/2));
-			int randomY = 1 + (int)(Math.random()*((height-2)/2));
+			int randomX = 1 + (int)(Math.random()*((width-2)/2));	//any random X in maze
+			int randomY = 1 + (int)(Math.random()*((height-2)/2));	//any random Y in maze
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
-				!grid[randomX][randomY].equals(player.getLocation())) {
+				!grid[randomX][randomY].equals(player.getLocation())) {	//and not where player is
 				grid[randomX][randomY].setType(Tile.ICE_POWER);
-				numIcePower++;
-				break;
+				numIcePower++;	//update number of ice power added
+				break;	//go to see if other ice powers are to be added
 			}
 		}
 		//other ice powers can spawn elsewhere
 		while (numIcePower < enemy.length-1) {	//one ice power for each enemy, minus one (harder)
-			int randomX = 1 + (int)(Math.random()*(width-2));
-			int randomY = 1 + (int)(Math.random()*(height-2));
+			int randomX = 1 + (int)(Math.random()*(width-2));	//any random X in maze
+			int randomY = 1 + (int)(Math.random()*(height-2));	//any random Y in maze
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
-				!grid[randomX][randomY].equals(player.getLocation())) {
+				!grid[randomX][randomY].equals(player.getLocation())) {	//and not where player is
 				grid[randomX][randomY].setType(Tile.ICE_POWER);
-				numIcePower++;
+				numIcePower++;	//update number of ice power added
 			}
 		}
 		
 		//sets three random tiles to treasure
+		//formula for number of treasure is 1 more treasure per 1.5 levels
 		int i = 0;
 		while (i < (int)(width-13)/3 + 3) {
-			int randomX = 1 + (int)(Math.random()*((width-2)));
-			int randomY = 1 + (int)(Math.random()*((height-2)));
+			int randomX = 1 + (int)(Math.random()*((width-2)));		//any random X
+			int randomY = 1 + (int)(Math.random()*((height-2)));	//any random Y
 			if (grid[randomX][randomY].getType() == Tile.PATH &&	//check that the tile is walkable
-				!grid[randomX][randomY].equals(player.getLocation())) {		//and not the origin
+				!grid[randomX][randomY].equals(player.getLocation())) {		//and not where player is
 				grid[randomX][randomY].setType(Tile.TREASURE);
-				i++;
+				i++;	//update treasure added
 			}
 		}
 		//width and height should be big enough to allow this to be valid
@@ -216,14 +211,16 @@ public class Maze {
 		mazeSolution.put(grid[1][1], null);
 		boolean[][] visitedTile = new boolean[width+2][height+2];
 		findPath(1,1,visitedTile,mazeSolution);		//finds solution to maze
-		//if (solvable) {	//maze should always be solvable
 		showMaze();			//for debugging
-		//}
 	}
 	
+	/**
+	 * Displays ASCII form of basic maze.
+	 * Shows where walls and paths are,
+	 * the solution and where player is.
+	 */
 	public void showMaze () {
 		Tile playerLoc = player.getLocation();
-		//Tile enemyLoc = enemy.getLocation();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (grid[i][j].isWalkable()) {
@@ -232,9 +229,7 @@ public class Maze {
 						System.out.print("P");
 					} else if (i == (width-1)-1 && j == (height-1)-1) {
 						System.out.print("D");
-					} /*else if (enemyLoc.equals(grid[i][j])) {
-						System.out.print("E");
-					}*/ else {
+					} else {
 						List<Tile> path = giveHint(grid[1][height-2]);
 						if (path.contains(grid[i][j])) {
 							System.out.print("X");
@@ -252,10 +247,15 @@ public class Maze {
 		}
 	}
 	
-	//checking within a 2 tile radius
+	/**
+	 * Getting neighbouring edges to a tile on the maze
+	 * @param curr the tile whose neighbouring edges is desired
+	 * @return the list of neighbouring edges to the tile
+	 */
 	public ArrayList<TileEdge> getNeighbouringEdges (Tile curr) {
 		ArrayList<TileEdge> neighbouringEdges = new ArrayList<TileEdge>();
 		//vertices exist only on tiles with odd x and y coordinates
+		//check within a two tile radius
 		for (int i = Math.max(curr.getX()-2,1); i <= Math.min(curr.getX()+2,width-1); i+=2) {
 			for (int j = Math.max(curr.getY()-2,1); j <= Math.min(curr.getY()+2,height-1); j+=2) {
 				TileEdge newEdge = null;
@@ -320,6 +320,15 @@ public class Maze {
 		return false;
 	}
 	
+	/**
+	 * Finds the path from (x,y) to (x1,y1).
+	 * It stores the path in an input hash map,
+	 * which maps the tile to its parent tile.
+	 * Credit to http://en.wikipedia.org/wiki/Maze_solving_algorithm.
+	 * Adapted from "Recursive algorithm".
+	 * @return true if a path exists. It should be true
+	 * as the maze is always solvable from any position.
+	 */
 	public boolean findPath (int x, int y, int x1, int y1, boolean[][] visited, HashMap<Tile,Tile> parent) {
 		if (x == x1 && y == y1) return true;
 		if (!grid[x][y].isWalkable() || visited[x][y]) return false;
@@ -351,7 +360,11 @@ public class Maze {
 		return false;
 	}
 	
-	//give first 10 steps from current tile to destination
+	/**
+	 * Give first 10 steps from the current tile to the destination
+	 * @param t the current tile
+	 * @return the list of 10 tiles in the path from the current tile to the destination
+	 */
 	public List<Tile> giveHint(Tile t) {
 		//TODO change colour of tiles such that path from current player position
 		//to the nearest tile part of the solution is given
@@ -377,7 +390,7 @@ public class Maze {
 	
 	/**
 	 * Finds the tile on the maze that the player is situated in.
-	 * @return the tile in which the player is on.
+	 * @return the tile in which the player is on, or null if player is dead
 	 */
 	public Tile getPlayerTile() {
 		if (player.isDead()) {
@@ -388,7 +401,8 @@ public class Maze {
 	
 	/**
 	 * Finds the tile on the maze that the enemy is situated in.
-	 * @return the tile in which the enemy is on.
+	 * @param i
+	 * @return the tile in which the enemy is on, or null if enemy is dead or doesn't exist
 	 */
 	public Tile getEnemyTile(int i) {
 		if (i >= enemy.length || enemy[i].isDead()) {
@@ -397,6 +411,10 @@ public class Maze {
 		return enemy[i].getLocation();
 	}
 	
+	/**
+	 * Get the tile where the destination door is situated on
+	 * @return the tile where the destination door is situated on
+	 */
 	public Tile getDestDoor() {
 		return grid[width-2][height-1];
 	}
@@ -443,10 +461,16 @@ public class Maze {
 	
 	/**
 	 * Checks if a player is dead.
-	 * A player is dead if it encounters the enemy.
+	 * A player is dead if it encounters the enemy without a sword.
 	 * @return true if the player is dead.
 	 */
 	public boolean playerDied () { return player.isDead(); }
+	/**
+	 * Checks if an enemy is dead.
+	 * An enemy is dead if it encounters the player who has a sword.
+	 * @param i stands for ith enemy
+	 * @return true if the enemy is dead.
+	 */
 	public boolean enemyDied (int i) { return enemy[i].isDead(); }
 	public boolean allEnemyDied () { 
 		for (int i = 0; i < enemy.length; i++) {
@@ -456,9 +480,12 @@ public class Maze {
 		}
 		return true; 
 	}
-	public int getNumEnemies () {
-		return enemy.length;
-	}
+	
+	/**
+	 * Get number of enemies in the maze initially
+	 * @return the number of enemies in the maze initially
+	 */
+	public int getNumEnemies () { return enemy.length; }
 	
 	/**
 	 * Checks if a player move is valid.
@@ -534,9 +561,28 @@ public class Maze {
 		return (!player.isDead() && player.getLocation().getX() == (width-2) && player.getLocation().getY() == (height-1));
 	}
 	
+	/**
+	 * Get number of treasure collected.
+	 * @return the number of treasure collected
+	 */
 	public int getNumTreasureCollected() { return player.getNumTreasureCollected(); }
+	
+	/**
+	 * Check if key is collected.
+	 * @return true if key is collected
+	 */
 	public boolean keyCollected() { return player.isKeyCollected(); }
+	
+	/**
+	 * Check if sword is collected.
+	 * @return true if sword is collected
+	 */
 	public boolean swordCollected() { return player.isSwordCollected(); }
+	
+	/**
+	 * Check if ice power is collected.
+	 * @return true if ice power is collected
+	 */
 	public boolean icePowerCollected() { return player.isIcePowerCollected(); }
 	
 	/**
