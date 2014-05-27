@@ -200,7 +200,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < m.getNumEnemies(); i++) {
 			Tile curEnemyPos = m.getEnemyTile(i);
 			if (!m.enemyDied(i)) {	//if enemy is not dead, update its position
-				if (!lastEnemyPos[i].equals(curEnemyPos)) {
+				if (!lastEnemyPos[i].equals(curEnemyPos) || m.itemCollected(Player.ICE_POWER)) {
 					updateBlock(m, lastEnemyPos[i]);
 					updateBlock(m, curEnemyPos);
 				}
