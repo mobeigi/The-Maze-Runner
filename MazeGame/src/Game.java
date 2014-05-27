@@ -1,8 +1,11 @@
-import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+/**
+ * Game class that setups maze and mazeFrame in preparation for a game.
+ *
+ * @version 1.0
+ */
 
 public class Game {
 	//Private fields
@@ -17,43 +20,70 @@ public class Game {
     private int score;
     private int level;
     
+    //Game constants
+    public static final int START_LEVEL_WIDTH = 11;
+    public static final int START_LEVEL_HEIGHT = 11;
+    public static final int POINTS_ENEMY_KILLED = 10;
+    public static final int MAX_LEVEL = 10;
+    
     //Flow control
     private volatile boolean inGame;
     private volatile boolean isGameOver;
     
+    /**
+     * Constructor for creating game object.
+     */
     public Game() {
         this.isGameOver = false;
         this.inGame = false;
         this.instrFrame = new InstructionFrame();
         this.optionFrame = new OptionFrame(this);
-        //Level 1 is 11 x 11       
-        this.gameFrame = new GameFrame(this,11,11,instrFrame,optionFrame);
-        
-        
-        this.score = 0;
+        this.gameFrame = new GameFrame(this, START_LEVEL_WIDTH, START_LEVEL_HEIGHT, instrFrame, optionFrame);	//create game frame
+        this.score = 0;	//initially empty score
     }
     
+    /**
+     * Create a maze which scales in size based on desired game level.
+     * 
+     * @param level - Desired game level for maze that is to be created.
+     */
     public void createMaze(int level) {
+    	// Dispose any previous mazes
     	if (mazeFrame != null) {
     		this.mazeFrame.dispose();
     	}
-    	this.maze =  new Maze(11+2*level, 11+2*level,player);
-    	this.mazeFrame = new MazeFrame(this, 11+2*level, 11+2*level); //make new maze frame
+    	this.maze =  new Maze(START_LEVEL_WIDTH+ (2*level), START_LEVEL_HEIGHT + (2*level), player);
+    	this.mazeFrame = new MazeFrame(this, START_LEVEL_WIDTH+ (2*level), START_LEVEL_HEIGHT + (2*level)); //make new maze frame
     	
-    	//Init maze that was created
+    	//Initilise maze that was created
     	initMazeFrame();
     }
     
+    /**
+     * Initilise mazeframe based on initial game state.
+     * 
+     * Also requests focus for the mazeframe. 
+     */
     public void initMazeFrame() {
        this.mazeFrame.init(this.maze); 
        this.mazeFrame.requestFocus();
     }
     
+    /**
+     * Update mazeframe based on current game state.
+     * 
+     * Also requests focus for the mazeframe. 
+     */
     public void updateMazeFrame() {
         this.mazeFrame.update(this.maze);
         this.mazeFrame.requestFocus();
      }
     
+    /**
+     * Set the visibility of the game interface.
+     * 
+     * @param isVisible - boolean expression for the 
+     */
     public void setGameFrameVisible(boolean isVisible) {
     	this.gameFrame.setVisible(isVisible);
     }
@@ -69,11 +99,11 @@ public class Game {
 			JOptionPane.showOptionDialog (this.mazeFrame, "Congratulations, warrior!\n" +
 						"Your skill is worthy of mention but who knows\n" + "what challenges we may see ahead?\n"
 						+ "We will require your assistance when the time comes...",
-						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,0);
+						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")), options, 0);
     	} //otherwise no special dialog is displayed
     	level = 0;	//restart game
     	score = 0;	//restart score
-    	this.maze = new Maze(11,11,player);	//level 1 maze
+    	this.maze = new Maze(START_LEVEL_WIDTH, START_LEVEL_HEIGHT, player);	//level 1 maze
     	player.clearStats();
     	this.mazeFrame.dispose(); //remove maze
     	this.gameFrame.setVisible(true);
@@ -127,7 +157,7 @@ public class Game {
     public void updateScore(){
     	//1 point for each treasure collected
     	//10 points for each enemy killed
-    	score = player.getNumTreasureCollected() + 10*player.getEnemyKilled();
+    	score = player.getNumTreasureCollected() + POINTS_ENEMY_KILLED * player.getEnemyKilled();
     }
     
 	public int getScore() {
