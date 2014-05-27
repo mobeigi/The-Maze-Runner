@@ -22,6 +22,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JLayeredPane[][] mazeGridComp;	//allows access to each tile in the grid
 	
 	private JLabel score;	//the score of the player
+	private JLabel level;	//level of game
 	private JPanel sidePanel;
 	private JButton exitButton;
 	private JLabel inventorySword;
@@ -214,67 +215,49 @@ public class MazeFrame extends JFrame implements ActionListener {
 	
 	private void updateBlock(Maze m, Tile old)
 	{	
-		mazeGridComp[old.getX()][old.getY()].removeAll();
+		//update top layer when updating block
+		//if exited maze, the path layer will be on top so do not remove then
+		if (this.mazeGridComp[old.getX()][old.getY()].getComponentCountInLayer(0) > 1 && !m.exitedMaze()) {
+			this.mazeGridComp[old.getX()][old.getY()].remove(0);
+		}
 		
-		String blockSprite = pathSprite;	//base (bottom) block sprite, default is path
-		String overLaySprite = "";	//Overlay sprite that goes on top of block sprite
+		String overLaySprite = pathSprite;	//Overlay sprite that goes on top of block sprite
 		
-		boolean enemyTile = false;
 		//Determine block graphics based on type of tile
 		//If player is at this tile
 		if (m.getPlayerTile() != null && m.getPlayerTile().equals(old)) {
 			overLaySprite = g.getPlayer().getCharacter();
 		}
 		//Check if enemy unit
-		else if (!m.allEnemyDied()) {
-			for (int i = 0; i < m.getNumEnemies(); i++) {
-				if (m.getEnemyTile(i) != null && m.getEnemyTile(i).equals(old)) {
-					if (m.icePowerCollected()) {
-						overLaySprite = killableEnemySprite;
-					} else {
-						overLaySprite = enemySprite;
-					}
-					enemyTile = true;
-					break;
-				}
+		else if (m.isEnemyTile(old)) {
+			if (m.icePowerCollected()) {
+				overLaySprite = killableEnemySprite;
+			} else {
+				overLaySprite = enemySprite;
 			}
 		}
-		if (!enemyTile) {
-			//Check if this is a door
-			if (old.getType() == Tile.DOOR) {
-				blockSprite = wallSprite;
-				overLaySprite = doorSprite;
-			}
-			//Check for key
-			else if (old.getType() == Tile.KEY) {
-				overLaySprite = keySprite;
-			}
-			else if (old.getType() == Tile.TREASURE) {
-				overLaySprite = coinSprite;
-			}
-			else if (old.getType() == Tile.SWORD){
-				overLaySprite = swordSprite;
-			}
-			else if (old.getType() == Tile.ICE_POWER) {
-				overLaySprite = snowflakeSprite;
-			}
-			//Else must be wall
-			else if (old.getType() == Tile.WALL){
-				blockSprite = wallSprite;
-			} else {	//Default is path
-				//do nothing
-			}
+		//Check if this is a door
+		else if (old.getType() == Tile.DOOR) {
+			overLaySprite = doorSprite;
 		}
-		
-		//Always add block sprite
-		JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
-		this.mazeGridComp[old.getX()][old.getY()].add(spriteImage, 1);
-		
-		//Add overlay sprite if required
-		if (overLaySprite != "") {
-			JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
-			this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, 0);
+		//Check for key
+		else if (old.getType() == Tile.KEY) {
+			overLaySprite = keySprite;
 		}
+		else if (old.getType() == Tile.TREASURE) {
+			overLaySprite = coinSprite;
+		}
+		else if (old.getType() == Tile.SWORD){
+			overLaySprite = swordSprite;
+		}
+		else if (old.getType() == Tile.ICE_POWER) {
+			overLaySprite = snowflakeSprite;
+		}
+		else if (old.getType() == Tile.WALL){ 		//Else must be wall
+			//do nothing
+		}
+		JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
+		this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, 0);
 		
 		this.pack();
 	}
@@ -319,7 +302,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 				String blockSprite = pathSprite;	//base (bottom) block sprite
 				String overLaySprite = "";	//Overlay sprite that goes on top of block sprite
 				
-				boolean enemyTile = false;
 				//Determine block graphics based on type of tile
 				//If player is at this tile
 				if (m.getPlayerTile() != null && m.getPlayerTile().equals(t)) {
@@ -327,41 +309,38 @@ public class MazeFrame extends JFrame implements ActionListener {
 					this.lastPlayerPos = t; //update last position
 				}
 				//Check if enemy unit
-				else if (!m.allEnemyDied()) {
-					for (int i = 0; i < m.getNumEnemies(); i++) {
+				else if (m.isEnemyTile(t)) {
+					for (int i = 0; i < m.getNumEnemies(); i++) {	//find enemy ID
 						if (m.getEnemyTile(i) != null && m.getEnemyTile(i).equals(t)) {
 							overLaySprite = enemySprite;
 							this.lastEnemyPos[i] = t;
-							enemyTile = true;
 							break;
 						}
 					}
 				}
-				if (!enemyTile) {
-					//Check if this is a door
-					if (t.getType() == Tile.DOOR) {
-						blockSprite = wallSprite;
-						overLaySprite = doorSprite;
-					}
-					//Check for key
-					else if (t.getType() == Tile.KEY) {
-						overLaySprite = keySprite;
-					}
-					else if (t.getType() == Tile.TREASURE) {
-						overLaySprite = coinSprite;
-					}
-					else if (t.getType() == Tile.SWORD){
-						overLaySprite = swordSprite;
-					}
-					else if (t.getType() == Tile.ICE_POWER) {
-						overLaySprite = snowflakeSprite;
-					}
-					//Else if wall
-					else if (t.getType() == Tile.WALL){
-						blockSprite = wallSprite;
-					} else {	//else it is a path
-						//do nothing
-					}
+				//Check if this is a door
+				else if (t.getType() == Tile.DOOR) {
+					blockSprite = wallSprite;
+					overLaySprite = doorSprite;
+				}
+				//Check for key
+				else if (t.getType() == Tile.KEY) {
+					overLaySprite = keySprite;
+				}
+				else if (t.getType() == Tile.TREASURE) {
+					overLaySprite = coinSprite;
+				}
+				else if (t.getType() == Tile.SWORD){
+					overLaySprite = swordSprite;
+				}
+				else if (t.getType() == Tile.ICE_POWER) {
+					overLaySprite = snowflakeSprite;
+				}
+				//Else if wall
+				else if (t.getType() == Tile.WALL){
+					blockSprite = wallSprite;
+				} else {	//else it is a path
+					//do nothing
 				}
 			
 				//Always add block sprite
@@ -379,9 +358,6 @@ public class MazeFrame extends JFrame implements ActionListener {
 			}
 		}
 		
-		//Save enemy last position
-		//lastEnemyPos = m.getEnemyTile();
-		
 		//Add maze to this frame
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -390,8 +366,15 @@ public class MazeFrame extends JFrame implements ActionListener {
 		
 		//Create SidePanel components using gridbag layout 
 		//Add Score Panel
-		JPanel scorePanel = new JPanel(new GridLayout(2,1));
+		JPanel scorePanel = new JPanel(new GridLayout(3,1));
 		scorePanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
+		
+		//Add game icon to side panel
+		ImageIcon title = new ImageIcon(this.getClass().getResource("/sprites/mazerunner.png"));
+		Image image = title.getImage().getScaledInstance(288, 144, Image.SCALE_FAST);
+		title.setImage(image);	
+		JLabel titleImage = new JLabel(title);
+		scorePanel.add(titleImage);
 		
 		//Add player image (set size 96 x 96)
 		PlayerPanel player = new PlayerPanel(g.getPlayer().getCharacter(),96,96);	
@@ -400,23 +383,25 @@ public class MazeFrame extends JFrame implements ActionListener {
 		scorePanel.add(playerImage);
 		
 		//Add Score for player
-		JPanel playerScore = new JPanel(new GridLayout(3,1));
+		JPanel playerStats = new JPanel(new GridLayout(4,1));
 		JLabel name = new JLabel("Name: " + g.getPlayer().getName());
 		JLabel character = new JLabel("Character: " + g.getPlayer().getCharacter().substring(0, 1).toUpperCase() + g.getPlayer().getCharacter().substring(1));
-		score = new JLabel("Score: " + Integer.toString(g.getScore()));
-		
+		score = new JLabel("Score: " + g.getScore());
+		level = new JLabel("Level: " + g.getLevel());
 		
 		
 		Font font = new Font("Arial", Font.PLAIN, 16);
 		name.setFont(font);
 		character.setFont(font);
 		score.setFont(new Font("Arial", Font.BOLD, 18));
+		level.setFont(new Font("Arial", Font.BOLD, 18));
 		
-		playerScore.add(name);
-		playerScore.add(character);
-		playerScore.add(score);
+		playerStats.add(name);
+		playerStats.add(character);
+		playerStats.add(score);
+		playerStats.add(level);
 		
-		scorePanel.add(playerScore);
+		scorePanel.add(playerStats);
 		
 		gbc.gridwidth = 4;
 		gbc.gridx = 0;
