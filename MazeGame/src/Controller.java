@@ -1,13 +1,9 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JFrame;
-
-
-
 public class Controller implements KeyListener {
-	private Game game;
 	
+	private Game game;
 	
 	public Controller(Game g){
 		this.game = g;
@@ -33,7 +29,7 @@ public class Controller implements KeyListener {
 		 } else if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN){
 			 //System.out.println("down");
 			 dx = 0;
-			 dy = +1;
+			 dy = 1;
 		 } else {	//Ignore other presses
 			 return;
 		 }
@@ -55,7 +51,4 @@ public class Controller implements KeyListener {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-
 }
