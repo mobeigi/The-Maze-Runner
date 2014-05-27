@@ -23,7 +23,7 @@ public class InstructionFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private JButton backButton;
 	private JPanel instructions;
-	private JPanel controls;
+	//private JPanel controls;
 	private JFrame frame;
 
 	
@@ -32,12 +32,13 @@ public class InstructionFrame implements ActionListener{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		backButton = new JButton("Close");
 		instructions = new JPanel(new GridBagLayout());
-		controls = new JPanel(new GridBagLayout());
+		//controls = new JPanel(new GridBagLayout());
 
 		backButton.addActionListener(this);
 		frame.getContentPane().setBackground(Color.WHITE);
 		instructions.setBackground(Color.WHITE);
-		controls.setBackground(Color.WHITE);
+		//controls.setBackground(Color.WHITE);
+		//controls.
 		
 		//this.setMinimumSize(new Dimension(600, 600));
 		//this.width = width;
@@ -45,7 +46,7 @@ public class InstructionFrame implements ActionListener{
 		//Set user size
 		//this.setSize(width, height);
 		//Make size fixed
-		frame.setResizable(true);
+		frame.setResizable(false);
 		
 		
 		frame.setLayout(new GridBagLayout());
@@ -57,59 +58,70 @@ public class InstructionFrame implements ActionListener{
 	    	System.out.println("FAIL");
 	    }
 		
+	    BufferedImage htp = null;
+	    try {
+	    	htp = ImageIO.read(new File("src/sprites/howtoplay.png"));
+	    } catch (IOException e){
+	    	System.out.println("FAIL");
+	    }
+	    
 		JLabel sword = new JLabel((new PlayerPanel(MazeFrame.swordSprite,48,48).getPlayerSprite()));
 		JLabel player = new JLabel((new PlayerPanel(MazeFrame.playerSprite,48,48).getPlayerSprite()));
 		JLabel key = new JLabel((new PlayerPanel(MazeFrame.keySprite,48,48).getPlayerSprite()));
 		JLabel coin = new JLabel((new PlayerPanel(MazeFrame.coinSprite,48,48).getPlayerSprite()));
 		JLabel enemy = new JLabel((new PlayerPanel(MazeFrame.enemySprite,48,48).getPlayerSprite()));
 		JLabel keyboard = new JLabel(new ImageIcon(wasd));
+		JLabel howtoplay = new JLabel(new ImageIcon(htp));
 		
 		sword.setText("Pick this up to kill the ghosts!");
 		player.setText("This is you, nice hat");
 		key.setText("Pick this up to open the door at the end of the maze");
 		coin.setText("Cash money, Cash money");
 		enemy.setText("Game over if you get too close");
-		keyboard.setText("(Use the WASD keys to move around)");
-		keyboard.setVerticalTextPosition(JLabel.BOTTOM);
-		keyboard.setHorizontalTextPosition(JLabel.CENTER);
+		keyboard.setText("Use the WASD keys to move around");
+		//keyboard.setVerticalTextPosition(JLabel.BOTTOM);
+		//keyboard.setHorizontalTextPosition(JLabel.CENTER);
 		
 		GridBagConstraints c= new GridBagConstraints();
 		c.fill=GridBagConstraints.VERTICAL;
 		
-		c.gridy=0;
-		instructions.add(player,c);
+		c.gridy = 0;
+		instructions.add(howtoplay, c);
 		
 		c.gridy = 1;
+		instructions.add(player,c);
+		
+		c.gridy = 2;
 		
 		instructions.add(enemy,c);
 		
-		c.gridy = 2;
+		c.gridy = 3;
 		instructions.add(sword,c);
 		
-		c.gridy=3;
+		c.gridy= 4;
 		instructions.add(key,c);
 		
-		c.gridy=4;
+		c.gridy= 5;
 		instructions.add(coin,c);
 		
-		c.gridy= 5;
+		c.gridy = 6;
+		instructions.add(keyboard, c);
+		
+		c.gridy= 8;
 		this.backButton.setEnabled(true);
 		instructions.add(backButton,c);
 		
-		controls.add(keyboard);
 		
-		c.gridx=0;
+		c.gridx= 0;
 		frame.add(instructions);
-		
-		c.gridx = 1;
-		frame.add(controls);
+
+		c.gridy = 1;
+		//frame.add(controls);
 		frame.pack();
 		frame.setVisible(false);
 	}
 	
 	
-	
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==this.backButton){
@@ -118,9 +130,6 @@ public class InstructionFrame implements ActionListener{
 		}
 		
 	}
-
-
-
 
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
