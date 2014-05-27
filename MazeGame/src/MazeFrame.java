@@ -154,13 +154,13 @@ public class MazeFrame extends JFrame implements ActionListener {
 			lastPlayerPos = curPlayerPos;
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
 			// Add things to inventory
-			if (m.swordCollected()){
+			if (m.itemCollected(Player.SWORD)){
 				inventorySword.setVisible(true);
 			}
-			if (m.keyCollected()){
+			if (m.itemCollected(Player.KEY)){
 				inventoryKey.setVisible(true);
 			}
-			if (m.icePowerCollected()){
+			if (m.itemCollected(Player.ICE_POWER)){
 				inventoryIcePower.setVisible(true);
 			} else {
 				inventoryIcePower.setVisible(false);	//disappears according to maze settings (after 5 seconds)
@@ -225,7 +225,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		} 
 		//Check if enemy unit
 		else if (m.isEnemyTile(old)) {
-			if (m.icePowerCollected()) {
+			if (m.itemCollected(Player.ICE_POWER)) {
 				overLaySprite = killableEnemySprite;
 			} else {
 				overLaySprite = enemySprite;
@@ -382,7 +382,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		JLabel name = new JLabel("Name: " + g.getPlayer().getName());
 		JLabel character = new JLabel("Character: " + g.getPlayer().getCharacter().substring(0, 1).toUpperCase() + g.getPlayer().getCharacter().substring(1));
 		score = new JLabel("Score: " + g.getScore());
-		level = new JLabel("Level: " + g.getLevel());
+		level = new JLabel("Level: " + (g.getLevel()+1)); //levels count from 0, so +1 offset so that levels count from 1
 		
 		
 		Font font = new Font("Arial", Font.PLAIN, 16);

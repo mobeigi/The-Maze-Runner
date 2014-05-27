@@ -14,10 +14,10 @@ public class Player {
 	private int numTreasureCollected;
 	private int enemyKilled;
 	
-	private static final int KEY = 0;
-	private static final int SWORD = 1;
-	private static final int ICE_POWER = 2;
-	private static final int NUM_INVENTORY_ITEMS = 3;
+	public static final int KEY = 0;
+	public static final int SWORD = 1;
+	public static final int ICE_POWER = 2;
+	public static final int NUM_INVENTORY_ITEMS = 3;
 
 	public Player(String name, String character){
 		this.name = name;
@@ -63,28 +63,12 @@ public class Player {
 		return isDead;
 	}
 
-	public boolean isKeyCollected() {
-		return inventory.get(KEY);
+	public boolean isItemCollected(int itemNum) {
+		return inventory.get(itemNum);
 	}
 
-	public void setKeyCollected(boolean keyCollected) {
-		inventory.set(KEY,keyCollected);
-	}
-
-	public boolean isSwordCollected() {
-		return inventory.get(SWORD);
-	}
-
-	public void setSwordCollected(boolean swordCollected) {
-		inventory.set(SWORD,swordCollected);
-	}
-	
-	public boolean isIcePowerCollected() {
-		return inventory.get(ICE_POWER);
-	}
-
-	public void setIcePowerCollected(boolean icePowerCollected) {
-		inventory.set(ICE_POWER,icePowerCollected);
+	public void setItemCollected(int itemNum, boolean collected) {
+		inventory.set(itemNum,collected);
 	}
 
 	public int getNumTreasureCollected() {

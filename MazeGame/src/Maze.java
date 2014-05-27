@@ -48,10 +48,10 @@ public class Maze {
 						timer.cancel();
 					} else if (enemy[i].isDead()) {	//if enemy is already dead
 						continue;
-					} else if (player.isIcePowerCollected()) {
+					} else if (player.isItemCollected(Player.ICE_POWER)) {
 						try {
 							Thread.sleep(5000);	//enemy freezes for 5 seconds
-							player.setIcePowerCollected(false);	//ice power disappears after 5 seconds
+							player.setItemCollected(Player.ICE_POWER,false);	//ice power disappears after 5 seconds
 						} catch (InterruptedException e) {
 							//do nothing
 						}
@@ -70,7 +70,7 @@ public class Maze {
 						}
 						enemy[i].setLocation(curr);	//update enemy location
 						if (enemy[i].getLocation().equals(player.getLocation())) {
-							if (!swordCollected()) {
+							if (!itemCollected(Player.SWORD)) {
 								player.setDead(true);	//player dies and enemy stops moving
 							} else {
 								enemy[i].setDead(true);	//player can kill enemies with sword
@@ -443,7 +443,7 @@ public class Maze {
 			for (int i = 0; i < enemy.length; i++) {
 				Tile enemyLoc = enemy[i].getLocation();	//get enemy location
 				if (playerLoc.equals(enemyLoc) && !enemy[i].isDead()) {
-					if (!swordCollected() && !icePowerCollected()) {
+					if (!itemCollected(Player.SWORD) && !itemCollected(Player.ICE_POWER)) {
 						player.setDead(true);	//player dies and enemy stops moving
 					} else {
 						enemy[i].setDead(true);
@@ -452,16 +452,16 @@ public class Maze {
 				}
 			}
 			if (playerLoc.getType() == Tile.KEY) {
-				player.setKeyCollected(true);
+				player.setItemCollected(Player.KEY, true);
 				playerLoc.setType(Tile.PATH);	//set key tile to normal path
 			} else if (playerLoc.getType() == Tile.TREASURE) {
 				player.addNumTreasureCollected();
 				playerLoc.setType(Tile.PATH);	//if we collected the treasure
 			} else if (playerLoc.getType() == Tile.SWORD) {
-				player.setSwordCollected(true);
+				player.setItemCollected(Player.SWORD, true);
 				playerLoc.setType(Tile.PATH);
 			} else if (playerLoc.getType() == Tile.ICE_POWER) {
-				player.setIcePowerCollected(true);
+				player.setItemCollected(Player.ICE_POWER,true);
 				playerLoc.setType(Tile.PATH);
 			}
 			checkReachedEnd();	//unlock door if player has reached end tile
@@ -540,7 +540,7 @@ public class Maze {
 		boolean atEnd = false;
 		if (playerLoc.getX() == (width-2) && playerLoc.getY() == (height-2)) {
 			atEnd = true;
-			if (keyCollected()) {	//if key is collected, unlock door
+			if (itemCollected(Player.KEY)) {	//if key is collected, unlock door
 				grid[width-2][height-1].setType(Tile.PATH);	//set door to walkable path
 				grid[width-2][height-1].setWalkable();
 			}
@@ -577,22 +577,11 @@ public class Maze {
 	public int getNumTreasureCollected() { return player.getNumTreasureCollected(); }
 	
 	/**
-	 * Check if key is collected.
-	 * @return true if key is collected
+	 * Check if item is collected.
+	 * @param itemNum the ID of the item as defined in Player
+	 * @return true if item is collected
 	 */
-	public boolean keyCollected() { return player.isKeyCollected(); }
-	
-	/**
-	 * Check if sword is collected.
-	 * @return true if sword is collected
-	 */
-	public boolean swordCollected() { return player.isSwordCollected(); }
-	
-	/**
-	 * Check if ice power is collected.
-	 * @return true if ice power is collected
-	 */
-	public boolean icePowerCollected() { return player.isIcePowerCollected(); }
+	public boolean itemCollected(int itemNum) { return player.isItemCollected(itemNum); }
 	
 	/**
 	 * Get the tile of a specific set of x and y coordinates.
