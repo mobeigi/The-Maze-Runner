@@ -25,6 +25,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JLabel level;	//level of game
 	private JPanel sidePanel;
 	private JButton exitButton;
+	
 	private JLabel inventorySword;
 	private JLabel inventoryKey;
 	private JLabel inventoryIcePower;
@@ -416,12 +417,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sidePanel.add(exitButton, gbc);
 		
 		//Add key and sword (set size 48 x 48)
-		PlayerPanel sword = new PlayerPanel(swordSprite,48,48);
-		inventorySword = new JLabel(sword.getPlayerSprite());
-		PlayerPanel key = new PlayerPanel(keySprite,48,48);
-		inventoryKey = new JLabel(key.getPlayerSprite());
-		PlayerPanel snowflake = new PlayerPanel(snowflakeSprite,48,48);
-		inventoryIcePower = new JLabel(snowflake.getPlayerSprite());
+		inventorySword = new JLabel(new PlayerPanel(swordSprite,48,48).getPlayerSprite());
+		inventoryKey = new JLabel(new PlayerPanel(keySprite,48,48).getPlayerSprite());
+		inventoryIcePower = new JLabel(new PlayerPanel(snowflakeSprite,48,48).getPlayerSprite());
 		
 		gbc.gridwidth = 1;
 		gbc.gridy = 3;
