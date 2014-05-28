@@ -413,7 +413,11 @@ public class Maze {
 		}
 	}
 	
-	public void startEnemy() {
+	/**
+	 * Begins updating enemy movement in the maze.
+	 * Each move is scheduled at every 1.5 seconds.
+	 */
+	private void startEnemy() {
 		final Timer timer = new Timer();	//auto-scheduling of enemy movement
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -429,12 +433,9 @@ public class Maze {
 						} catch (InterruptedException e) {
 							//do nothing
 						}
-					} else if (player.getLocation() != null && !player.isDead()) {	//if player is not dead
+					} else if (player.getLocation() != null) {	//if player is not dead
 						//enemy follows player
 						Tile enemyLoc = enemy[i].getLocation();
-						if (enemyLoc == null) {
-							continue;
-						}
 						HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
 						path.put(grid[enemyLoc.getX()][enemyLoc.getY()], null);
 						boolean[][] visitedTile = new boolean[width][height];
