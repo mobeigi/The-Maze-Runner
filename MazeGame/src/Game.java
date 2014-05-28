@@ -13,7 +13,7 @@ public class Game {
     private GameFrame gameFrame;
     private MazeFrame mazeFrame;
     private InstructionFrame instrFrame;
-    private OptionFrame optionFrame;
+    private OptionPanel optionPanel;
     private Player player;
     private Controller c;
    
@@ -37,8 +37,8 @@ public class Game {
         this.isGameOver = false;
         this.inGame = false;
         this.instrFrame = new InstructionFrame();
-        this.optionFrame = new OptionFrame(this);
-        this.gameFrame = new GameFrame(this, START_LEVEL_WIDTH, START_LEVEL_HEIGHT, instrFrame, optionFrame);	//create game frame
+        this.optionPanel = new OptionPanel(this);
+        this.gameFrame = new GameFrame(this, START_LEVEL_WIDTH, START_LEVEL_HEIGHT, instrFrame, optionPanel);	//create game frame
         this.score = 0;	//initially empty score
     }
     
@@ -94,7 +94,7 @@ public class Game {
     
     public void showUI() {
     	//end game dialog if user finishes all levels
-    	if (level == 10) {
+    	if (level == MAX_LEVEL) {
     		Object[] options = {"Exit"};
 			JOptionPane.showOptionDialog (this.mazeFrame, "Congratulations, warrior!\n" +
 						"Your skill is worthy of mention but who knows\n" + "what challenges we may see ahead?\n"
