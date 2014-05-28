@@ -34,13 +34,18 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private Tile[] lastEnemyPos;
 	
 	//Store sprites once
-	private HashMap<String, PlayerPanel> sprites;
+	private HashMap<String, Sprite> sprites;
 	
 
 	public static final String wallSprite = "steel_wall";
 	public static final String pathSprite = "carpet";
 	public static final String doorSprite = "locked_door";
-	public static final String playerSprite = "link";
+	
+	public static String playerSprite;
+	public static final String LinkSprite = "link";
+	public static final String WilliamSprite = "william";
+	public static final String KainenSprite = "kainen";
+
 	public static final String keySprite = "key";
 	public static final String coinSprite = "coin";
 	public static final String enemySprite = "cyan_pacman_monster";
@@ -74,24 +79,27 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//width of screen is normally shorter than height
 		//so block should always fit on screen
 		this.blockSize = new Dimension((int)((ySize*0.95/this.height)), (int)((ySize*0.95/this.height)));
-		this.sprites = new HashMap<String, PlayerPanel>();
+		this.sprites = new HashMap<String, Sprite>();
 		
 		int x = (int)blockSize.getWidth();
 		int y = (int)blockSize.getHeight();
 		
+		//Set PlayerSprite
+		this.playerSprite = g.getPlayer().getCharacter();
+		
 		//Add sprites to hashmap
 		//size of each sprite is determined by x and y,
 		//which is the size of each block on the maze grid
-		sprites.put(wallSprite, new PlayerPanel(wallSprite,x,y));
-		sprites.put(pathSprite, new PlayerPanel(pathSprite,x,y));
-		sprites.put(playerSprite, new PlayerPanel(playerSprite,x,y));
-		sprites.put(doorSprite, new PlayerPanel(doorSprite,x,y));
-		sprites.put(keySprite, new PlayerPanel(keySprite,x,y));
-		sprites.put(enemySprite, new PlayerPanel(enemySprite,x,y));
-		sprites.put(coinSprite, new PlayerPanel(coinSprite,x,y));
-		sprites.put(swordSprite, new PlayerPanel(swordSprite,x,y));
-		sprites.put(snowflakeSprite, new PlayerPanel(snowflakeSprite,x,y));
-		sprites.put(killableEnemySprite, new PlayerPanel(killableEnemySprite,x,y));
+		sprites.put(wallSprite, new Sprite(wallSprite,x,y));
+		sprites.put(pathSprite, new Sprite(pathSprite,x,y));
+		sprites.put(playerSprite, new Sprite(playerSprite,x,y));
+		sprites.put(doorSprite, new Sprite(doorSprite,x,y));
+		sprites.put(keySprite, new Sprite(keySprite,x,y));
+		sprites.put(enemySprite, new Sprite(enemySprite,x,y));
+		sprites.put(coinSprite, new Sprite(coinSprite,x,y));
+		sprites.put(swordSprite, new Sprite(swordSprite,x,y));
+		sprites.put(snowflakeSprite, new Sprite(snowflakeSprite,x,y));
+		sprites.put(killableEnemySprite, new Sprite(killableEnemySprite,x,y));
 		
 		//Initialise side panel looks
 		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -372,7 +380,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		scorePanel.add(titleImage);
 		
 		//Add player image (set size 96 x 96)
-		PlayerPanel player = new PlayerPanel(g.getPlayer().getCharacter(),96,96);	
+		Sprite player = new Sprite(g.getPlayer().getCharacter(),96,96);	
 		JLabel playerImage = new JLabel(player.getPlayerSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		scorePanel.add(playerImage);
@@ -411,9 +419,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 		sidePanel.add(exitButton, gbc);
 		
 		//Add key and sword (set size 48 x 48)
-		inventory.add(Player.KEY, new JLabel(new PlayerPanel(keySprite,48,48).getPlayerSprite()));
-		inventory.add(Player.SWORD, new JLabel(new PlayerPanel(swordSprite,48,48).getPlayerSprite()));
-		inventory.add(Player.ICE_POWER, new JLabel(new PlayerPanel(snowflakeSprite,48,48).getPlayerSprite()));
+		inventory.add(Player.KEY, new JLabel(new Sprite(keySprite,48,48).getPlayerSprite()));
+		inventory.add(Player.SWORD, new JLabel(new Sprite(swordSprite,48,48).getPlayerSprite()));
+		inventory.add(Player.ICE_POWER, new JLabel(new Sprite(snowflakeSprite,48,48).getPlayerSprite()));
 		
 		gbc.gridwidth = 1;
 		gbc.gridy = 3;

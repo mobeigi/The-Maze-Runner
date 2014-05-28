@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +20,8 @@ public class OptionPanel extends JPanel implements ActionListener {
 	private Game game;
 	
 	private JButton setLink;
-	private JButton setKey;
+	private JButton setWilliam;
+	private JButton setKainen;
 	private JTextField nameField;
 
 	
@@ -27,25 +29,44 @@ public class OptionPanel extends JPanel implements ActionListener {
 		game = g;
 
 		this.setLayout(new GridBagLayout());
-		//panel.setResizable(false);
-		PlayerPanel linkPanel = new PlayerPanel(MazeFrame.playerSprite,48,48);
-		PlayerPanel keyPanel = new PlayerPanel(MazeFrame.keySprite,48,48);
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		//panel.setResizable(false)
+		Sprite linkPanel = new Sprite(MazeFrame.LinkSprite, 48, 48);
+		Sprite williamPanel = new Sprite(MazeFrame.WilliamSprite, 48, 48);
+		Sprite kainenPanel = new Sprite(MazeFrame.KainenSprite, 48, 48);
 		
 		
-		nameField = new JTextField("Default");
-		nameField.setPreferredSize(new Dimension(100,100));
+		nameField = new JTextField("enter name");
+		nameField.setPreferredSize(new Dimension(200,26));
 		
-		setLink = new JButton("Link", linkPanel.getPlayerSprite() );
-		setKey = new JButton("Key", keyPanel.getPlayerSprite());
+		setLink = new JButton("Link - The Legend", linkPanel.getPlayerSprite() );
+		setWilliam = new JButton("William - The Knight", williamPanel.getPlayerSprite());
+		setKainen = new JButton("Kainen - The Dark Prince", kainenPanel.getPlayerSprite());
+		
 		//closeButton = new JButton("close");
 		
 		setLink.addActionListener(this);
-		setKey.addActionListener(this);
+		setWilliam.addActionListener(this);
+		setKainen.addActionListener(this);
+
 		//closeButton.addActionListener(this);
 		
 		this.add(setLink);
-		this.add(setKey);
-		this.add(nameField);
+		this.add(setWilliam);
+		this.add(setKainen);
+		
+		// Move to next line
+		gbc.gridy = -1;
+		gbc.gridx = 0;
+		
+		JLabel nameText = new JLabel("Introduce yourself, Champion: ");
+		this.add(nameText, gbc);
+		
+		gbc.gridx = 1;
+		
+		this.add(nameField, gbc);
 		//panel.add(closeButton);
 		
 		//panel.setVisible(false);
@@ -55,11 +76,12 @@ public class OptionPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == setLink){
-			game.getPlayer().setCharacter(MazeFrame.playerSprite);
-		} else if (event.getSource() == setKey){
-			game.getPlayer().setCharacter(MazeFrame.keySprite);
+			game.getPlayer().setCharacter(MazeFrame.LinkSprite);
+		} else if (event.getSource() == setWilliam){
+			game.getPlayer().setCharacter(MazeFrame.WilliamSprite);
+		} else if (event.getSource() == setKainen){
+			game.getPlayer().setCharacter(MazeFrame.KainenSprite);
 		}
-
 	}
 	
 	public String getName(){
