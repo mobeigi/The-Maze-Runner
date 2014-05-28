@@ -51,7 +51,7 @@ public class InstructionFrame implements ActionListener{
 	    }
 	    
 		JLabel sword = new JLabel(new Sprite(MazeFrame.swordSprite,48,48).getPlayerSprite());
-		JLabel player = new JLabel(new Sprite(MazeFrame.playerSprite,48,48).getPlayerSprite());
+		//JLabel player = new JLabel(new Sprite(MazeFrame.playerSprite,48,48).getPlayerSprite());
 		JLabel key = new JLabel(new Sprite(MazeFrame.keySprite,48,48).getPlayerSprite());
 		JLabel coin = new JLabel(new Sprite(MazeFrame.coinSprite,48,48).getPlayerSprite());
 		JLabel enemy = new JLabel(new Sprite(MazeFrame.enemySprite,48,48).getPlayerSprite());
@@ -62,7 +62,7 @@ public class InstructionFrame implements ActionListener{
 		JLabel howtoplay = new JLabel(new ImageIcon(htp));
 		
 		sword.setText("Pick this up to kill the ghosts!");
-		player.setText("This is you, nice hat");
+		//player.setText("This is you, nice hat");
 		key.setText("Pick this up to open the door at the end of the maze");
 		coin.setText("Cash money, Cash money");
 		enemy.setText("Game over if you get too close");
@@ -78,8 +78,8 @@ public class InstructionFrame implements ActionListener{
 		
 		c.anchor = GridBagConstraints.WEST;
 		c.insets = new Insets(0,170,0,0);
-		c.gridy = 1;
-		instructions.add(player,c);
+		//c.gridy = 1;
+		//instructions.add(player,c);
 		
 		c.gridy = 2;
 		instructions.add(enemy,c);

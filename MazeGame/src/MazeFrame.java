@@ -9,12 +9,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 
-public class MazeFrame extends JFrame implements ActionListener {
+public class MazeFrame implements ActionListener {
 	//Private Fields
 	private static final long serialVersionUID = 1L;
 
 	private int height;
 	private int width;
+	private JFrame frame;
 	
 	private Game g;
 	
@@ -56,6 +57,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	public MazeFrame(Game g, int width, int height)
 	{
 		//Initialisation
+		frame = new JFrame();
 		this.height = height+2; 	//add 2 for border around maze
 		this.width = width+2;
 		this.g = g;
@@ -72,7 +74,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		int xSize = ((int) tk.getScreenSize().getWidth());  
 		int ySize = ((int) tk.getScreenSize().getHeight()); 
 		Dimension fullscreen = new Dimension(xSize, ySize);
-		this.setPreferredSize(fullscreen);
+		frame.setPreferredSize(fullscreen);
 		
 		//Initialise character spites
 		//block is made into a square size
@@ -113,21 +115,21 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//inventoryPanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		
 		//Update state
-		this.setExtendedState(Frame.MAXIMIZED_BOTH);  
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);  
 
 		//Fix window size
-		this.setResizable(false);
+		frame.setResizable(false);
 		
 		//Set frame layout
-		this.setLayout(new GridBagLayout());
+		frame.setLayout(new GridBagLayout());
 
 		//Set close operation
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Pack
-		this.setUndecorated(true);
-		this.pack();
-		this.setVisible(true);
+		frame.setUndecorated(true);
+		frame.pack();
+		frame.setVisible(true);
 	}
 
 	//Perform actions based on user actions
@@ -135,7 +137,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	{
 		//Detect object who performed action
 		if (e.getSource() == this.exitButton) {
-			int dialogResult = JOptionPane.showConfirmDialog (this, "Are you sure you want to exit to the main menu?\n\n" +
+			int dialogResult = JOptionPane.showConfirmDialog (frame, "Are you sure you want to exit to the main menu?\n\n" +
 					"										All game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
 			
 			//If user wishes to quit
@@ -143,7 +145,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 				g.setIsGameOver(true);
 				g.setIsInGame(false);
 			} else {
-				this.requestFocus();	//request focus again
+				frame.requestFocus();	//request focus again
 			}
 		}
 	}
@@ -180,7 +182,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 				updateBlock(m,m.getDestDoor());
 			} else if (m.exitedMaze()) {
 				Object[] options = {"Next level"};
-				int dialogResult = JOptionPane.showOptionDialog (this, "The next journey awaits you...\n" +
+				int dialogResult = JOptionPane.showOptionDialog (frame, "The next journey awaits you...\n" +
 									"What unknown challenges lay ahead?","Room " + (g.getLevel()+1) + " cleared!", 	//levels count from 0, so +1 offset to count from 1
 									JOptionPane.OK_OPTION,JOptionPane.PLAIN_MESSAGE,
 									new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,options[0]);
@@ -188,12 +190,12 @@ public class MazeFrame extends JFrame implements ActionListener {
 				if (dialogResult == 0) {
 					//do nothing for now, change so that next level is reached
 				} else {
-					this.requestFocus();	//request focus again
+					frame.requestFocus();	//request focus again
 				}
 			}
 		} else {
 			Object[] options = {"End campaign"};
-			int dialogResult = JOptionPane.showOptionDialog (this, "Pacman monster killed you!","OH NO!", 
+			int dialogResult = JOptionPane.showOptionDialog (frame, "Pacman monster killed you!","OH NO!", 
 								JOptionPane.CLOSED_OPTION,JOptionPane.PLAIN_MESSAGE,
 								new ImageIcon(this.getClass().getResource("/sprites/" + enemySprite + ".gif")),options,options[0]);
 			//when user clicks the exit button
@@ -201,7 +203,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 				g.setIsGameOver(true);
 				g.setIsInGame(false);
 			} else {
-				this.requestFocus();	//request focus again
+				frame.requestFocus();	//request focus again
 			}
 		}
 		
@@ -267,7 +269,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
 		this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, 0);
 		
-		this.pack();
+		frame.pack();
 	}
 	
 	//Initilise maze GUI and pack it
@@ -369,7 +371,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.CENTER;
-		this.add(mazeGrid, gbc);
+		frame.add(mazeGrid, gbc);
 		
 		//Create SidePanel components using gridbag layout 
 		//Add Score Panel
@@ -449,10 +451,13 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Add sidePanel to this frame
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		this.add(sidePanel, gbc);
+		frame.add(sidePanel, gbc);
 		
 		//Repack frame
-		this.pack();
+		frame.pack();
 	}
 	
+	public JFrame getFrame(){
+		return frame;
+	}
 }

@@ -48,7 +48,7 @@ public class Game {
     public void createMaze(int level) {
     	// Dispose any previous mazes
     	if (mazeFrame != null) {
-    		this.mazeFrame.dispose();
+    		this.mazeFrame.getFrame().dispose();
     	}
     	this.maze =  new Maze(START_LEVEL_WIDTH+ (2*level), START_LEVEL_HEIGHT + (2*level), player);
     	this.mazeFrame = new MazeFrame(this, START_LEVEL_WIDTH+ (2*level), START_LEVEL_HEIGHT + (2*level)); //make new maze frame
@@ -56,7 +56,7 @@ public class Game {
     	//Initialise maze that was created
     	initMazeFrame();
 		c = new Controller(maze);	//update controller
-		this.mazeFrame.addKeyListener(this.c);
+		this.mazeFrame.getFrame().addKeyListener(this.c);
     }
     
     /**
@@ -66,7 +66,7 @@ public class Game {
      */
     public void initMazeFrame() {
        this.mazeFrame.init(this.maze); 
-       this.mazeFrame.requestFocus();
+       this.mazeFrame.getFrame().requestFocus();
     }
     
     /**
@@ -76,15 +76,15 @@ public class Game {
      */
     public void updateMazeFrame() {
         this.mazeFrame.update(this.maze);
-        this.mazeFrame.requestFocus();
-        this.mazeFrame.repaint();
+        this.mazeFrame.getFrame().requestFocus();
+        this.mazeFrame.getFrame().repaint();
      }
     
     public void showUI() {
     	//end game dialog if user finishes all levels
     	if (level == MAX_LEVEL) {
     		Object[] options = {"Exit"};
-			JOptionPane.showOptionDialog (this.mazeFrame, "Congratulations, warrior!\n" +
+			JOptionPane.showOptionDialog (this.mazeFrame.getFrame(), "Congratulations, warrior!\n" +
 						"Your skill is worthy of mention but who knows\n" + "what challenges we may see ahead?\n"
 						+ "We will require your assistance when the time comes...",
 						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")), options, options[0]);
@@ -93,7 +93,7 @@ public class Game {
     	score = 0;	//restart score
     	this.maze = new Maze(START_LEVEL_WIDTH, START_LEVEL_HEIGHT, player);	//level 1 maze
     	player.clearStats();
-    	this.mazeFrame.dispose(); //remove maze
+    	this.mazeFrame.getFrame().dispose(); //remove maze
     	this.gameFrame.setVisible(true);
     }
     
@@ -113,7 +113,7 @@ public class Game {
     
     public void setController(Controller c) {
     	this.c = c;
-    	this.mazeFrame.addKeyListener(this.c);
+    	this.mazeFrame.getFrame().addKeyListener(this.c);
     }
     
     public Player getPlayer() {
