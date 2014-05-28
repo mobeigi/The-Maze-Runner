@@ -20,7 +20,7 @@ public class GameFrame extends JFrame implements ActionListener {
 	JButton playButton = new JButton("Play Game!");
 	JButton howButton = new JButton("How to Play");
 	JButton exitButton = new JButton("EXIT");
-	JButton optionButton = new JButton("options");
+	JButton optionButton = new JButton("Options");
 	
 	public GameFrame(Game g, int width, int height, InstructionFrame instructions, OptionFrame optionFrame)
 	{
@@ -57,52 +57,56 @@ public class GameFrame extends JFrame implements ActionListener {
 		
 	    GridBagConstraints c = new GridBagConstraints();
 	    
-	    c.gridheight = 15;
+	    c.gridheight = 10;
 	    c.gridwidth = 10;
 	    c.gridy = 0;
 	    c.gridx = 0;
 	    this.add(titleImage,c);
 	    
-		//add image of link
-		c.gridwidth = 3;
-		c.gridheight = 10;
+		//add image of Link
+		c.gridwidth = 4;
 		c.gridy = 15;
-		c.gridx = 6;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		//c.insets = new Insets(0, 250, 0,0);
+		c.fill = GridBagConstraints.CENTER;
 
 	    this.add(linkImage, c);
 	    
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//Add play button
-	    c.gridy = 26;
-	    c.gridx = 3;
+	    c.gridy = 27;
+	    c.gridx = 0;
+	    c.insets = new Insets(0, 200, 0,0);
 		this.playButton.setBackground(Color.WHITE);
 		this.add(playButton,c); 
 		this.playButton.addActionListener(this);
 		
 		//Add how to play button
-		c.gridy = 26;
-	    c.gridx = 4;
+		c.gridy = 27;
+	    c.gridx = 1;
+	    
+	    c.insets = new Insets(0,0,0,0);
 		this.howButton.setBackground(Color.WHITE);
 		this.howButton.setEnabled(true);
 		this.add(howButton,c);
 		this.howButton.addActionListener(this);
 
+		//Add option button
+		c.gridy = 27;
+		c.gridx = 2;
+		this.optionButton.setBackground(Color.WHITE);
+		this.add(optionButton,c);		
+		this.optionButton.addActionListener(this);
 		
 		//Add exit button
-		c.gridy =26;
-	    c.gridx = 5;
+		c.gridy =27;
+	    c.gridx = 3;
 		this.exitButton.setBackground(Color.WHITE);
 		this.add(exitButton,c);		
 		this.exitButton.addActionListener(this);
 		
-		//Add option button
-		c.gridy =26;
-		c.gridx = 6;
-		this.optionButton.setBackground(Color.WHITE);
-		this.add(optionButton,c);		
-		this.optionButton.addActionListener(this);
+		
 		
 		//Remove border
 		//this.setUndecorated(true);
