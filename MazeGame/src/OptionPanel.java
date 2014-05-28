@@ -33,7 +33,7 @@ public class OptionPanel extends JPanel implements ActionListener {
 		
 		
 		nameField = new JTextField("Enter Name");
-		nameField.setPreferredSize(new Dimension(100,20));
+		nameField.setPreferredSize(new Dimension(200,20));
 		
 		
 		setLink = new JButton("Link", linkPanel.getPlayerSprite() );
@@ -46,12 +46,16 @@ public class OptionPanel extends JPanel implements ActionListener {
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 0;
+		gbc.gridx = 0;
 		this.add(setLink,gbc);
 		
-		gbc.gridy = 1;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
 		this.add(setKey,gbc);
 		
-		gbc.gridy =2;
+		gbc.gridwidth = 2;
+		gbc.gridx = 0;
+		gbc.gridy =1;
 		this.add(nameField,gbc);
 		//panel.add(closeButton);
 		

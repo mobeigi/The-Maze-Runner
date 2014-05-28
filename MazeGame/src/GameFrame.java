@@ -25,10 +25,12 @@ public class GameFrame extends JFrame implements ActionListener {
 	public GameFrame(Game g, int width, int height, InstructionFrame instructions, OptionPanel optionPanel)
 	{
 		//Set Minimum size
+		
+		
 		Dimension minSize = new Dimension(600, 600);
 		this.setMinimumSize(minSize);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+		this.setLocationRelativeTo(null);
 		this.g = g;
 		
 		this.instructions = instructions;
@@ -118,12 +120,13 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
 			//Make maze and mazeframe
-			JOptionPane.showConfirmDialog(null,optionPanel,"Please choose Character Model",JOptionPane.DEFAULT_OPTION);
-			g.getPlayer().setName(optionPanel.getName());
-			g.createMaze(g.getLevel()); //based on user options
-			g.setIsInGame(true);
-			g.setIsGameOver(false);
-			g.setGameFrameVisible(false);
+			if (JOptionPane.showConfirmDialog(null,optionPanel,"Choose Name & Character ",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION){
+				g.getPlayer().setName(optionPanel.getName());
+				g.createMaze(g.getLevel()); //based on user options
+				g.setIsInGame(true);
+				g.setIsGameOver(false);
+				g.setGameFrameVisible(false);
+			}
 		}
 		else if (e.getSource() == this.howButton) {
 			instructions.setVisible(true);
