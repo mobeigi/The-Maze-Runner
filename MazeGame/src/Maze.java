@@ -347,9 +347,11 @@ public class Maze {
 	}
 	
 	/**
-	 * Give first 10 steps from the current tile to the destination
+	 * Give first 10 steps from the current tile to the destination.
+	 * If less than 10 steps away, all tiles to destination are shown
 	 * @param t the current tile
-	 * @return the list of 10 tiles in the path from the current tile to the destination
+	 * @return the list of 10 tiles in the path from the current tile to the destination,
+	 * or all tiles to destination if less than 10 tiles away.
 	 */
 	public List<Tile> giveHint(Tile t) {
 		//TODO change colour of tiles such that path from current player position
@@ -369,7 +371,7 @@ public class Maze {
 				path.addFirst(prev);
 				curr = prev;
 			}
-			List<Tile> pathInit = path.subList(0,10);
+			List<Tile> pathInit = path.subList(0,Math.min(10,path.size()));
 			return pathInit;
 		}
 	}

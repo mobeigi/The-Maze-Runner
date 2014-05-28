@@ -8,17 +8,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-
+import java.util.List;
 public class MazeFrame implements ActionListener {
-	//Private Fields
-	private static final long serialVersionUID = 1L;
 
 	private int height;
 	private int width;
-	private JFrame frame;
 	
 	private Game g;
 	
+	private JFrame frame;
 	//Frame components
 	private JPanel mazeGrid;	//panel where maze grid is placed in
 	private JLayeredPane[][] mazeGridComp;	//allows access to each tile in the grid
@@ -28,6 +26,7 @@ public class MazeFrame implements ActionListener {
 	private JLabel level;	//level of game
 	private JPanel sidePanel;
 	private JButton exitButton;	
+	private JButton hintButton;
 	
 	private ArrayList<JLabel> inventory;
 	
@@ -53,11 +52,12 @@ public class MazeFrame implements ActionListener {
 	public static final String killableEnemySprite = "dead_pacman_monster";
 	public static final String swordSprite = "sword";
 	public static final String snowflakeSprite = "snowflake";
+	public static final String hintSprite = "grass";
 	
 	public MazeFrame(Game g, int width, int height)
 	{
-		//Initialisation
 		frame = new JFrame();
+		//Initialisation
 		this.height = height+2; 	//add 2 for border around maze
 		this.width = width+2;
 		this.g = g;
@@ -67,6 +67,8 @@ public class MazeFrame implements ActionListener {
 		this.sidePanel = new JPanel();
 		this.exitButton = new JButton("Exit");
 		this.exitButton.addActionListener(this);
+		this.hintButton = new JButton("Hint");
+		this.hintButton.addActionListener(this);
 		this.inventory = new ArrayList<JLabel>();
 		
 		//Make maze take up full screen
@@ -102,6 +104,7 @@ public class MazeFrame implements ActionListener {
 		sprites.put(swordSprite, new Sprite(swordSprite,x,y));
 		sprites.put(snowflakeSprite, new Sprite(snowflakeSprite,x,y));
 		sprites.put(killableEnemySprite, new Sprite(killableEnemySprite,x,y));
+		sprites.put(hintSprite, new Sprite(hintSprite,x,y));
 		
 		//Initialise side panel looks
 		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
@@ -109,10 +112,6 @@ public class MazeFrame implements ActionListener {
 		this.sidePanel.setBackground(new Color(240, 240, 240));
 		this.sidePanel.setLayout(new GridBagLayout());
 		this.sidePanel.setBorder(new LineBorder(Color.WHITE, 2));
-		
-		//initialise inventoryPanel
-		//this.inventoryPanel = new JPanel(new GridLayout(2,1));
-		//inventoryPanel.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		
 		//Update state
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);  
@@ -146,6 +145,19 @@ public class MazeFrame implements ActionListener {
 				g.setIsInGame(false);
 			} else {
 				frame.requestFocus();	//request focus again
+			}
+		} else if (e.getSource() == this.hintButton) {
+			Maze m = g.getMaze();
+			List<Tile> hintTiles = m.giveHint(m.getPlayerTile());
+			for (int i = 0; i < hintTiles.size(); i++) {
+				JLabel hintImage = new JLabel(sprites.get(hintSprite).getPlayerSprite());
+				//add hint tile to second layer from the top
+				if (this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].getComponentCountInLayer(0) == 1) {
+					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, 0);
+				} else {
+					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, 1);
+				}
+				this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].repaint();
 			}
 		}
 	}
@@ -354,7 +366,7 @@ public class MazeFrame implements ActionListener {
 			
 				//Always add block sprite
 				JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
-				block.add(spriteImage, 1);
+				block.add(spriteImage, -1);
 				
 				//Add overlay sprite if required
 				if (overLaySprite != "") {
@@ -423,6 +435,8 @@ public class MazeFrame implements ActionListener {
 		exitButton.setMargin(new Insets(5, 10, 5, 10));
 		exitButton.setToolTipText("Click here to exit to main menu.");
 		sidePanel.add(exitButton, gbc);
+		hintButton.setMargin(new Insets(5, 10, 5, 10));
+		sidePanel.add(hintButton, gbc);
 		
 		//Add key and sword (set size 48 x 48)
 		inventory.add(Player.KEY, new JLabel(new Sprite(keySprite,48,48).getPlayerSprite()));
@@ -430,17 +444,17 @@ public class MazeFrame implements ActionListener {
 		inventory.add(Player.ICE_POWER, new JLabel(new Sprite(snowflakeSprite,48,48).getPlayerSprite()));
 		
 		gbc.gridwidth = 1;
-		gbc.gridy = 3;
+		gbc.gridy = 6;
 		gbc.gridx = 0;
 		//gbc.insets = new Insets(0,10,0,0);
 		sidePanel.add(inventory.get(Player.SWORD),gbc);
 		
 		//gbc.insets = new Insets(0,0,0,10);
-		gbc.gridy = 4;
+		gbc.gridy = 7;
 		gbc.gridx = 0;
 		sidePanel.add(inventory.get(Player.KEY),gbc);
 		
-		gbc.gridy = 5;
+		gbc.gridy = 8;
 		gbc.gridx = 0;
 		sidePanel.add(inventory.get(Player.ICE_POWER),gbc);
 		
@@ -457,7 +471,7 @@ public class MazeFrame implements ActionListener {
 		frame.pack();
 	}
 	
-	public JFrame getFrame(){
+	public JFrame getFrame() {
 		return frame;
-	}
+	}	
 }
