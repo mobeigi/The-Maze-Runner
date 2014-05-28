@@ -14,8 +14,8 @@ public class Game {
     private MazeFrame mazeFrame;
     private Player player;
     private Controller c;
+    
     private int difficulty;
-   
     private int score;
     private int level;
     
@@ -31,8 +31,7 @@ public class Game {
     
     public static final int EASY = -1;
     public static final int MEDIUM = 0;
-    public static final int HARD = 1;
-    
+    public static final int HARD = 1;  
     
     /**
      * Constructor for creating game object.
@@ -43,7 +42,7 @@ public class Game {
         //Make one player
 		player = new Player("Default", "link");
         this.score = 0;	//initially empty score
-        this.difficulty = MEDIUM;
+        this.difficulty = MEDIUM;	//default difficulty is medium
         this.gameFrame = new GameFrame(this, START_LEVEL_WIDTH, START_LEVEL_HEIGHT);	//create game frame
     }
     
@@ -156,9 +155,7 @@ public class Game {
 		 //If level is complete
 		 if (maze.exitedMaze()) {
 			level++;
-			player.setItemCollected(Player.SWORD,false);	//clear inventory once next level
-			player.setItemCollected(Player.KEY,false);
-			player.setItemCollected(Player.ICE_POWER,false);
+			player.clearInventory();	//clear inventory once next level
 			 if (level == MAX_LEVEL) {
 				 setIsGameOver(true);	//end game if passed all levels
 				 setIsInGame(false);

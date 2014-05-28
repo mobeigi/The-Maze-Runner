@@ -17,7 +17,7 @@ import java.util.TimerTask;
  * @see Player
  */
 public class Maze {
-	private Tile[][] grid;	//all tiles in the grid
+	private final Tile[][] grid;	//all tiles in the grid
 	private int width;	//width of maze including border
 	private int height;	//height of maze including border
 	private Player player;	//the current player
@@ -37,54 +37,7 @@ public class Maze {
 		}
 		createMaze();	//initialise all tiles including
 						//player location, enemy locations, coins, powerups, doors
-		
-		final Timer timer = new Timer();	//auto-scheduling of enemy movement
-		timer.schedule(new TimerTask() {
-			public void run() {
-				for (int i = 0; i < enemy.length; i++) {	//update location of all enemies
-					if (player.isDead()) {
-						timer.cancel();
-					} else if (enemy[i].isDead()) {	//if enemy is already dead
-						continue;
-					} else if (player.isItemCollected(Player.ICE_POWER)) {
-						try {
-							Thread.sleep(5000);	//enemy freezes for 5 seconds
-							player.setItemCollected(Player.ICE_POWER,false);	//ice power disappears after 5 seconds
-						} catch (InterruptedException e) {
-							//do nothing
-						}
-					} else if (player.getLocation() != null && !player.isDead()) {	//if player is not dead
-						//enemy follows player
-						Tile enemyLoc = enemy[i].getLocation();
-						if (enemyLoc == null) {
-							continue;
-						}
-						HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
-						path.put(grid[enemyLoc.getX()][enemyLoc.getY()], null);
-						boolean[][] visitedTile = new boolean[width][height];
-						findPath(enemyLoc.getX(), enemyLoc.getY(),
-								player.getLocation().getX(), player.getLocation().getY(),
-								visitedTile,path);
-						Tile curr = player.getLocation();
-						//backtracking through path to find next tile to go
-						while (!path.get(curr).equals(enemyLoc)) {	//if we haven't found the next tile to go
-							curr = path.get(curr);
-						}
-						enemy[i].setLocation(curr);	//update enemy location
-						if (enemy[i].getLocation().equals(player.getLocation())) {
-							if (!itemCollected(Player.SWORD)) {
-								player.setDead(true);	//player dies and enemy stops moving
-							} else {
-								enemy[i].setDead(true);	//player can kill enemies with sword
-								player.addEnemyKilled();
-							}
-						}
-					} //else don't move enemy
-					//showMaze();	//for debugging
-				}
-			}
-		},1500,1500);	//enemy moves every 1.5 seconds
-						//if too fast, player cannot reach sword and will eventually die
+		startEnemy();
 	}
 	
 	/**
@@ -458,6 +411,56 @@ public class Maze {
 			}
 			checkReachedEnd();	//unlock door if player has reached end tile
 		}
+	}
+	
+	public void startEnemy() {
+		final Timer timer = new Timer();	//auto-scheduling of enemy movement
+		timer.schedule(new TimerTask() {
+			public void run() {
+				for (int i = 0; i < enemy.length; i++) {	//update location of all enemies
+					if (player.isDead()) {
+						timer.cancel();
+					} else if (enemy[i].isDead()) {	//if enemy is already dead
+						continue;
+					} else if (player.isItemCollected(Player.ICE_POWER)) {
+						try {
+							Thread.sleep(5000);	//enemy freezes for 5 seconds
+							player.setItemCollected(Player.ICE_POWER,false);	//ice power disappears after 5 seconds
+						} catch (InterruptedException e) {
+							//do nothing
+						}
+					} else if (player.getLocation() != null && !player.isDead()) {	//if player is not dead
+						//enemy follows player
+						Tile enemyLoc = enemy[i].getLocation();
+						if (enemyLoc == null) {
+							continue;
+						}
+						HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
+						path.put(grid[enemyLoc.getX()][enemyLoc.getY()], null);
+						boolean[][] visitedTile = new boolean[width][height];
+						findPath(enemyLoc.getX(), enemyLoc.getY(),
+								player.getLocation().getX(), player.getLocation().getY(),
+								visitedTile,path);
+						Tile curr = player.getLocation();
+						//backtracking through path to find next tile to go
+						while (!path.get(curr).equals(enemyLoc)) {	//if we haven't found the next tile to go
+							curr = path.get(curr);
+						}
+						enemy[i].setLocation(curr);	//update enemy location
+						if (enemy[i].getLocation().equals(player.getLocation())) {
+							if (!itemCollected(Player.SWORD)) {
+								player.setDead(true);	//player dies and enemy stops moving
+							} else {
+								enemy[i].setDead(true);	//player can kill enemies with sword
+								player.addEnemyKilled();
+							}
+						}
+					} //else don't move enemy
+					//showMaze();	//for debugging
+				}
+			}
+		},1500,1500);	//enemy moves every 1.5 seconds
+						//if too fast, player cannot reach sword and will eventually die
 	}
 	
 	/**

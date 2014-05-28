@@ -41,7 +41,7 @@ public class MazeFrame implements ActionListener {
 	public static final String pathSprite = "carpet";
 	public static final String doorSprite = "locked_door";
 	
-	public static String playerSprite;
+	private String playerSprite;
 	public static final String LinkSprite = "link";
 	public static final String WilliamSprite = "william";
 	public static final String KainenSprite = "kainen";
@@ -107,8 +107,10 @@ public class MazeFrame implements ActionListener {
 		sprites.put(hintSprite, new Sprite(hintSprite,x,y));
 		
 		//Initialise side panel looks
-		this.sidePanel.setPreferredSize(new Dimension( (int) ((this.width * blockSize.getWidth()) *0.4) ,	//side panel is based on mazes size, width is 40% of maze width 
-														(int) (this.height * blockSize.getHeight()))); //height is matched exactly
+		//side panel is based on mazes size, width is 40% of maze width
+		//height is matched exactly
+		this.sidePanel.setPreferredSize(new Dimension((int) ((this.width * blockSize.getWidth())*0.4) ,
+													(int) (this.height * blockSize.getHeight())));
 		this.sidePanel.setBackground(new Color(240, 240, 240));
 		this.sidePanel.setLayout(new GridBagLayout());
 		this.sidePanel.setBorder(new LineBorder(Color.WHITE, 2));

@@ -2,18 +2,23 @@ import java.util.ArrayList;
 
 /**
  * Player of the maze game.
+ * Contains all player information including name,
+ * character, location, status (dead or alive), inventory items,
+ * and statistics involving number of enemies killed and number of
+ * treasure collected.
  * @author Gavin Tam
  */
 public class Player {
 	private String name;
 	private String character;
 	private Tile location;
-	private boolean isDead;
+	private boolean isDead;	//status, determines if enemy has killed player or not
 	
-	private ArrayList<Boolean> inventory;
+	private ArrayList<Boolean> inventory;	//inventory with items ordered by item number
 	private int numTreasureCollected;
 	private int enemyKilled;
 	
+	//describes the item number of each item in the inventory
 	public static final int KEY = 0;
 	public static final int SWORD = 1;
 	public static final int ICE_POWER = 2;
@@ -35,6 +40,11 @@ public class Player {
 	//Return the name of the player
 	public String getName(){
 		return this.name;
+	}
+	
+	
+	public void setName(String name){
+		this.name = name;
 	}
 	
 	//Return the character this player has selected
@@ -97,7 +107,9 @@ public class Player {
 		enemyKilled = 0;
 	}
 	
-	public void setName(String name){
-		this.name = name;
+	public void clearInventory() {
+		for (int i = 0; i < NUM_INVENTORY_ITEMS; i++) {
+			inventory.set(i,false);	//clear inventory
+		}
 	}
 }
