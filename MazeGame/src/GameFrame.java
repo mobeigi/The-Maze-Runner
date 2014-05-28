@@ -14,15 +14,15 @@ public class GameFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private Game g;
 	private InstructionFrame instructions;
-	private OptionFrame optionFrame;
+	private JPanel optionPanel;
 	
 	//Frame components
-	JButton playButton = new JButton("Play Game!");
-	JButton howButton = new JButton("How to Play");
-	JButton exitButton = new JButton("EXIT");
-	JButton optionButton = new JButton("options");
+	private JButton playButton = new JButton("Play Game!");
+	private JButton howButton = new JButton("How to Play");
+	private JButton exitButton = new JButton("EXIT");
+
 	
-	public GameFrame(Game g, int width, int height, InstructionFrame instructions, OptionFrame optionFrame)
+	public GameFrame(Game g, int width, int height, InstructionFrame instructions, OptionPanel optionPanel)
 	{
 		//Set Minimum size
 		Dimension minSize = new Dimension(600, 600);
@@ -32,7 +32,7 @@ public class GameFrame extends JFrame implements ActionListener {
 		this.g = g;
 		
 		this.instructions = instructions;
-		this.optionFrame = optionFrame;
+		this.optionPanel = optionPanel;
 		
 		//Set user size
 		this.setSize(width, height);
@@ -96,14 +96,14 @@ public class GameFrame extends JFrame implements ActionListener {
 		this.exitButton.setBackground(Color.WHITE);
 		this.add(exitButton,c);		
 		this.exitButton.addActionListener(this);
-		
+		/*
 		//Add option button
 		c.gridy =26;
 		c.gridx = 6;
 		this.optionButton.setBackground(Color.WHITE);
 		this.add(optionButton,c);		
 		this.optionButton.addActionListener(this);
-		
+		*/
 		//Remove border
 		//this.setUndecorated(true);
 		
@@ -118,19 +118,15 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
 			//Make maze and mazeframe
+			JOptionPane.showConfirmDialog(null,optionPanel,"Please choose Character Model",JOptionPane.OK_OPTION);
+			g.getPlayer().setName(optionPanel.getName());
 			g.createMaze(g.getLevel()); //based on user options
 			g.setIsInGame(true);
 			g.setIsGameOver(false);
 			g.setGameFrameVisible(false);
 		}
 		else if (e.getSource() == this.howButton) {
-			//Input diagJOptionPane.showInputDialog(null, "This is the message", "This is the default text");
 			instructions.setVisible(true);
-			//g.setGameFrameVisible(false);
-			
-		}
-		else if (e.getSource() == this.optionButton){
-			optionFrame.setVisible(true);
 		}
 		else if (e.getSource() == this.exitButton) {
 			System.exit(0);

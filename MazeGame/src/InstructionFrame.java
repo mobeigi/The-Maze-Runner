@@ -106,9 +106,6 @@ public class InstructionFrame implements ActionListener{
 		frame.pack();
 		frame.setVisible(false);
 	}
-	
-	
-	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
