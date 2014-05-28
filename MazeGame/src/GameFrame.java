@@ -1,13 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-
 
 public class GameFrame extends JFrame implements ActionListener {
 	//Private Fields
@@ -17,24 +12,21 @@ public class GameFrame extends JFrame implements ActionListener {
 	private JPanel optionPanel;
 	
 	//Frame components
-	private JButton playButton = new JButton("Play Game!");
-	private JButton howButton = new JButton("How to Play");
-	private JButton exitButton = new JButton("EXIT");
+	private JButton playButton;
+	private JButton howButton;
+	private JButton exitButton;
 
 	
-	public GameFrame(Game g, int width, int height, InstructionFrame instructions, OptionPanel optionPanel)
-	{
+	public GameFrame(Game g, int width, int height) {
 		//Set Minimum size
-		
-		
 		Dimension minSize = new Dimension(600, 600);
 		this.setMinimumSize(minSize);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.g = g;
 		
-		this.instructions = instructions;
-		this.optionPanel = optionPanel;
+		this.instructions = new InstructionFrame();
+		this.optionPanel = new OptionPanel(g);
 		
 		//Set user size
 		this.setSize(width, height);
@@ -79,6 +71,7 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Add play button
 	    c.gridy = 26;
 	    c.gridx = 3;
+	    playButton = new JButton("Play Game!");
 		this.playButton.setBackground(Color.WHITE);
 		this.add(playButton,c); 
 		this.playButton.addActionListener(this);
@@ -86,28 +79,19 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Add how to play button
 		c.gridy = 26;
 	    c.gridx = 4;
+	    howButton = new JButton("How to Play");
 		this.howButton.setBackground(Color.WHITE);
 		this.howButton.setEnabled(true);
 		this.add(howButton,c);
 		this.howButton.addActionListener(this);
 
-		
 		//Add exit button
 		c.gridy =26;
 	    c.gridx = 5;
+	    exitButton = new JButton("EXIT");
 		this.exitButton.setBackground(Color.WHITE);
 		this.add(exitButton,c);		
 		this.exitButton.addActionListener(this);
-		/*
-		//Add option button
-		c.gridy =26;
-		c.gridx = 6;
-		this.optionButton.setBackground(Color.WHITE);
-		this.add(optionButton,c);		
-		this.optionButton.addActionListener(this);
-		*/
-		//Remove border
-		//this.setUndecorated(true);
 		
 		//Pack
 		this.pack();
@@ -115,17 +99,17 @@ public class GameFrame extends JFrame implements ActionListener {
 	}
 
 	//Perform actions based on user actions
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
 			//Make maze and mazeframe
-			if (JOptionPane.showConfirmDialog(null,optionPanel,"Choose Name & Character ",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION){
+			if (JOptionPane.showConfirmDialog(null,optionPanel,"Choose Name & Character ",
+				JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
 				g.getPlayer().setName(optionPanel.getName());
 				g.createMaze(g.getLevel()); //based on user options
 				g.setIsInGame(true);
 				g.setIsGameOver(false);
-				g.setGameFrameVisible(false);
+				this.setVisible(false);
 			}
 		}
 		else if (e.getSource() == this.howButton) {

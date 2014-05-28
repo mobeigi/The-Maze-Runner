@@ -217,12 +217,12 @@ public class Maze {
 	/**
 	 * Displays ASCII form of basic maze.
 	 * Shows where walls and paths are,
-	 * the solution and where player is.
+	 * and where player is.
 	 */
 	public void showMaze () {
 		Tile playerLoc = player.getLocation();
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
+		for (int j = 0; j < width; j++) {
+			for (int i = 0; i < height; i++) {
 				if (grid[i][j].isWalkable()) {
 					//order of printing is important as path contains start and dest
 					if (playerLoc != null && playerLoc.equals(grid[i][j])) {
@@ -230,14 +230,7 @@ public class Maze {
 					} else if (i == (width-1)-1 && j == (height-1)-1) {
 						System.out.print("D");
 					} else {
-						List<Tile> path = giveHint(grid[1][height-2]);
-						if (path.contains(grid[i][j])) {
-							System.out.print("X");
-						} else if (mazeSolution.containsKey(grid[i][j])) {
-							System.out.print("*");
-						} else {
-							System.out.print("0");
-						}
+						System.out.print("0");
 					}
 				} else {
 					System.out.print("-");	//represents wall

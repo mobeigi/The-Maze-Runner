@@ -1,9 +1,6 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,40 +14,26 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 
 public class InstructionFrame implements ActionListener{
-	private static final long serialVersionUID = 1L;
+
 	private JButton backButton;
 	private JPanel instructions;
 	//private JPanel controls;
 	private JFrame frame;
-
 	
-	public InstructionFrame (){
+	public InstructionFrame () {
 		frame = new JFrame();
 		frame.setTitle("How to Play");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		backButton = new JButton("Close");
 		instructions = new JPanel(new GridBagLayout());
-		//controls = new JPanel(new GridBagLayout());
 
 		backButton.addActionListener(this);
 		frame.getContentPane().setBackground(Color.WHITE);
 		instructions.setBackground(Color.WHITE);
-		//controls.setBackground(Color.WHITE);
-		//controls.
-		
-		//this.setMinimumSize(new Dimension(600, 600));
-		//this.width = width;
-		//this.height = height;
-		//Set user size
-		//this.setSize(width, height);
-		//Make size fixed
 		frame.setResizable(false);
-		
-		
 		frame.setLayout(new GridBagLayout());
 		
 		BufferedImage wasd = null;
@@ -67,13 +50,13 @@ public class InstructionFrame implements ActionListener{
 	    	System.out.println("FAIL");
 	    }
 	    
-		JLabel sword = new JLabel((new Sprite(MazeFrame.swordSprite,48,48).getPlayerSprite()));
-		JLabel player = new JLabel((new Sprite(MazeFrame.playerSprite,48,48).getPlayerSprite()));
-		JLabel key = new JLabel((new Sprite(MazeFrame.keySprite,48,48).getPlayerSprite()));
-		JLabel coin = new JLabel((new Sprite(MazeFrame.coinSprite,48,48).getPlayerSprite()));
-		JLabel enemy = new JLabel((new Sprite(MazeFrame.enemySprite,48,48).getPlayerSprite()));
-		JLabel freeze = new JLabel((new Sprite(MazeFrame.snowflakeSprite, 48, 48).getPlayerSprite()));
-		JLabel enemyF = new JLabel((new Sprite(MazeFrame.killableEnemySprite, 48, 48).getPlayerSprite()));
+		JLabel sword = new JLabel(new Sprite(MazeFrame.swordSprite,48,48).getPlayerSprite());
+		JLabel player = new JLabel(new Sprite(MazeFrame.playerSprite,48,48).getPlayerSprite());
+		JLabel key = new JLabel(new Sprite(MazeFrame.keySprite,48,48).getPlayerSprite());
+		JLabel coin = new JLabel(new Sprite(MazeFrame.coinSprite,48,48).getPlayerSprite());
+		JLabel enemy = new JLabel(new Sprite(MazeFrame.enemySprite,48,48).getPlayerSprite());
+		JLabel freeze = new JLabel(new Sprite(MazeFrame.snowflakeSprite, 48, 48).getPlayerSprite());
+		JLabel enemyF = new JLabel(new Sprite(MazeFrame.killableEnemySprite, 48, 48).getPlayerSprite());
 
 		JLabel keyboard = new JLabel(new ImageIcon(wasd));
 		JLabel howtoplay = new JLabel(new ImageIcon(htp));
@@ -86,13 +69,9 @@ public class InstructionFrame implements ActionListener{
 		enemyF.setText("Chomp them when they're looking scared like this");
 		keyboard.setText("Use the WASD keys to move around");
 		freeze.setText("Pick this up to freeze and eat your enemies");
-		//keyboard.setVerticalTextPosition(JLabel.BOTTOM);
-		//keyboard.setHorizontalTextPosition(JLabel.CENTER);
 		
 		GridBagConstraints c= new GridBagConstraints();
 		c.fill=GridBagConstraints.VERTICAL;
-		
-		
 		
 		c.gridy = 0;
 		instructions.add(howtoplay, c);
@@ -131,7 +110,6 @@ public class InstructionFrame implements ActionListener{
 		this.backButton.setEnabled(true);
 		instructions.add(backButton,c);
 		
-		
 		c.gridx= 0;
 		frame.add(instructions);
 
@@ -141,14 +119,11 @@ public class InstructionFrame implements ActionListener{
 		frame.setVisible(false);
 	}
 	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==this.backButton){
 			frame.setVisible(false);
-			//mainMenu.setVisible(true);
 		}
-		
 	}
 
 	public void setVisible(boolean b) {

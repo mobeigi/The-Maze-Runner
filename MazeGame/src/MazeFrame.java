@@ -291,10 +291,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//Fill All blocks
 		for (int y = 0; y < height; y++)
 		{
-			gbc.gridy = y;	//update grid y pos
+			gbc.gridx = y;	//update grid y pos
 			for (int x = 0; x < width; x++)
 			{
-				gbc.gridx = x; //update grid x pos
+				gbc.gridy = x; //update grid x pos
 				
 				//Get information about current tile
 				Tile t = m.getTile(x, y);

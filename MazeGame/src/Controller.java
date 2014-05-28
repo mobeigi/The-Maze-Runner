@@ -3,10 +3,10 @@ import java.awt.event.KeyListener;
 
 public class Controller implements KeyListener {
 	
-	private Game game;
+	private Maze maze;
 	
-	public Controller(Game g){
-		this.game = g;
+	public Controller(Maze maze){
+		this.maze = maze;
 	}
 		
 	@Override
@@ -35,8 +35,8 @@ public class Controller implements KeyListener {
 		 }
 		 
 		 //Update the player location
-		 if (game.getMaze().isValid(dx, dy)) {
-			 game.getMaze().updatePlayerLoc(dx, dy);
+		 if (maze.isValid(dx, dy)) {
+			 maze.updatePlayerLoc(dx, dy);
 		 }
 	}
 
