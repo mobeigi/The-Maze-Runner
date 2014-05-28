@@ -14,6 +14,7 @@ public class Game {
     private MazeFrame mazeFrame;
     private Player player;
     private Controller c;
+    private int difficulty;
    
     private int score;
     private int level;
@@ -28,6 +29,11 @@ public class Game {
     public static final int POINTS_ENEMY_KILLED = 10;
     public static final int MAX_LEVEL = 10;
     
+    public static final int EASY = -1;
+    public static final int MEDIUM = 0;
+    public static final int HARD = 1;
+    
+    
     /**
      * Constructor for creating game object.
      */
@@ -37,6 +43,7 @@ public class Game {
         //Make one player
 		player = new Player("Default", "link");
         this.score = 0;	//initially empty score
+        this.difficulty = MEDIUM;
         this.gameFrame = new GameFrame(this, START_LEVEL_WIDTH, START_LEVEL_HEIGHT);	//create game frame
     }
     
@@ -50,8 +57,8 @@ public class Game {
     	if (mazeFrame != null) {
     		this.mazeFrame.getFrame().dispose();
     	}
-    	this.maze =  new Maze(START_LEVEL_WIDTH+ (2*level), START_LEVEL_HEIGHT + (2*level), player);
-    	this.mazeFrame = new MazeFrame(this, START_LEVEL_WIDTH+ (2*level), START_LEVEL_HEIGHT + (2*level)); //make new maze frame
+    	this.maze =  new Maze(START_LEVEL_WIDTH + (2*(level+difficulty)), START_LEVEL_HEIGHT + (2*(level+difficulty)), player);
+    	this.mazeFrame = new MazeFrame(this, START_LEVEL_WIDTH + (2*(level+difficulty)), START_LEVEL_HEIGHT + (2*(level+difficulty))); //make new maze frame
     	
     	//Initialise maze that was created
     	initMazeFrame();
@@ -163,5 +170,9 @@ public class Game {
 
 	public int getLevel () {
 		return level;
+	}
+	
+	public void setDifficulty (int difficulty) {
+		this.difficulty = difficulty;
 	}
 }
