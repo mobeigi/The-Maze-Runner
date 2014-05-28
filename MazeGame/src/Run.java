@@ -26,7 +26,7 @@ public class Run
 			//While still in game
 			while (!g.isGameOver()) 
 			{
-				if (System.currentTimeMillis() - lastUpdateTime > 50) {	//update every 250ms
+				if (System.currentTimeMillis() - lastUpdateTime > 20) {	//update every 20ms
 					 g.updateMazeFrame(); //update maze
 					 g.getMazeFrame().repaint(); //paint
 					 g.updateScore();
@@ -34,8 +34,8 @@ public class Run
 					 //If level is complete
 					 if (g.getMaze().exitedMaze()) {
 						 g.nextLevel();
-						 if (g.getLevel() == 10) {		//maximum of 10 levels
-							 g.setIsGameOver(true);	//end game if passed all 10 levels
+						 if (g.getLevel() == Game.MAX_LEVEL) {
+							 g.setIsGameOver(true);	//end game if passed all levels
 							 g.setIsInGame(false);
 						 } else {
 							 g.createMaze(g.getLevel());
