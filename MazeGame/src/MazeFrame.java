@@ -73,7 +73,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//block is made into a square size
 		//width of screen is normally shorter than height
 		//so block should always fit on screen
-		this.blockSize = new Dimension((int)((xSize*0.6/this.width)), (int)((xSize*0.6/this.width)));
+		this.blockSize = new Dimension((int)((ySize*0.95/this.width)), (int)((ySize*0.95/this.width)));
 		this.sprites = new HashMap<String, PlayerPanel>();
 		
 		int x = (int)blockSize.getWidth();
