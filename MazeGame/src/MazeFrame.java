@@ -152,12 +152,22 @@ public class MazeFrame implements ActionListener {
 			for (int i = 0; i < hintTiles.size(); i++) {
 				JLabel hintImage = new JLabel(sprites.get(hintSprite).getPlayerSprite());
 				//add hint tile to second layer from the top
-				if (this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].getComponentCountInLayer(0) == 1) {
-					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, 0);
-				} else {
-					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, 1);
+				int numComponents = this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].getComponentCount();
+				if (numComponents >= 3) {	//if more than 3 components, a hint tile was already added, so don't add again
+					continue;
+				}
+				//if only one component that is a path tile, add a hint tile on top
+				if (numComponents == 1 && g.getMaze().getTile(hintTiles.get(i).getX(),hintTiles.get(i).getY()).getType() == Tile.PATH) {
+					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, new Integer(0));
+				} else if (g.getMaze().getTile(hintTiles.get(i).getX(),hintTiles.get(i).getY()).getType() != Tile.PATH) {
+					//if more than one component and is not a path tile i.e. is special tile
+					//add hint tile in between
+					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, new Integer(-1));
+				} else {	//else don't do anything
+					continue;
 				}
 				this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].repaint();
+				frame.pack();
 			}
 		}
 	}
@@ -174,37 +184,37 @@ public class MazeFrame implements ActionListener {
 				if (!m.playerDied()) {
 					updateBlock(m, curPlayerPos);
 				}
-			}
-			lastPlayerPos = curPlayerPos;
-			score.setText("Score: " + Integer.toString(g.getScore())); //update score
-			// Add things to inventory
-			if (m.itemCollected(Player.SWORD)){
-				inventory.get(Player.SWORD).setVisible(true);
-			}
-			if (m.itemCollected(Player.KEY)){
-				inventory.get(Player.KEY).setVisible(true);
-			}
-			if (m.itemCollected(Player.ICE_POWER)){
-				inventory.get(Player.ICE_POWER).setVisible(true);
-			} else {
-				inventory.get(Player.ICE_POWER).setVisible(false);	//disappears according to maze settings (after 5 seconds)
-			}
-			
-			if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
-				updateBlock(m,m.getDestDoor());
-			} else if (m.exitedMaze()) {
-				Object[] options = {"Next level"};
-				int dialogResult = JOptionPane.showOptionDialog (frame, "The next journey awaits you...\n" +
-									"What unknown challenges lay ahead?","Room " + (g.getLevel()+1) + " cleared!", 	//levels count from 0, so +1 offset to count from 1
-									JOptionPane.OK_OPTION,JOptionPane.PLAIN_MESSAGE,
-									new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,options[0]);
-				//when user clicks the exit button
-				if (dialogResult == 0) {
-					//do nothing for now, change so that next level is reached
+				score.setText("Score: " + Integer.toString(g.getScore())); //update score
+				// Add things to inventory
+				if (m.itemCollected(Player.SWORD)){
+					inventory.get(Player.SWORD).setVisible(true);
+				}
+				if (m.itemCollected(Player.KEY)){
+					inventory.get(Player.KEY).setVisible(true);
+				}
+				if (m.itemCollected(Player.ICE_POWER)){
+					inventory.get(Player.ICE_POWER).setVisible(true);
 				} else {
-					frame.requestFocus();	//request focus again
+					inventory.get(Player.ICE_POWER).setVisible(false);	//disappears according to maze settings (after 5 seconds)
+				}
+				
+				if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
+					updateBlock(m,m.getDestDoor());
+				} else if (m.exitedMaze()) {
+					Object[] options = {"Next level"};
+					int dialogResult = JOptionPane.showOptionDialog (frame, "The next journey awaits you...\n" +
+										"What unknown challenges lay ahead?","Room " + (g.getLevel()+1) + " cleared!", 	//levels count from 0, so +1 offset to count from 1
+										JOptionPane.OK_OPTION,JOptionPane.PLAIN_MESSAGE,
+										new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,options[0]);
+					//when user clicks the exit button
+					if (dialogResult == 0) {
+						g.checkNextLevel();//do nothing for now, change so that next level is reached
+					} else {
+						frame.requestFocus();	//request focus again
+					}
 				}
 			}
+			lastPlayerPos = curPlayerPos;
 		} else {
 			Object[] options = {"End campaign"};
 			int dialogResult = JOptionPane.showOptionDialog (frame, "Pacman monster killed you!","OH NO!", 
@@ -238,11 +248,11 @@ public class MazeFrame implements ActionListener {
 	{	
 		//update top layers when updating block
 		//leave bottom background layer
-		for (int i = 0; i < this.mazeGridComp[old.getX()][old.getY()].getComponentCountInLayer(0)-1; i++) {
-			this.mazeGridComp[old.getX()][old.getY()].remove(i);
+		int numComponents = this.mazeGridComp[old.getX()][old.getY()].getComponentCount();
+		for (int i = 0; i < numComponents-1; i++) {
+			this.mazeGridComp[old.getX()][old.getY()].remove(0);
 		}
-		
-		String overLaySprite = pathSprite;	//Overlay sprite that goes on top of block sprite
+		String overLaySprite = "";	//Overlay sprite that goes on top of block sprite
 		
 		//Determine block graphics based on type of tile
 		//If player is at this tile
@@ -260,6 +270,7 @@ public class MazeFrame implements ActionListener {
 		//if the tile is door and is a path now (key collected)
 		else if (m.getDestDoor().equals(old) && m.getDestDoor().getType() == Tile.PATH) {
 			this.mazeGridComp[old.getX()][old.getY()].remove(0);
+			overLaySprite = pathSprite;
 		}
 		//Check if this is a door
 		else if (old.getType() == Tile.DOOR) {
@@ -278,10 +289,12 @@ public class MazeFrame implements ActionListener {
 		else if (old.getType() == Tile.ICE_POWER) {
 			overLaySprite = snowflakeSprite;
 		}
-		JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
-		this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, 0);
-		
-		frame.pack();
+		if (overLaySprite != "") {
+			JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
+			this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, new Integer(0));
+			
+			frame.pack();
+		}
 	}
 	
 	//Initilise maze GUI and pack it
@@ -305,10 +318,10 @@ public class MazeFrame implements ActionListener {
 		//Fill All blocks
 		for (int y = 0; y < height; y++)
 		{
-			gbc.gridx = y;	//update grid y pos
+			gbc.gridy = y;	//update grid y pos
 			for (int x = 0; x < width; x++)
 			{
-				gbc.gridy = x; //update grid x pos
+				gbc.gridx = x; //update grid x pos
 				
 				//Get information about current tile
 				Tile t = m.getTile(x, y);
@@ -366,12 +379,12 @@ public class MazeFrame implements ActionListener {
 			
 				//Always add block sprite
 				JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
-				block.add(spriteImage, -1);
+				block.add(spriteImage, new Integer(-2));
 				
 				//Add overlay sprite if required
 				if (overLaySprite != "") {
 					JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
-					block.add(overlayImage, 0);
+					block.add(overlayImage, new Integer(0));
 				}
 				
 				//Add block as hole to maze

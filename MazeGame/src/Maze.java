@@ -55,15 +55,19 @@ public class Maze {
 						}
 					} else if (player.getLocation() != null && !player.isDead()) {	//if player is not dead
 						//enemy follows player
+						Tile enemyLoc = enemy[i].getLocation();
+						if (enemyLoc == null) {
+							continue;
+						}
 						HashMap<Tile,Tile> path = new HashMap<Tile,Tile>();
-						path.put(grid[enemy[i].getLocation().getX()][enemy[i].getLocation().getY()], null);
+						path.put(grid[enemyLoc.getX()][enemyLoc.getY()], null);
 						boolean[][] visitedTile = new boolean[width][height];
-						findPath(enemy[i].getLocation().getX(), enemy[i].getLocation().getY(),
+						findPath(enemyLoc.getX(), enemyLoc.getY(),
 								player.getLocation().getX(), player.getLocation().getY(),
 								visitedTile,path);
 						Tile curr = player.getLocation();
 						//backtracking through path to find next tile to go
-						while (!path.get(curr).equals(enemy[i].getLocation())) {	//if we haven't found the next tile to go
+						while (!path.get(curr).equals(enemyLoc)) {	//if we haven't found the next tile to go
 							curr = path.get(curr);
 						}
 						enemy[i].setLocation(curr);	//update enemy location
@@ -401,7 +405,7 @@ public class Maze {
 	
 	public boolean isEnemyTile (Tile t) {
 		for (int i = 0; i < enemy.length; i++) {
-			if (enemy[i].getLocation() != null && enemy[i].getLocation().equals(t)) {
+			if (!enemy[i].isDead() && enemy[i].getLocation().equals(t)) {
 				return true;
 			}
 		}
