@@ -118,7 +118,7 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Detect object who performed action
 		if (e.getSource() == this.playButton) {
 			//Make maze and mazeframe
-			JOptionPane.showConfirmDialog(null,optionPanel,"Please choose Character Model",JOptionPane.OK_OPTION);
+			JOptionPane.showConfirmDialog(null,optionPanel,"Please choose Character Model",JOptionPane.DEFAULT_OPTION);
 			g.getPlayer().setName(optionPanel.getName());
 			g.createMaze(g.getLevel()); //based on user options
 			g.setIsInGame(true);

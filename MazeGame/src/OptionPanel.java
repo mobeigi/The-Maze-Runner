@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,13 +28,13 @@ public class OptionPanel extends JPanel implements ActionListener {
 		game = g;
 
 		this.setLayout(new GridBagLayout());
-		//panel.setResizable(false);
 		PlayerPanel linkPanel = new PlayerPanel(MazeFrame.playerSprite,48,48);
 		PlayerPanel keyPanel = new PlayerPanel(MazeFrame.keySprite,48,48);
 		
 		
-		nameField = new JTextField("Default");
-		nameField.setPreferredSize(new Dimension(100,100));
+		nameField = new JTextField("Enter Name");
+		nameField.setPreferredSize(new Dimension(100,20));
+		
 		
 		setLink = new JButton("Link", linkPanel.getPlayerSprite() );
 		setKey = new JButton("Key", keyPanel.getPlayerSprite());
@@ -43,9 +44,15 @@ public class OptionPanel extends JPanel implements ActionListener {
 		setKey.addActionListener(this);
 		//closeButton.addActionListener(this);
 		
-		this.add(setLink);
-		this.add(setKey);
-		this.add(nameField);
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridy = 0;
+		this.add(setLink,gbc);
+		
+		gbc.gridy = 1;
+		this.add(setKey,gbc);
+		
+		gbc.gridy =2;
+		this.add(nameField,gbc);
 		//panel.add(closeButton);
 		
 		//panel.setVisible(false);
