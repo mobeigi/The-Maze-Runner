@@ -26,7 +26,7 @@ public class Run
 			//While still in game
 			while (!g.isGameOver()) 
 			{
-				if (System.currentTimeMillis() - lastUpdateTime > 50) {	//update every 250ms
+				if (System.currentTimeMillis() - lastUpdateTime > 20) {	//update every 20ms
 					 g.updateMazeFrame(); //update maze
 					 g.getMazeFrame().repaint(); //paint
 					 g.updateScore();

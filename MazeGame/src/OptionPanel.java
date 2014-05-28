@@ -45,6 +45,9 @@ public class OptionPanel extends JPanel implements ActionListener {
 		setWilliam = new JButton("William - The Knight", williamPanel.getPlayerSprite());
 		setKainen = new JButton("Kainen - The Dark Prince", kainenPanel.getPlayerSprite());
 		
+		nameField = new JTextField("Enter Name");
+		nameField.setPreferredSize(new Dimension(200,20));
+		
 		//closeButton = new JButton("close");
 		
 		setLink.addActionListener(this);
@@ -52,7 +55,7 @@ public class OptionPanel extends JPanel implements ActionListener {
 		setKainen.addActionListener(this);
 
 		//closeButton.addActionListener(this);
-		
+
 		this.add(setLink);
 		this.add(setWilliam);
 		this.add(setKainen);
@@ -65,8 +68,9 @@ public class OptionPanel extends JPanel implements ActionListener {
 		this.add(nameText, gbc);
 		
 		gbc.gridx = 1;
-		
 		this.add(nameField, gbc);
+
+
 		//panel.add(closeButton);
 		
 		//panel.setVisible(false);
