@@ -99,7 +99,7 @@ public class Game {
 			JOptionPane.showOptionDialog (this.mazeFrame, "Congratulations, warrior!\n" +
 						"Your skill is worthy of mention but who knows\n" + "what challenges we may see ahead?\n"
 						+ "We will require your assistance when the time comes...",
-						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")), options, 0);
+						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")), options, options[0]);
     	} //otherwise no special dialog is displayed
     	level = 0;	//restart game
     	score = 0;	//restart score
