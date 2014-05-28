@@ -26,7 +26,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JLabel score;	//the score of the player
 	private JLabel level;	//level of game
 	private JPanel sidePanel;
-	private JButton exitButton;	
+	private JButton exitButton;
 	
 	private ArrayList<JLabel> inventory;
 	
