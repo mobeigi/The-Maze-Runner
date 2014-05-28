@@ -77,7 +77,10 @@ public class GameFrame extends JFrame implements ActionListener {
 		//Add play button
 	    c.gridy = 27;
 	    c.gridx = 0;
-	    c.insets = new Insets(0, 200, 0,0);
+	    Toolkit tk = Toolkit.getDefaultToolkit();
+	    int xSize = ((int) tk.getScreenSize().getWidth());
+	    System.out.println(xSize);
+	    c.insets = new Insets(0, 185, 0,0);
 		this.playButton.setBackground(Color.WHITE);
 		this.add(playButton,c); 
 		this.playButton.addActionListener(this);
