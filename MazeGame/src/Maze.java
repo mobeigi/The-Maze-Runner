@@ -361,11 +361,9 @@ public class Maze {
 	}
 	
 	/**
-	 * Give first 10 steps from the current tile to the destination,
-	 * or less if the player is less than 10 steps away
+	 * Give first 10 steps from the current tile to the destination
 	 * @param t the current tile
-	 * @return the list of 10 tiles (or less if less than 10 tiles away)
-	 * in the path from the current tile to the destination
+	 * @return the list of 10 tiles in the path from the current tile to the destination
 	 */
 	public List<Tile> giveHint(Tile t) {
 		//TODO change colour of tiles such that path from current player position
@@ -385,7 +383,7 @@ public class Maze {
 				path.addFirst(prev);
 				curr = prev;
 			}
-			List<Tile> pathInit = path.subList(0,Math.min(10,path.size()));
+			List<Tile> pathInit = path.subList(0,10);
 			return pathInit;
 		}
 	}
@@ -413,11 +411,6 @@ public class Maze {
 		return enemy[i].getLocation();
 	}
 	
-	/**
-	 * Checks if a tile is one where an enemy is situated on
-	 * @param t the tile of interest
-	 * @return true if the tile is one where an enemy is situated on
-	 */
 	public boolean isEnemyTile (Tile t) {
 		for (int i = 0; i < enemy.length; i++) {
 			if (enemy[i].getLocation() != null && enemy[i].getLocation().equals(t)) {

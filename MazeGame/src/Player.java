@@ -96,4 +96,8 @@ public class Player {
 		numTreasureCollected = 0;
 		enemyKilled = 0;
 	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
 }

@@ -26,7 +26,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 	private JLabel score;	//the score of the player
 	private JLabel level;	//level of game
 	private JPanel sidePanel;
-	private JButton exitButton;
+	private JButton exitButton;	
 	
 	private ArrayList<JLabel> inventory;
 	
@@ -73,7 +73,7 @@ public class MazeFrame extends JFrame implements ActionListener {
 		//block is made into a square size
 		//width of screen is normally shorter than height
 		//so block should always fit on screen
-		this.blockSize = new Dimension((int)((ySize*0.95/this.width)), (int)((ySize*0.95/this.width)));
+		this.blockSize = new Dimension((int)((xSize*0.6/this.width)), (int)((xSize*0.6/this.width)));
 		this.sprites = new HashMap<String, PlayerPanel>();
 		
 		int x = (int)blockSize.getWidth();
@@ -147,11 +147,9 @@ public class MazeFrame extends JFrame implements ActionListener {
 		
 		//if player is not dead or if he just died, update its position
 		if (!m.playerDied() || lastPlayerPos != null) {
-			if (!lastPlayerPos.equals(curPlayerPos)) {
-				updateBlock(m, lastPlayerPos);
-				if (!m.playerDied()) {
-					updateBlock(m, curPlayerPos);
-				}
+			updateBlock(m, lastPlayerPos);
+			if (!m.playerDied()) {
+				updateBlock(m, curPlayerPos);
 			}
 			lastPlayerPos = curPlayerPos;
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
@@ -200,10 +198,8 @@ public class MazeFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < m.getNumEnemies(); i++) {
 			Tile curEnemyPos = m.getEnemyTile(i);
 			if (!m.enemyDied(i)) {	//if enemy is not dead, update its position
-				if (!lastEnemyPos[i].equals(curEnemyPos) || m.itemCollected(Player.ICE_POWER)) {
-					updateBlock(m, lastEnemyPos[i]);
-					updateBlock(m, curEnemyPos);
-				}
+				updateBlock(m, lastEnemyPos[i]);
+				updateBlock(m, curEnemyPos);
 				lastEnemyPos[i] = curEnemyPos;
 			} else if (lastEnemyPos[i] != null) {
 				updateBlock(m, lastEnemyPos[i]);
