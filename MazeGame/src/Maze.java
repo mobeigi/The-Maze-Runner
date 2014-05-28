@@ -23,8 +23,6 @@ public class Maze {
 	private Player player;	//the current player
 	private Enemy[] enemy;	//all the enemies
 	
-	private HashMap<Tile,Tile> mazeSolution;
-			
 	public Maze (int w, int h, Player p) {
 		//width and height is assumed to be greater than 1
 		grid = new Tile[w+2][h+2];	//add 2 for border around maze
@@ -206,11 +204,6 @@ public class Maze {
 				i++;	//update treasure added
 			}
 		}
-		//width and height should be big enough to allow this to be valid
-		mazeSolution = new HashMap<Tile,Tile>();
-		mazeSolution.put(grid[1][1], null);
-		boolean[][] visitedTile = new boolean[width+2][height+2];
-		findPath(1,1,visitedTile,mazeSolution);		//finds solution to maze
 		showMaze();			//for debugging
 	}
 	
