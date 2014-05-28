@@ -147,9 +147,11 @@ public class MazeFrame extends JFrame implements ActionListener {
 		
 		//if player is not dead or if he just died, update its position
 		if (!m.playerDied() || lastPlayerPos != null) {
-			updateBlock(m, lastPlayerPos);
-			if (!m.playerDied()) {
-				updateBlock(m, curPlayerPos);
+			if (!lastPlayerPos.equals(curPlayerPos)) {
+				updateBlock(m, lastPlayerPos);
+				if (!m.playerDied()) {
+					updateBlock(m, curPlayerPos);
+				}
 			}
 			lastPlayerPos = curPlayerPos;
 			score.setText("Score: " + Integer.toString(g.getScore())); //update score
@@ -198,8 +200,10 @@ public class MazeFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < m.getNumEnemies(); i++) {
 			Tile curEnemyPos = m.getEnemyTile(i);
 			if (!m.enemyDied(i)) {	//if enemy is not dead, update its position
-				updateBlock(m, lastEnemyPos[i]);
-				updateBlock(m, curEnemyPos);
+				if (!lastEnemyPos[i].equals(curEnemyPos) || m.itemCollected(Player.ICE_POWER)) {
+					updateBlock(m, lastEnemyPos[i]);
+					updateBlock(m, curEnemyPos);
+				}
 				lastEnemyPos[i] = curEnemyPos;
 			} else if (lastEnemyPos[i] != null) {
 				updateBlock(m, lastEnemyPos[i]);
