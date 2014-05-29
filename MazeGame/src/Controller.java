@@ -22,7 +22,7 @@ public class Controller implements KeyListener {
 		
 	/**
 	 * Override method for keyPressed.
-	 * If ASWD (or the arrow keys) are pressed,
+	 * If arrow keys are pressed,
 	 * the player's location in the maze is updated
 	 * if the move is valid.
 	 * Check Maze for more information about validity of a player move
@@ -32,19 +32,19 @@ public class Controller implements KeyListener {
 		 int dx = 0;	//movement in the x direction
 		 int dy = 0;	//movement in the y direction
 		 
-		 if (e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT){
+		 if ( e.getKeyCode() == KeyEvent.VK_RIGHT){
 			 //System.out.println("right");
 			 dx = 1;	//move right
 			 dy = 0;
-		 } else if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT){
+		 } else if ( e.getKeyCode() == KeyEvent.VK_LEFT){
 			 //System.out.println("left");
 			 dx = -1;	//move left
 			 dy = 0;
-		 } else if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP) {
+		 } else if (e.getKeyCode() == KeyEvent.VK_UP) {
 			 //System.out.println("up");
 			 dx = 0;	//move up
 			 dy = -1;
-		 } else if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN){
+		 } else if ( e.getKeyCode() == KeyEvent.VK_DOWN){
 			 //System.out.println("down");
 			 dx = 0;	//move down
 			 dy = 1;

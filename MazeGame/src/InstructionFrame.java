@@ -49,7 +49,7 @@ public class InstructionFrame {
 		
 		BufferedImage wasd = null;
 	    try {
-	    	wasd = ImageIO.read(new File("src/sprites/WASD.png"));
+	    	wasd = ImageIO.read(new File("src/sprites/arrow.png"));
 	    } catch (IOException e) {
 	    	System.out.println("FAIL");
 	    }
@@ -76,7 +76,7 @@ public class InstructionFrame {
 		coin.setText("Cash money, Cash money");
 		enemy.setText("Game over if you get too close");
 		enemyF.setText("Chomp them when they're looking scared like this");
-		keyboard.setText("Use the WASD keys to move around");
+		keyboard.setText("Use the arrow keys to move around");
 		freeze.setText("Pick this up to freeze and eat your enemies");
 		
 		GridBagConstraints c= new GridBagConstraints();
