@@ -5,8 +5,7 @@ import javax.swing.JOptionPane;
  * System managing game flow.
  * It determines what game screens to show and
  * updates the GUI of the game seen by the user.
- * @author Gavin Tam
- *
+ * @author Mohammad Ghasembeigi, Gavin Tam
  */
 public class GameManager {
 	 private GameFrame gameFrame;	//the home screen

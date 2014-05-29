@@ -3,6 +3,8 @@
  * Game class that setups maze and in-game screens in preparation for a game.
  * In-game screens include the home screen and the maze game screen.
  * All players and controllers are configured.
+ * 
+ * @author Mohammad Ghasembeigi, Gavin Tam, Jeremy Ma, Calvin Ko
  */
 public class Game {
 	

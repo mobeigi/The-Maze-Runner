@@ -11,15 +11,17 @@ import javax.swing.border.LineBorder;
 
 /**
  * GUI class for the maze game.
- * It displays the current game state of the maze.
+ * Responsible for displaying the current game state of the maze in addition to a sidepanel containing relevant game variables and navigation options.
+ * 
  * @author Mohammad Ghasembeigi, Gavin Tam
+ * @see Maze
  */
 public class MazeFrame {
 
-	private int height;	//dimensions of the maze frame
+	private int height;	//Dimensions of the maze frame
 	private int width;
 	
-	private Game g;	//the current game state
+	private Game g;	//Reference to the game state to allow querying for information
 	
 	//Frame components
 	private JFrame frame;
@@ -37,6 +39,7 @@ public class MazeFrame {
 	
 	private Tile lastPlayerPos;	//stores where the player last was
 	private Tile[] lastEnemyPos;	//stores where the enemies last were
+	private boolean updatedOnce;
 	
 	//Store sprites once in hash map for easy access
 	private HashMap<String, Sprite> sprites;	
@@ -45,13 +48,13 @@ public class MazeFrame {
 	public static final String wallSprite = "steel_wall";
 	public static final String pathSprite = "carpet";
 	
-	//All characters
+	//Character sprite constants
 	private String playerSprite;
 	public static final String LinkSprite = "link";
 	public static final String WilliamSprite = "william";
 	public static final String KainenSprite = "kainen";
 
-	//All other sprites
+	//Other block sprite constants
 	public static final String doorSprite = "locked_door";
 	public static final String keySprite = "key";
 	public static final String coinSprite = "coin";
@@ -61,22 +64,33 @@ public class MazeFrame {
 	public static final String snowflakeSprite = "snowflake";
 	public static final String hintSprite = "grass";
 	
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param game - Game object with game state information.
+	 * @param width - Width of maze grid to be painted (number of tiles).
+	 * @param height - Height of maze grid to be painted (number of tiles).
+	 */
 	public MazeFrame(Game game, int width, int height) {
-		//set up main frame
+		//Set up MazeFrame with provided parameters
 		frame = new JFrame();	//make new frame to place maze frame components in
 		this.height = height; 	//number of tiles in y direction
 		this.width = width;		//number of tiles in x direction
 		this.g = game;		//save reference to game state
 		
-		//set up side panel
+		//Set up side panel
 		mazeGrid = new JPanel();
 		mazeGridComp = new JLayeredPane[this.width][this.height];
 		sidePanel = new JPanel();
 		exitButton = new JButton("Exit");
-		exitButton.addActionListener(new ActionListener() {	//shows dialog box giving exit option
+		exitButton.addActionListener(new ActionListener() {	//Anonymous actionListerner class, Shows dialog box giving exit option
 			public void actionPerformed(ActionEvent e) {
-				int dialogResult = JOptionPane.showConfirmDialog (frame, "Are you sure you want to exit to the main menu?\n\n" +
-															"All game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
+				Object[] options = {"Yes", "Cancel"};
+				Icon icon = UIManager.getIcon("OptionPane.informationIcon");
+				
+				int dialogResult = JOptionPane.showOptionDialog(frame, "Are you sure you want to exit to the main menu?\n\nAll game progress will be lost.", "Exit Warning", 
+																JOptionPane.YES_NO_OPTION, JOptionPane.YES_NO_OPTION, icon, options, options);
 				//If user wishes to quit
 				if (dialogResult == JOptionPane.YES_OPTION) {
 					g.setIsGameOver(true);
@@ -86,8 +100,9 @@ public class MazeFrame {
 				}
 			} 
 		});
+		
 		hintButton = new JButton("Hint");
-		hintButton.addActionListener(new ActionListener() {	//shows hint tiles on maze
+		hintButton.addActionListener(new ActionListener() {	//Anonymous actionListerner class, shows hint tiles on maze
 			public void actionPerformed(ActionEvent e) {
 				Maze m = g.getMaze();
 				List<Tile> hintTiles = m.giveHint(m.getPlayerTile());
@@ -123,20 +138,22 @@ public class MazeFrame {
 		frame.setPreferredSize(fullscreen);
 		
 		//Initialise character spites
-		//block is made into a square size
-		//width of screen is normally shorter than height
-		//so block should always fit on screen
-		blockSize = new Dimension((int)((ySize*0.95/this.height)), (int)((ySize*0.95/this.height)));
+		//Maze block is made into a sqaure size
+		//Screen height is often shorter than width, thus use 95% of height for pixel width and pixel height of maze GUI
+		blockSize = new Dimension((int)((ySize*0.95/this.height)), (int)((ySize*0.95/this.height)));	
+		
+		//Store sprites in hashmap for easy access
 		sprites = new HashMap<String, Sprite>();
 		
+		//Store x, y of blockSize
 		int x = (int)blockSize.getWidth();
 		int y = (int)blockSize.getHeight();
 		
 		//Set PlayerSprite
-		this.playerSprite = g.getPlayer().getCharacter();
+		playerSprite = g.getPlayer().getCharacter();
 		
 		//Add sprites to hashmap
-		//size of each sprite is determined by x and y,
+		//Size of each sprite is determined by x and y,
 		//which is the size of each block on the maze grid
 		sprites.put(wallSprite, new Sprite(wallSprite,x,y));
 		sprites.put(pathSprite, new Sprite(pathSprite,x,y));
@@ -150,28 +167,31 @@ public class MazeFrame {
 		sprites.put(killableEnemySprite, new Sprite(killableEnemySprite,x,y));
 		sprites.put(hintSprite, new Sprite(hintSprite,x,y));
 		
-		//Initialise side panel looks
-		//side panel is based on mazes size, width is 40% of maze width
-		//height is matched exactly
-		sidePanel.setPreferredSize(new Dimension((int) ((this.width * blockSize.getWidth())*0.4) ,
+		//Set side panel characteristics
+		//Size is based on mazes size. Its width is 40% of mazes width.
+		//Height is equivalent to mazes height.
+		sidePanel.setPreferredSize(new Dimension((int) ((this.width * blockSize.getWidth())*0.4),
 													(int) (this.height * blockSize.getHeight())));
 		sidePanel.setBackground(new Color(240, 240, 240));
 		sidePanel.setLayout(new GridBagLayout());
-		sidePanel.setBorder(new LineBorder(Color.WHITE, 2));
+		sidePanel.setBorder(new LineBorder(Color.BLACK, 2));
 		
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);  //Update state 
 		frame.setResizable(false); //Fix window size
 		frame.setLayout(new GridBagLayout()); //Set frame layout
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Set close operation
 		
-		//Pack
+		//Pack frame
 		frame.setUndecorated(true);
 		frame.pack();
 		frame.setVisible(true);
 	}
-
-	private boolean updatedOnce;
-	//updates all changed blocks including player, enemy and unlocked door
+	
+	/**
+	 * Update only GUI components that will have changed since initialisation or a previous update cal1l.
+	 * These components include blocks with the player, enemy and unlocked door.
+	 * @param m Maze that GUI will use to create a visual representation of the maze game.
+	 */
 	public void update(Maze m) {
 		Tile curPlayerPos = m.getPlayerTile();
 		
@@ -280,7 +300,7 @@ public class MazeFrame {
 			this.mazeGridComp[old.getX()][old.getY()].remove(0);
 			overLaySprite = pathSprite;
 		}
-		//Check if this is a door
+		//Check to see what tile type this is
 		else if (old.getType() == Tile.DOOR) {
 			overLaySprite = doorSprite;
 		}
@@ -304,13 +324,13 @@ public class MazeFrame {
 		}
 	}
 	
-	//Initilise maze GUI and pack it
+	/**
+	 * Initialise GUI components in frame based on the initial state of maze.
+	 * 
+	 * @param m Maze that GUI will use to create a visual representation of the maze game.
+	 */
 	public void init(Maze m) 
 	{
-		lastEnemyPos = new Tile[m.getNumEnemies()];	//make new enemy
-		for (int i = 0; i < m.getNumEnemies(); i++) {
-			lastEnemyPos[i] = new Tile();
-		}
 		//Clear panels
 		mazeGrid.removeAll();
 		sidePanel.removeAll();
@@ -321,6 +341,12 @@ public class MazeFrame {
 		//Constraints to GridBayLayout
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
+		
+		//Make new enemy
+		lastEnemyPos = new Tile[m.getNumEnemies()];
+		for (int i = 0; i < m.getNumEnemies(); i++) {
+			lastEnemyPos[i] = new Tile();
+		}
 		
 		//Fill all blocks
 		for (int y = 0; y < height; y++)
@@ -417,23 +443,22 @@ public class MazeFrame {
 		JLabel titleImage = new JLabel(title);
 		playerPanel.add(titleImage);
 		
-		//Add player image (set size 96 x 96)
+		//Add current player image (set size 96 x 96)
 		Sprite player = new Sprite(g.getPlayer().getCharacter(),96,96);	
 		JLabel playerImage = new JLabel(player.getPlayerSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		playerPanel.add(playerImage);
 		
-		//Add Score for player
+		//Add Score label for player
 		JPanel playerStats = new JPanel(new GridLayout(4,1));
 		JLabel name = new JLabel("Name: " + g.getPlayer().getName());
 		JLabel character = new JLabel("Character: " + g.getPlayer().getCharacter().substring(0, 1).toUpperCase() + g.getPlayer().getCharacter().substring(1));
 		score = new JLabel("Score: " + g.getScore());
 		level = new JLabel("Level: " + (g.getLevel()+1)); //levels count from 0, so +1 offset so that levels count from 1
 		
-		//Setup font of player stats
-		Font font = new Font("Arial", Font.PLAIN, 16);
-		name.setFont(font);
-		character.setFont(font);
+		//Setup font of different labels
+		name.setFont(new Font("Arial", Font.PLAIN, 16));
+		character.setFont(new Font("Arial", Font.PLAIN, 16));
 		score.setFont(new Font("Arial", Font.BOLD, 18));
 		level.setFont(new Font("Arial", Font.BOLD, 18));
 		
@@ -451,12 +476,12 @@ public class MazeFrame {
 		gbc.gridx = 0;
 		gbc.gridy = -2;
 		
-		//Add exit button at very bottom
-		exitButton.setMargin(new Insets(5, 10, 5, 10));
-		exitButton.setToolTipText("Click here to exit to main menu.");
-		sidePanel.add(exitButton, gbc);
+		//Add exit button and hint button at bottom of side panel
 		hintButton.setMargin(new Insets(5, 10, 5, 10));
+		exitButton.setToolTipText("Click here to exit to main menu.");
 		sidePanel.add(hintButton, gbc);
+		exitButton.setMargin(new Insets(5, 10, 5, 10));
+		sidePanel.add(exitButton, gbc);
 		
 		//Add key and sword (set size 48 x 48)
 		inventory.add(Player.KEY, new JLabel(new Sprite(keySprite,48,48).getPlayerSprite()));
@@ -479,12 +504,13 @@ public class MazeFrame {
 		for (int i = 0; i < Player.NUM_INVENTORY_ITEMS; i++) {
 			inventory.get(i).setVisible(false);
 		}
-		//Add sidePanel to this frame
+		
+		//Add sidePanel to the frame
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		frame.add(sidePanel, gbc);
 		
-		//Repack frame
+		//Pack frame
 		frame.pack();
 	}
 	
