@@ -236,7 +236,9 @@ public class MazeFrame {
 					updatedOnce = false;
 				} else if (m.itemCollected(Player.ICE_POWER) && !updatedOnce) {
 					updateBlock(m, lastEnemyPos[i]);
-					updatedOnce = true;
+					if (i == m.getNumEnemies()-1) {	//if all frozen enemies have been updated once
+						updatedOnce = true;			//no need to update again until unfrozen
+					}
 				}
 				lastEnemyPos[i] = curEnemyPos;
 			} else if (lastEnemyPos[i] != null) {
