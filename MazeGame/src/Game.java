@@ -67,8 +67,6 @@ public class Game {
      */
     public void setIsGameOver(boolean isGameOver) {
     	this.isGameOver = isGameOver;
-    	//set score back to zero.
-    	score = 0;
     }
     
     /**
@@ -203,11 +201,17 @@ public class Game {
 	public void setFinishedLevel(boolean b) {
 		finishedLevel = b;
 	}
+	
 	/**
-	 * Sets level to given integer
-	 * @param setLevel
+	 * Clears the progress of the player in the game.
 	 */
+	public void clearGame() {
+    	//set score and level back to zero.
+    	score = 0;
+    	level = 0;
+	}
+	/* For testing only
 	public void setLevel(int setLevel) {
 		level = setLevel;
-	}
+	}*/
 }

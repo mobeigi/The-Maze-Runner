@@ -84,9 +84,8 @@ public class GameManager {
 						+ "We will require your assistance when the time comes...",
 						"Tower cleared!", 1,0,new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")), options, options[0]);
     	} //otherwise no special dialog is displayed
-    	g.createMaze();	//create maze for if player wants to play again
     	g.getPlayer().clearStats();	//clear all player stats
-    	g.setLevel(0);
+    	g.clearGame();	//clear player progress in game
     	mazeFrame.getFrame().dispose(); //remove maze
     	gameFrame.getFrame().setVisible(true);	//show home screen
     }
