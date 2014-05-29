@@ -14,11 +14,9 @@ import javax.swing.JTextField;
  * @author Jeremy
  *
  */
-public class OptionPanel extends JPanel implements ActionListener {
+public class OptionPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-
-	private Game game;
 	
 	private JButton setLink;
 	private JButton setWilliam;
@@ -31,12 +29,10 @@ public class OptionPanel extends JPanel implements ActionListener {
 
 	
 	public OptionPanel(Game g){
-		game = g;
-
+		final Game game = g;
 		this.setLayout(new GridBagLayout());		
 		GridBagConstraints gbc = new GridBagConstraints();
 		
-		//panel.setResizable(false)
 		Sprite linkPanel = new Sprite(MazeFrame.LinkSprite, 48, 48);
 		Sprite williamPanel = new Sprite(MazeFrame.WilliamSprite, 48, 48);
 		Sprite kainenPanel = new Sprite(MazeFrame.KainenSprite, 48, 48);
@@ -45,10 +41,22 @@ public class OptionPanel extends JPanel implements ActionListener {
 		setWilliam = new JButton("William - The Knight", williamPanel.getPlayerSprite());
 		setKainen = new JButton("Kainen - The Dark Prince", kainenPanel.getPlayerSprite());
 		
-		setLink.addActionListener(this);
-		setWilliam.addActionListener(this);
-		setKainen.addActionListener(this);
-		this.add(setLink);
+		setLink.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				game.getPlayer().setCharacter(MazeFrame.LinkSprite);
+			}
+		});
+		setWilliam.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				game.getPlayer().setCharacter(MazeFrame.WilliamSprite);
+			}
+		});
+		setKainen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				game.getPlayer().setCharacter(MazeFrame.KainenSprite);
+			}
+		});;
+		this.add(setLink);	//add choose character buttons to panel
 		this.add(setWilliam);
 		this.add(setKainen);
 		
@@ -93,26 +101,21 @@ public class OptionPanel extends JPanel implements ActionListener {
 		gbc.gridx = 2;
 		this.add(hardDifficulty,gbc);
 		
-		easyDifficulty.addActionListener(this);
-		mediumDifficulty.addActionListener(this);
-		hardDifficulty.addActionListener(this);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == setLink){
-			game.getPlayer().setCharacter(MazeFrame.LinkSprite);
-		} else if (event.getSource() == setWilliam){
-			game.getPlayer().setCharacter(MazeFrame.WilliamSprite);
-		} else if (event.getSource() == setKainen){
-			game.getPlayer().setCharacter(MazeFrame.KainenSprite);
-		} else if (event.getSource() == easyDifficulty){
-			game.setDifficulty(Game.EASY);
-		} else if (event.getSource() == mediumDifficulty){
-			game.setDifficulty(Game.MEDIUM);
-		} else if (event.getSource() == hardDifficulty){
-			game.setDifficulty(Game.HARD);
-		}
+		easyDifficulty.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				game.setDifficulty(Game.EASY);
+			}
+		});
+		mediumDifficulty.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				game.setDifficulty(Game.MEDIUM);
+			}
+		});
+		hardDifficulty.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				game.setDifficulty(Game.HARD);
+			}
+		});
 	}
 	
 	public String getName(){

@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import java.util.List;
-public class MazeFrame implements ActionListener {
+public class MazeFrame {
 
 	private int height;
 	private int width;
@@ -54,21 +54,58 @@ public class MazeFrame implements ActionListener {
 	public static final String snowflakeSprite = "snowflake";
 	public static final String hintSprite = "grass";
 	
-	public MazeFrame(Game g, int width, int height)
+	public MazeFrame(Game game, int width, int height)
 	{
 		frame = new JFrame();
 		//Initialisation
 		this.height = height+2; 	//add 2 for border around maze
 		this.width = width+2;
-		this.g = g;
+		this.g = game;
 		
 		this.mazeGrid = new JPanel();
 		this.mazeGridComp = new JLayeredPane[this.width][this.height];
 		this.sidePanel = new JPanel();
 		this.exitButton = new JButton("Exit");
-		this.exitButton.addActionListener(this);
+		this.exitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int dialogResult = JOptionPane.showConfirmDialog (frame, "Are you sure you want to exit to the main menu?\n\n" +
+															"All game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
+				//If user wishes to quit
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					g.setIsGameOver(true);
+					g.setIsInGame(false);
+				} else {
+					frame.requestFocus();	//request focus again
+				}
+			} 
+		});
 		this.hintButton = new JButton("Hint");
-		this.hintButton.addActionListener(this);
+		this.hintButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Maze m = g.getMaze();
+				List<Tile> hintTiles = m.giveHint(m.getPlayerTile());
+				for (int i = 0; i < hintTiles.size(); i++) {
+					JLabel hintImage = new JLabel(sprites.get(hintSprite).getPlayerSprite());
+					//add hint tile to second layer from the top
+					int numComponents = mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].getComponentCount();
+					if (numComponents >= 3) {	//if more than 3 components, a hint tile was already added, so don't add again
+						continue;
+					}
+					//if only one component that is a path tile, add a hint tile on top
+					if (numComponents == 1 && g.getMaze().getTile(hintTiles.get(i).getX(),hintTiles.get(i).getY()).getType() == Tile.PATH) {
+						mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, new Integer(0));
+					} else if (g.getMaze().getTile(hintTiles.get(i).getX(),hintTiles.get(i).getY()).getType() != Tile.PATH) {
+						//if more than one component and is not a path tile i.e. is special tile
+						//add hint tile in between
+						mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, new Integer(-1));
+					} else {	//else don't do anything
+						continue;
+					}
+					mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].repaint();
+					frame.pack();
+				}
+			}
+		});
 		this.inventory = new ArrayList<JLabel>();
 		
 		//Make maze take up full screen
@@ -131,47 +168,6 @@ public class MazeFrame implements ActionListener {
 		frame.setUndecorated(true);
 		frame.pack();
 		frame.setVisible(true);
-	}
-
-	//Perform actions based on user actions
-	public void actionPerformed(ActionEvent e)
-	{
-		//Detect object who performed action
-		if (e.getSource() == this.exitButton) {
-			int dialogResult = JOptionPane.showConfirmDialog (frame, "Are you sure you want to exit to the main menu?\n\n" +
-					"										All game progress will be lost.","Exit Warning", JOptionPane.YES_NO_OPTION);
-			
-			//If user wishes to quit
-			if (dialogResult == JOptionPane.YES_OPTION) {
-				g.setIsGameOver(true);
-				g.setIsInGame(false);
-			} else {
-				frame.requestFocus();	//request focus again
-			}
-		} else if (e.getSource() == this.hintButton) {
-			Maze m = g.getMaze();
-			List<Tile> hintTiles = m.giveHint(m.getPlayerTile());
-			for (int i = 0; i < hintTiles.size(); i++) {
-				JLabel hintImage = new JLabel(sprites.get(hintSprite).getPlayerSprite());
-				//add hint tile to second layer from the top
-				int numComponents = this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].getComponentCount();
-				if (numComponents >= 3) {	//if more than 3 components, a hint tile was already added, so don't add again
-					continue;
-				}
-				//if only one component that is a path tile, add a hint tile on top
-				if (numComponents == 1 && g.getMaze().getTile(hintTiles.get(i).getX(),hintTiles.get(i).getY()).getType() == Tile.PATH) {
-					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, new Integer(0));
-				} else if (g.getMaze().getTile(hintTiles.get(i).getX(),hintTiles.get(i).getY()).getType() != Tile.PATH) {
-					//if more than one component and is not a path tile i.e. is special tile
-					//add hint tile in between
-					this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].add(hintImage, new Integer(-1));
-				} else {	//else don't do anything
-					continue;
-				}
-				this.mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].repaint();
-				frame.pack();
-			}
-		}
 	}
 
 	//updates all changed blocks including player, enemy and unlocked door

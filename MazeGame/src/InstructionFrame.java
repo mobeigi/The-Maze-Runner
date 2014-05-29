@@ -16,11 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class InstructionFrame implements ActionListener{
+public class InstructionFrame {
 
 	private JButton backButton;
 	private JPanel instructions;
-	//private JPanel controls;
 	private JFrame frame;
 	
 	public InstructionFrame () {
@@ -30,7 +29,11 @@ public class InstructionFrame implements ActionListener{
 		backButton = new JButton("Close");
 		instructions = new JPanel(new GridBagLayout());
 
-		backButton.addActionListener(this);
+		backButton.addActionListener(new ActionListener() {	
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+			}
+		});
 		frame.getContentPane().setBackground(Color.WHITE);
 		instructions.setBackground(Color.WHITE);
 		frame.setResizable(false);
@@ -51,7 +54,6 @@ public class InstructionFrame implements ActionListener{
 	    }
 	    
 		JLabel sword = new JLabel(new Sprite(MazeFrame.swordSprite,48,48).getPlayerSprite());
-		//JLabel player = new JLabel(new Sprite(MazeFrame.playerSprite,48,48).getPlayerSprite());
 		JLabel key = new JLabel(new Sprite(MazeFrame.keySprite,48,48).getPlayerSprite());
 		JLabel coin = new JLabel(new Sprite(MazeFrame.coinSprite,48,48).getPlayerSprite());
 		JLabel enemy = new JLabel(new Sprite(MazeFrame.enemySprite,48,48).getPlayerSprite());
@@ -62,7 +64,6 @@ public class InstructionFrame implements ActionListener{
 		JLabel howtoplay = new JLabel(new ImageIcon(htp));
 		
 		sword.setText("Pick this up to kill the ghosts!");
-		//player.setText("This is you, nice hat");
 		key.setText("Pick this up to open the door at the end of the maze");
 		coin.setText("Cash money, Cash money");
 		enemy.setText("Game over if you get too close");
@@ -71,15 +72,13 @@ public class InstructionFrame implements ActionListener{
 		freeze.setText("Pick this up to freeze and eat your enemies");
 		
 		GridBagConstraints c= new GridBagConstraints();
-		c.fill=GridBagConstraints.VERTICAL;
+		c.fill = GridBagConstraints.VERTICAL;
 		
 		c.gridy = 0;
 		instructions.add(howtoplay, c);
 		
 		c.anchor = GridBagConstraints.WEST;
 		c.insets = new Insets(0,170,0,0);
-		//c.gridy = 1;
-		//instructions.add(player,c);
 		
 		c.gridy = 2;
 		instructions.add(enemy,c);
@@ -114,16 +113,8 @@ public class InstructionFrame implements ActionListener{
 		frame.add(instructions);
 
 		c.gridy = 1;
-		//frame.add(controls);
 		frame.pack();
 		frame.setVisible(false);
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource()==this.backButton){
-			frame.setVisible(false);
-		}
 	}
 
 	public void setVisible(boolean b) {
