@@ -1,19 +1,19 @@
+
 /**
  * Game class that setups maze and in-game screens in preparation for a game.
  * In-game screens include the home screen and the maze game screen.
  * All players and controllers are configured.
  */
-
 public class Game {
 	
     private Maze maze;
-    private Player player;
+    private Player player;	//the current player of the maze
     private Controller c;	//controller for player
     
-    private int difficulty;
-    private int score;
-    private int level;
-    private boolean levelledUp;
+    private int difficulty;	//difficulty setting
+    private int score;	//player's score
+    private int level;	//current level in the maze game
+    private boolean finishedLevel;	//whether or not current level has been completed
     
     //Flow control
     private volatile boolean inGame;	//whether or not the game has not been exited yet
@@ -32,6 +32,9 @@ public class Game {
     
     /**
      * Constructor for creating a maze game.
+     * All fields set to default values, with a new player
+     * created with the default name and character.
+     * Difficulty is set on medium by default.
      */
     public Game() {
         isGameOver = false;
@@ -44,12 +47,13 @@ public class Game {
     }
     
     /**
-     * Create a maze which scales in size based on desired game level.
-     * @param level the desired game level for maze that is to be created.
+     * Create a maze which scales in size based on game level and difficulty.
      */
     public void createMaze() {
-    	this.maze =  new Maze(START_LEVEL_WIDTH + (2*(level+difficulty)), START_LEVEL_HEIGHT + (2*(level+difficulty)), player);
-		c = new Controller(maze);	//update controller
+    	//creates a new maze
+    	this.maze =  new Maze(START_LEVEL_WIDTH + (2*(level+difficulty)), 
+    						START_LEVEL_HEIGHT + (2*(level+difficulty)), player);
+		c = new Controller(maze);	//set controller to the maze
     }
     
     /**
@@ -62,9 +66,19 @@ public class Game {
     public void setIsGameOver(boolean isGameOver) {
     	this.isGameOver = isGameOver;
     	//set score back to zero.
-    	this.score = 0;
+    	score = 0;
     }
     
+    /**
+     * Checks if the game is over or not.
+     * The game is over when the player has lost the game
+  	 * or has passed all the levels.
+     * @return true if game has been finished.
+     */
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+       
     /**
      * Updates the status of whether the player is still in the game or not.
      * @param inGame if true, the game should be in the exit state;
@@ -79,7 +93,7 @@ public class Game {
      * @return true if the player is still in the game.
      */
     public boolean isInGame() {
-    	return this.inGame;
+    	return inGame;
     }
     
     /**
@@ -115,16 +129,6 @@ public class Game {
     }
     
     /**
-     * Checks if the game is over or not.
-     * The game is over when the player has lost the game
-  	 * or has passed all the levels.
-     * @return true if game has been finished.
-     */
-    public boolean isGameOver() {
-        return this.isGameOver;
-    }
-    
-    /**
      * Updates the game score.
      * The game is dependent on the number of treasure collected
      * by the player, and the number of enemies killed.
@@ -151,14 +155,14 @@ public class Game {
 	public void checkNextLevel () {
 		 //If level is complete
 		 if (maze.exitedMaze()) {
+			finishedLevel = true;	//current level has been completed
 			level++;
 			player.clearInventory();	//clear inventory once next level
 			 if (level == MAX_LEVEL) {
 				 setIsGameOver(true);	//end game if passed all levels
 				 setIsInGame(false);
 			 } else {
-				 createMaze();
-				 levelledUp = true;
+				 createMaze();	//create a new maze for the next level
 			 }
 		 }
 	}
@@ -179,11 +183,22 @@ public class Game {
 		this.difficulty = difficulty;
 	}
 	
-	public boolean getLevelledUp() {
-		return levelledUp;
+	/**
+	 * Checks if the maze of the current level has been completed.
+	 * This information is mainly used by GameManager to determine
+	 * what screens to show.
+	 * @return true if the maze of the current level has been completed.
+	 */
+	public boolean getFinishedLevel() {
+		return finishedLevel;
 	}
 	
-	public void setLevelledUp(boolean b) {
-		levelledUp = b;
+	/**
+	 * Sets the status that the maze of the current level has been completed.
+	 * @param b if true, the maze of the current level has been completed;
+	 * if false, the maze has not yet been completed.
+	 */
+	public void setFinishedLevel(boolean b) {
+		finishedLevel = b;
 	}
 }

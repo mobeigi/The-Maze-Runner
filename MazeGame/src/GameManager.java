@@ -29,9 +29,9 @@ public class GameManager {
 	  */
 	 public void run() {
 		//create game frame
-		 //this is the home screen of the game
-		 gameFrame = new GameFrame(g, Game.START_LEVEL_WIDTH, Game.START_LEVEL_HEIGHT);
-		 while (true) {
+		//this is the home screen of the game
+		gameFrame = new GameFrame(g, Game.START_LEVEL_WIDTH, Game.START_LEVEL_HEIGHT);
+		while (true) {
 			//If not in game, do nothing (wait for play button to be clicked)
 			if (!g.isInGame())
 				continue;
@@ -44,19 +44,19 @@ public class GameManager {
 			//while still in game
 			while (!g.isGameOver()) {
 				if (System.currentTimeMillis() - lastUpdateTime > 20) {	//update every 20ms
-					if (!g.getLevelledUp()) {
+					if (!g.getFinishedLevel()) {
 						updateMazeFrame(); //update maze according to game state
 					} else {
 						createNewMazeFrame();	//if levelled up, create a new maze for the new level
-						g.setLevelledUp(false);	//once done, set levelled up to false
+						g.setFinishedLevel(false);	//once done, set finished current level to false
 					}
 					g.updateScore();	//update player score					
 					lastUpdateTime = System.currentTimeMillis(); //update time
 				}
 			}
-			//the game is finished; game UI is shown
+			//the game is finished; home screen (game frame) is shown
 			//game can be played repeatedly until user exits game
-			showUI();	
+			showGameFrame();	
 		}
 	 }
     
@@ -75,7 +75,7 @@ public class GameManager {
      * Special ending dialogue box is shown if the player finished all levels of the game.
      * The statistics of the player are then cleared.
      */
-    private void showUI() {
+    private void showGameFrame() {
     	//end game dialog if user finishes all levels
     	if (g.getLevel() == Game.MAX_LEVEL) {
     		Object[] options = {"Exit"};
