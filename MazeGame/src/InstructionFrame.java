@@ -48,17 +48,17 @@ public class InstructionFrame {
 		frame.setLayout(new GridBagLayout());
 		
 		BufferedImage wasd = null;
-	    try {
-	    	wasd = ImageIO.read(new File("src/sprites/arrow.png"));
+	   try {
+	    	wasd = ImageIO.read(this.getClass().getResource("/sprites/arrow.png"));
 	    } catch (IOException e) {
-	    	System.out.println("FAIL");
+	    	System.err.println("Failed to read sprite.");
 	    }
 		
 	    BufferedImage htp = null;
 	    try {
-	    	htp = ImageIO.read(new File("src/sprites/howtoplay2.png"));
+	    	htp = ImageIO.read(this.getClass().getResource("/sprites/howtoplay2.png"));
 	    } catch (IOException e){
-	    	System.out.println("FAIL");
+	    	System.err.println("Failed to read sprite.");
 	    }
 	    
 		JLabel sword = new JLabel(new Sprite(MazeFrame.swordSprite,48,48).getPlayerSprite());
