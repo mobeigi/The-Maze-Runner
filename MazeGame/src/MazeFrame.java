@@ -170,6 +170,7 @@ public class MazeFrame {
 		frame.setVisible(true);
 	}
 
+	private boolean updatedOnce;
 	//updates all changed blocks including player, enemy and unlocked door
 	public void update(Maze m) {
 		Tile curPlayerPos = m.getPlayerTile();
@@ -229,9 +230,13 @@ public class MazeFrame {
 		for (int i = 0; i < m.getNumEnemies(); i++) {
 			Tile curEnemyPos = m.getEnemyTile(i);
 			if (!m.enemyDied(i)) {	//if enemy is not dead, update its position
-				if (!lastEnemyPos[i].equals(curEnemyPos) || m.itemCollected(Player.ICE_POWER)) {
+				if (!lastEnemyPos[i].equals(curEnemyPos)) {
 					updateBlock(m, lastEnemyPos[i]);
 					updateBlock(m, curEnemyPos);
+					updatedOnce = false;
+				} else if (m.itemCollected(Player.ICE_POWER) && !updatedOnce) {
+					updateBlock(m, lastEnemyPos[i]);
+					updatedOnce = true;
 				}
 				lastEnemyPos[i] = curEnemyPos;
 			} else if (lastEnemyPos[i] != null) {
