@@ -63,7 +63,7 @@ public class Controller implements KeyListener {
 	 * No action required when key is released.
 	 */
 	@Override
-	public void keyReleased(KeyEvent arg0) {
+	public void keyReleased(KeyEvent e) {
 		//no action if key is released	
 	}
 
@@ -72,7 +72,7 @@ public class Controller implements KeyListener {
 	 * No action required when key is typed.
 	 */
 	@Override
-	public void keyTyped(KeyEvent arg0) {
+	public void keyTyped(KeyEvent e) {
 		//no action if key is typed
 	}
 }
