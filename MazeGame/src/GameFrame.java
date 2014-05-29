@@ -5,8 +5,9 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
- * @author 
- *
+ * GUI class for the game interface.
+ * Responsible for displaying buttons and input fields to allow users to control program flow in order to play games, look at help pages and exit the program.
+ * @author Jeremy
  */
 public class GameFrame {
 
@@ -67,12 +68,12 @@ public class GameFrame {
 	    frame.add(titleImage,c);
 	    
 		//add image of link
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		c.gridheight = 10;
 		c.gridy = 15;
-		c.gridx = 6;
+		c.gridx =3 ;
 		c.fill = GridBagConstraints.HORIZONTAL;
-
+		c.insets = new Insets(0,250,0,0);
 	    frame.add(linkImage, c);
 	    
 		c.gridwidth = 1;
@@ -80,6 +81,7 @@ public class GameFrame {
 		//Add play button
 	    c.gridy = 26;
 	    c.gridx = 3;
+	    c.insets = new Insets(0,235,0,0);
 	    playButton = new JButton("Play Game!");
 		this.playButton.setBackground(Color.WHITE);
 		frame.add(playButton,c); 
@@ -95,7 +97,7 @@ public class GameFrame {
 				}
 			}
 		});
-		
+		c.insets = new Insets(0,0,0,0);
 		//Add how to play button
 		c.gridy = 26;
 	    c.gridx = 4;
