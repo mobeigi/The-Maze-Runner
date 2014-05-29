@@ -1,4 +1,9 @@
 
+/**Tile Class for maze representation
+ * Contains constants for its Walkability and its object-type
+ * @author
+ *
+ */
 public class Tile {
 	//Public constants for tile type
 	public static final int WALL = 0;
@@ -14,6 +19,11 @@ public class Tile {
 	private boolean isWalkable;
 	private int type;
 	
+	/**Constructor for Tile, takes in its Walkability and it's x-y coordinates
+	 * @param isWalkable Whether or not the player can walk over the tile.
+	 * @param x X Coordinate
+	 * @param y Y Coordinate
+	 */
 	public Tile (boolean isWalkable, int x, int y){
 		this.x = x;
 		this.y = y;
@@ -21,6 +31,9 @@ public class Tile {
 		this.type = WALL; 	//default type is WALL
 	}
 	
+	/**
+	 * Empty Constructor
+	 */
 	public Tile() {
 		//do nothing
 	}
@@ -29,7 +42,11 @@ public class Tile {
 		return type;
 	}
 	
-	//returns boolean if setting type was successful
+	
+	/**returns boolean depending on the sucesssfulness of setting type.
+	 * @param newType The new type the tile will be set with.
+	 * @return true if set, false otherwise.
+	 */
 	public boolean setType (int newType) {
 		if (newType >= 0 && newType <= 6) {
 			this.type = newType;
@@ -38,6 +55,9 @@ public class Tile {
 		return false;
 	}
 
+	/**Sets the tile to be walkable and it's type to PATH, the default walkable type.
+	 * 
+	 */
 	public void setWalkable (){
 		this.isWalkable = true;
 		this.type = PATH;	//default type is path if walkable

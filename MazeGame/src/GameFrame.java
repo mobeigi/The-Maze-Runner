@@ -4,6 +4,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * @author 
+ *
+ */
 public class GameFrame {
 
 	private InstructionFrame instructions;
@@ -16,6 +20,11 @@ public class GameFrame {
 	private JButton exitButton;
 
 	
+	/** Generates the introductory window of the Game
+	 * @param game The game object that contains the details of in game screens and the maze.
+	 * @param width Width of the window.
+	 * @param height Height of the window.
+	 */
 	public GameFrame(Game game, int width, int height) {
 		frame = new JFrame();
 		//Set Minimum size
@@ -117,6 +126,9 @@ public class GameFrame {
 		frame.setVisible(true);
 	}
 	
+	/**
+	 * @return The JFrame
+	 */
 	public JFrame getFrame() {
 		return frame;
 	}

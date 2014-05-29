@@ -16,12 +16,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+/**The Instruction Frame contains the instructions of the game for the user
+ * @author 
+ * 
+ */
 public class InstructionFrame {
 
 	private JButton backButton;
 	private JPanel instructions;
 	private JFrame frame;
 	
+	/**Constructor of the Instruction Frame
+	 * Sets the title, creates all the buttons, loads all the sprites and their relevant
+	 * instructions and packed using GridBagLayout
+	 */
 	public InstructionFrame () {
 		frame = new JFrame();
 		frame.setTitle("How to Play");
@@ -117,6 +125,9 @@ public class InstructionFrame {
 		frame.setVisible(false);
 	}
 
+	/**Sets whether the window/frame appears or not.
+	 * @param b True to be visible, false otherwise.
+	 */
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
 	}
