@@ -80,17 +80,17 @@ public class Game {
     }
        
     /**
-     * Updates the status of whether the player is still in the game or not.
-     * @param inGame if true, the game should be in the exit state;
-     * if false, the game should still be on.
+     * Updates the status of whether the player is still in the maze game or not.
+     * @param inGame if true, the game should be on the home screen;
+     * if false, the maze game should still be on.
      */
     public void setIsInGame(boolean inGame) {
     	this.inGame = inGame;
     }
     
     /**
-     * Checks if the player is still in the game or not.
-     * @return true if the player is still in the game.
+     * Checks if the player is still in the maze game or not.
+     * @return true if the player is still in the maze game.
      */
     public boolean isInGame() {
     	return inGame;
