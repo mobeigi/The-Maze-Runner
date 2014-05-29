@@ -473,8 +473,9 @@ public class MazeFrame {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		sidePanel.add(playerPanel);	//add player information panel to side panel
+		
 		gbc.gridx = 0;
-		gbc.gridy = -2;
+		gbc.gridy = -3;
 		
 		//Add exit button and hint button at bottom of side panel
 		hintButton.setMargin(new Insets(5, 10, 5, 10));
@@ -488,30 +489,37 @@ public class MazeFrame {
 		inventory.add(Player.SWORD, new JLabel(new Sprite(swordSprite,48,48).getPlayerSprite()));
 		inventory.add(Player.ICE_POWER, new JLabel(new Sprite(snowflakeSprite,48,48).getPlayerSprite()));
 		
-		gbc.gridwidth = 1;
-		gbc.gridy = 6;
-		gbc.gridx = 0;
-		sidePanel.add(inventory.get(Player.SWORD),gbc);
-		
-		gbc.gridy = 7;
-		gbc.gridx = 0;
-		sidePanel.add(inventory.get(Player.KEY),gbc);
-		
-		gbc.gridy = 8;
-		gbc.gridx = 0;
-		sidePanel.add(inventory.get(Player.ICE_POWER),gbc);
-		
-		for (int i = 0; i < Player.NUM_INVENTORY_ITEMS; i++) {
-			inventory.get(i).setVisible(false);
-		}
-		
-		//Add sidePanel to the frame
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		frame.add(sidePanel, gbc);
-		
-		//Pack frame
-		frame.pack();
+		 JPanel invPanel = new JPanel();
+         invPanel.setPreferredSize(new Dimension(200,60));
+        
+         gbc.gridwidth = 1;
+         gbc.gridy = 0;
+         gbc.gridx = 0;
+         invPanel.add(inventory.get(Player.SWORD),gbc);
+        
+         gbc.gridy = 0;
+         gbc.gridx = 1;
+         invPanel.add(inventory.get(Player.KEY),gbc);
+        
+         gbc.gridy = 0;
+         gbc.gridx = 2;
+         invPanel.add(inventory.get(Player.ICE_POWER),gbc);
+        
+         for (int i = 0; i < Player.NUM_INVENTORY_ITEMS; i++) {
+                 inventory.get(i).setVisible(false);
+         }
+         
+         gbc.gridy = 2;
+         gbc.gridx = 0;
+         sidePanel.add(invPanel,gbc);
+         
+         //Add sidePanel to this frame
+         gbc.gridx = 1;
+         gbc.gridy = 0;
+         frame.add(sidePanel, gbc);
+        
+         //Pack frame
+         frame.pack();
 	}
 	
 	/**
