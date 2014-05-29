@@ -69,6 +69,7 @@ public class Game {
     	this.isGameOver = isGameOver;
     	//set score back to zero.
     	score = 0;
+    	level = 0;
     }
     
     /**
