@@ -10,7 +10,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 /**
- * Option window for creating a character
+ * Class containing JPanel for options for Character, Difficulty selection and setting Name
  * @author Jeremy
  *
  */
@@ -27,7 +27,10 @@ public class OptionPanel extends JPanel {
 	private JRadioButton mediumDifficulty;
 	private JRadioButton hardDifficulty;
 
-	
+	/**
+	 * Construct the JPanel containing elements for the option panel
+	 * @param Game object
+	 */
 	public OptionPanel(Game g){
 		final Game game = g;
 		this.setLayout(new GridBagLayout());		
@@ -118,6 +121,9 @@ public class OptionPanel extends JPanel {
 		});
 	}
 	
+	/**
+	 * returns the name in the text field
+	 */
 	public String getName(){
 		return nameField.getText();
 	}
