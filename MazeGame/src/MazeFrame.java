@@ -224,7 +224,8 @@ public class MazeFrame {
 										"What unknown challenges lay ahead?","Room " + (g.getLevel()+1) + " cleared!", 	//levels count from 0, so +1 offset to count from 1
 										JOptionPane.OK_OPTION,JOptionPane.PLAIN_MESSAGE,
 										new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,options[0]);
-					//when user clicks the exit button
+					
+					//When user pressed next level or closes dialog, go to next level
 					g.checkNextLevel(); //change game state so that next level is reached
 					frame.requestFocus();	//request focus again
 				}
