@@ -58,8 +58,8 @@ public class MazeFrame {
 	{
 		frame = new JFrame();
 		//Initialisation
-		this.height = height+2; 	//add 2 for border around maze
-		this.width = width+2;
+		this.height = height; 	//add 2 for border around maze
+		this.width = width;
 		this.g = game;
 		
 		this.mazeGrid = new JPanel();
