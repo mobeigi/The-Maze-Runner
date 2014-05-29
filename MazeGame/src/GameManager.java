@@ -30,6 +30,7 @@ public class GameManager {
 		//create game frame
 		//this is the home screen of the game
 		gameFrame = new GameFrame(g, Game.START_LEVEL_WIDTH, Game.START_LEVEL_HEIGHT);
+		
 		while (true) {
 			//If not in game, do nothing (wait for play button to be clicked)
 			if (!g.isInGame())
@@ -85,6 +86,7 @@ public class GameManager {
     	} //otherwise no special dialog is displayed
     	g.createMaze();	//create maze for if player wants to play again
     	g.getPlayer().clearStats();	//clear all player stats
+    	g.setLevel(0);
     	mazeFrame.getFrame().dispose(); //remove maze
     	gameFrame.getFrame().setVisible(true);	//show home screen
     }
