@@ -33,7 +33,7 @@ public class InstructionFrame {
 	public InstructionFrame () {
 		frame = new JFrame();	//setup frame
 		frame.setTitle("How to Play");		//add title
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		backButton = new JButton("Close");	//add close button
 		instructions = new JPanel(new GridBagLayout());
 
