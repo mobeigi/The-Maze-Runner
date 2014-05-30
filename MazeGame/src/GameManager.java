@@ -29,7 +29,7 @@ public class GameManager {
 	 public void run() {
 		//create game frame
 		//this is the home screen of the game
-		gameFrame = new GameFrame(g, Game.START_LEVEL_WIDTH, Game.START_LEVEL_HEIGHT);
+		gameFrame = new GameFrame(g, 800, 800);
 		
 		while (true) {
 			//If not in game, do nothing (wait for play button to be clicked)
@@ -44,13 +44,13 @@ public class GameManager {
 			//while still in game
 			while (!g.isGameOver()) {
 				if (System.currentTimeMillis() - lastUpdateTime > 20) {	//update every 20ms
+					g.updateScore();	//update player score		
 					if (!g.getFinishedLevel()) {
 						updateMazeFrame(); //update maze according to game state
 					} else {
 						createNewMazeFrame();	//if levelled up, create a new maze for the new level
 						g.setFinishedLevel(false);	//once done, set finished current level to false
-					}
-					g.updateScore();	//update player score					
+					}			
 					lastUpdateTime = System.currentTimeMillis(); //update time
 				}
 			}

@@ -19,7 +19,7 @@ public class Enemy {
 	}
 	
 	/**
-	 * Constructor for enemy.
+	 * Empty constructor for enemy.
 	 * Creates an enemy (with default field values)
 	 * if location is not decided yet.
 	 */

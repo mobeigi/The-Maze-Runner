@@ -19,9 +19,13 @@ public class Player {
 	private int enemyKilled;
 	
 	//describes the item number of each item in the inventory
+	/**Constant for key identifying position in inventory.*/
 	public static final int KEY = 0;
+	/**Constant for sword identifying position in inventory.*/
 	public static final int SWORD = 1;
+	/**Constant for ice power identifying position in inventory.*/
 	public static final int ICE_POWER = 2;
+	/**Constant for number of items in inventory.*/
 	public static final int NUM_INVENTORY_ITEMS = 3; //total number of inventory items available
 
 	/**

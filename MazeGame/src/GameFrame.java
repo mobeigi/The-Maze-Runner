@@ -6,7 +6,9 @@ import javax.swing.*;
 
 /**
  * GUI class for the game interface.
- * Responsible for displaying buttons and input fields to allow users to control program flow in order to play games, look at help pages and exit the program.
+ * Responsible for displaying buttons and input fields 
+ * to allow users to control program flow in order to play games, 
+ * look at help pages and exit the program.
  * @author Jeremy Ma
  */
 public class GameFrame {
@@ -129,7 +131,8 @@ public class GameFrame {
 	}
 	
 	/**
-	 * @return The JFrame
+	 * Gets the frame of the introductory game window (game frame).
+	 * @return the frame of the introductory game window (game frame).
 	 */
 	public JFrame getFrame() {
 		return frame;

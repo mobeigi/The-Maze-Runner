@@ -11,8 +11,9 @@ import javax.swing.border.LineBorder;
 
 /**
  * GUI class for the maze game.
- * Responsible for displaying the current game state of the maze in addition to a sidepanel containing relevant game variables and navigation options.
- * 
+ * Responsible for displaying the current game state of the maze 
+ * in addition to a side panel containing relevant game variables and navigation options.
+ * String identifier constants are used to determine which sprite image to display.
  * @author Mohammad Ghasembeigi, Gavin Tam
  * @see Maze
  */
@@ -50,23 +51,34 @@ public class MazeFrame {
 	
 	//Character sprite constants
 	private String playerSprite;
+	/**String identifier for the character Link.*/
 	public static final String LinkSprite = "link";
+	/**String identifier for the character William.*/
 	public static final String WilliamSprite = "william";
+	/**String identifier for the character Kainen.*/
 	public static final String KainenSprite = "kainen";
 
 	//Other block sprite constants
+	/**String identifier for the doors of the maze.*/
 	public static final String doorSprite = "locked_door";
+	/**String identifier for the key.*/
 	public static final String keySprite = "key";
+	/**String identifier for the coin.*/
 	public static final String coinSprite = "coin";
+	/**String identifier for the enemy.*/
 	public static final String enemySprite = "cyan_pacman_monster";
+	/**String identifier for the frozen enemy.*/
 	public static final String killableEnemySprite = "dead_pacman_monster";
+	/**String identifier for the sword.*/
 	public static final String swordSprite = "master_sword";
+	/**String identifier for the ice power.*/
 	public static final String snowflakeSprite = "snowflake";
+	/**String identifier for the hint.*/
 	public static final String hintSprite = "hint";
 	
 	
 	/**
-	 * Constructor.
+	 * Constructor for the maze frame.
 	 * 
 	 * @param game - Game object with game state information.
 	 * @param width - Width of maze grid to be painted (number of tiles).

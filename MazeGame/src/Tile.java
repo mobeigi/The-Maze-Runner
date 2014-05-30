@@ -7,12 +7,19 @@
  */
 public class Tile {
 	//Public constants for tile type
+	/**Constant for wall tile type.*/
 	public static final int WALL = 0;
+	/**Constant for path tile type.*/
 	public static final int PATH = 1;
+	/**Constant for key tile type.*/
 	public static final int KEY = 2;
+	/**Constant for treasure tile type.*/
 	public static final int TREASURE = 3;
+	/**Constant for door tile type.*/
 	public static final int DOOR = 4;
+	/**Constant for sword tile type.*/
 	public static final int SWORD = 5;
+	/**Constant for ice power tile type.*/
 	public static final int ICE_POWER = 6;
 	
 	private int x;	//coordinates of the tile

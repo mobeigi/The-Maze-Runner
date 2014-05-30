@@ -259,9 +259,9 @@ public class Maze {
 	}
 	
 	/**
-	 * Finds the tile on the maze that the enemy is situated in.
-	 * @param i
-	 * @return the tile in which the enemy is on, or null if enemy is dead or doesn't exist
+	 * Finds the tile on the maze that the enemy is situated on.
+	 * @param i the ID of the enemy (ith enemy).
+	 * @return the tile in which the enemy is on, or null if enemy is dead or doesn't exist.
 	 */
 	public Tile getEnemyTile(int i) {
 		if (i >= enemy.length || enemy[i].isDead()) {
@@ -270,6 +270,11 @@ public class Maze {
 		return enemy[i].getLocation();
 	}
 	
+	/**
+	 * Checks if a tile is one where an enemy is situated on.
+	 * @param t the tile of interest.
+	 * @return true if the tile is one where an enemy is situated on.
+	 */
 	public boolean isEnemyTile (Tile t) {
 		for (int i = 0; i < enemy.length; i++) {
 			if (!enemy[i].isDead() && enemy[i].getLocation().equals(t)) {
@@ -391,9 +396,14 @@ public class Maze {
 	 * @return true if the enemy is dead.
 	 */
 	public boolean enemyDied (int i) { return enemy[i].isDead(); }
+	
+	/**
+	 * Checks if all enemies in the maze are dead.
+	 * @return true if all enemies in the maze are dead.
+	 */
 	public boolean allEnemyDied () { 
 		for (int i = 0; i < enemy.length; i++) {
-			if (!enemy[i].isDead()) {
+			if (!enemy[i].isDead()) {	//check each enemy for status
 				return false;
 			}
 		}

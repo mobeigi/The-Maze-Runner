@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.ImageIcon;
 
 /**
- * Create a Sprite based on provided string identifer of gif image in sprite directory.
+ * Create a Sprite based on provided string identifier of gif image in sprite directory.
  * 
  * @author Mohammad Ghasembeigi
  */
@@ -11,7 +11,7 @@ public class Sprite {
 	private ImageIcon sprite;
 
 	/**
-	 * Constructor.
+	 * Constructor for Sprite.
 	 * 
 	 * Loads and sets sprite field if image successfully loaded or creates an empty sprite otherwise.
 	 * 
@@ -30,6 +30,7 @@ public class Sprite {
     }
     
     /**
+     * Gets the sprite image icon.
      * @return Stored image of resized sprite.
      */
     public ImageIcon getSprite()

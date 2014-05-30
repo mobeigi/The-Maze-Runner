@@ -22,14 +22,20 @@ public class Game {
     private volatile boolean isGameOver;	//whether or not player has lost the game
     										//or has passed all the levels
     //Game constants
-    public static final int START_LEVEL_WIDTH = 11;
-    public static final int START_LEVEL_HEIGHT = 11;
-    public static final int POINTS_ENEMY_KILLED = 10;
+    /**Describes constant for the width of the maze at the starting level (on medium difficulty).*/
+    private static final int START_LEVEL_WIDTH = 11;
+    /**Describes constant for the height of the maze at the starting level (on medium difficulty).*/
+    private static final int START_LEVEL_HEIGHT = 11;
+    private static final int POINTS_ENEMY_KILLED = 10;
+    /**Describes constant for the maximum number of levels in the maze game.*/
     public static final int MAX_LEVEL = 10;
     
     //Difficulty constants
+    /**Describes constant for easy difficulty.*/
     public static final int EASY = -1;
+    /**Describes constant for medium difficulty.*/
     public static final int MEDIUM = 0;
+    /**Describes constant for hard difficulty.*/
     public static final int HARD = 1;  
     
     /**
