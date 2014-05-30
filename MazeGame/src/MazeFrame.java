@@ -218,31 +218,9 @@ public class MazeFrame {
 				
 				if (m.checkReachedEnd()) {	//unlock door if the player has reached the end with the key
 					updateBlock(m,m.getDestDoor());
-				} else if (m.exitedMaze()) {
-					Object[] options = {"Next level"};
-					JOptionPane.showOptionDialog (frame, "The next journey awaits you...\n" +
-										"What unknown challenges lay ahead?","Room " + (g.getLevel()+1) + " cleared!", 	//levels count from 0, so +1 offset to count from 1
-										JOptionPane.OK_OPTION,JOptionPane.PLAIN_MESSAGE,
-										new ImageIcon(this.getClass().getResource("/sprites/door_open.gif")),options,options[0]);
-					
-					//When user pressed next level or closes dialog, go to next level
-					g.checkNextLevel(); //change game state so that next level is reached
-					frame.requestFocus();	//request focus again
 				}
 			}
 			lastPlayerPos = curPlayerPos;
-		} else {	//else player died, so show end campaign dialog box
-			Object[] options = {"End campaign"};
-			int dialogResult = JOptionPane.showOptionDialog (frame, "Pacman monster killed you!","OH NO!", 
-								JOptionPane.CLOSED_OPTION,JOptionPane.PLAIN_MESSAGE,
-								new ImageIcon(this.getClass().getResource("/sprites/" + enemySprite + ".gif")),options,options[0]);
-			//when user clicks the end campaign button
-			if (dialogResult == 0) {
-				g.setIsGameOver(true);	//update game state to game over
-				g.setIsInGame(false);
-			} else {
-				frame.requestFocus();	//request focus again
-			}
 		}
 		
 		for (int i = 0; i < m.getNumEnemies(); i++) {
@@ -279,7 +257,7 @@ public class MazeFrame {
 			this.mazeGridComp[old.getX()][old.getY()].remove(0);
 		}
 		String overLaySprite = "";	//Overlay sprite that goes on top of block sprite
-		
+		int index = 0; 	//where the overlay layer is to be placed on the JLayeredPane
 		//Determine block graphics based on type of tile
 		//If player is at this tile
 		if (m.getPlayerTile() != null && m.getPlayerTile().equals(old)) {
@@ -297,6 +275,7 @@ public class MazeFrame {
 		else if (m.getDestDoor().equals(old) && m.getDestDoor().getType() == Tile.PATH) {
 			this.mazeGridComp[old.getX()][old.getY()].remove(0);
 			overLaySprite = pathSprite;
+			index = -2;
 		}
 		//Check to see what tile type this is
 		else if (old.getType() == Tile.DOOR) {
@@ -317,7 +296,7 @@ public class MazeFrame {
 		}
 		if (overLaySprite != "") {	//if an overlay sprite has been determined
 			JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
-			this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, new Integer(0));		
+			this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, new Integer(index));	
 			frame.pack();
 		}
 	}
@@ -504,7 +483,7 @@ public class MazeFrame {
          invPanel.add(inventory.get(Player.ICE_POWER),gbc);
         
          for (int i = 0; i < Player.NUM_INVENTORY_ITEMS; i++) {
-                 inventory.get(i).setVisible(false);
+        	 inventory.get(i).setVisible(false);
          }
          
          gbc.gridy = 2;
