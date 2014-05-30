@@ -5,7 +5,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -16,9 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-/**The Instruction Frame contains the instructions of the game for the user
- * @author 
- * 
+/**
+ * The Instruction Frame contains the instructions of the game for the user
+ * @author Jeremy Ma
  */
 public class InstructionFrame {
 
@@ -26,20 +25,21 @@ public class InstructionFrame {
 	private JPanel instructions;
 	private JFrame frame;
 	
-	/**Constructor of the Instruction Frame
+	/**
+	 * Constructor of the Instruction Frame.
 	 * Sets the title, creates all the buttons, loads all the sprites and their relevant
-	 * instructions and packed using GridBagLayout
+	 * instructions and packed using GridBagLayout.
 	 */
 	public InstructionFrame () {
-		frame = new JFrame();
-		frame.setTitle("How to Play");
+		frame = new JFrame();	//setup frame
+		frame.setTitle("How to Play");		//add title
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		backButton = new JButton("Close");
+		backButton = new JButton("Close");	//add close button
 		instructions = new JPanel(new GridBagLayout());
 
 		backButton.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
+				frame.setVisible(false);	//set frame to not visible when close button is pressed
 			}
 		});
 		frame.getContentPane().setBackground(Color.WHITE);
@@ -47,6 +47,7 @@ public class InstructionFrame {
 		frame.setResizable(false);
 		frame.setLayout(new GridBagLayout());
 		
+		//Set up images in the instruction frame
 		BufferedImage wasd = null;
 	   try {
 	    	wasd = ImageIO.read(this.getClass().getResource("/sprites/arrow.png"));
@@ -60,17 +61,18 @@ public class InstructionFrame {
 	    } catch (IOException e){
 	    	System.err.println("Failed to read sprite.");
 	    }
-	    
-		JLabel sword = new JLabel(new Sprite(MazeFrame.swordSprite,48,48).getPlayerSprite());
-		JLabel key = new JLabel(new Sprite(MazeFrame.keySprite,48,48).getPlayerSprite());
-		JLabel coin = new JLabel(new Sprite(MazeFrame.coinSprite,48,48).getPlayerSprite());
-		JLabel enemy = new JLabel(new Sprite(MazeFrame.enemySprite,48,48).getPlayerSprite());
-		JLabel freeze = new JLabel(new Sprite(MazeFrame.snowflakeSprite, 48, 48).getPlayerSprite());
-		JLabel enemyF = new JLabel(new Sprite(MazeFrame.killableEnemySprite, 48, 48).getPlayerSprite());
+	    //set up JLabels for the images displayed on the instruction screen
+		JLabel sword = new JLabel(new Sprite(MazeFrame.swordSprite,48,48).getSprite());
+		JLabel key = new JLabel(new Sprite(MazeFrame.keySprite,48,48).getSprite());
+		JLabel coin = new JLabel(new Sprite(MazeFrame.coinSprite,48,48).getSprite());
+		JLabel enemy = new JLabel(new Sprite(MazeFrame.enemySprite,48,48).getSprite());
+		JLabel freeze = new JLabel(new Sprite(MazeFrame.snowflakeSprite, 48, 48).getSprite());
+		JLabel enemyF = new JLabel(new Sprite(MazeFrame.killableEnemySprite, 48, 48).getSprite());
 
 		JLabel keyboard = new JLabel(new ImageIcon(wasd));
 		JLabel howtoplay = new JLabel(new ImageIcon(htp));
 		
+		//text for the tutorial
 		sword.setText("Pick this up to kill the ghosts!");
 		key.setText("Pick this up to open the door at the end of the maze");
 		coin.setText("Cash money, Cash money");
@@ -79,6 +81,7 @@ public class InstructionFrame {
 		keyboard.setText("Use the arrow keys to move around");
 		freeze.setText("Pick this up to freeze and eat your enemies");
 		
+		//position the components (text and image0
 		GridBagConstraints c= new GridBagConstraints();
 		c.fill = GridBagConstraints.VERTICAL;
 		
@@ -125,8 +128,9 @@ public class InstructionFrame {
 		frame.setVisible(false);
 	}
 
-	/**Sets whether the window/frame appears or not.
-	 * @param b True to be visible, false otherwise.
+	/**
+	 * Sets whether the window/frame appears or not.
+	 * @param b true to be visible, false otherwise.
 	 */
 	public void setVisible(boolean b) {
 		frame.setVisible(b);

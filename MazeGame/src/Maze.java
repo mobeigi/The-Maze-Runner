@@ -108,7 +108,7 @@ public class Maze {
 				i++;	//update treasure added
 			}
 		}
-		showMaze();			//for debugging
+		//showMaze();			//for debugging
 	}
 	
 	/**

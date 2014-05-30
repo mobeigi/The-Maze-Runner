@@ -107,7 +107,7 @@ public class MazeFrame {
 				Maze m = g.getMaze();
 				List<Tile> hintTiles = m.giveHint(m.getPlayerTile());
 				for (int i = 0; i < hintTiles.size(); i++) {
-					JLabel hintImage = new JLabel(sprites.get(hintSprite).getPlayerSprite());
+					JLabel hintImage = new JLabel(sprites.get(hintSprite).getSprite());
 					//add hint tile to second layer from the top
 					int numComponents = mazeGridComp[hintTiles.get(i).getX()][hintTiles.get(i).getY()].getComponentCount();
 					if (numComponents >= 3) {	//if more than 3 components, a hint tile was already added, so don't add again
@@ -295,7 +295,7 @@ public class MazeFrame {
 			overLaySprite = snowflakeSprite;
 		}
 		if (overLaySprite != "") {	//if an overlay sprite has been determined
-			JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
+			JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getSprite());
 			this.mazeGridComp[old.getX()][old.getY()].add(overlayImage, new Integer(index));	
 			frame.pack();
 		}
@@ -388,12 +388,12 @@ public class MazeFrame {
 				//else, path so default block sprite is used
 			
 				//Always add block sprite
-				JLabel spriteImage = new JLabel(sprites.get(blockSprite).getPlayerSprite());
+				JLabel spriteImage = new JLabel(sprites.get(blockSprite).getSprite());
 				block.add(spriteImage, new Integer(-2));
 				
 				//Add overlay sprite if required
 				if (overLaySprite != "") {
-					JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getPlayerSprite());
+					JLabel overlayImage = new JLabel(sprites.get(overLaySprite).getSprite());
 					block.add(overlayImage, new Integer(0));
 				}
 				
@@ -422,7 +422,7 @@ public class MazeFrame {
 		
 		//Add current player image (set size 96 x 96)
 		Sprite player = new Sprite(g.getPlayer().getCharacter(),96,96);	
-		JLabel playerImage = new JLabel(player.getPlayerSprite());
+		JLabel playerImage = new JLabel(player.getSprite());
 		playerImage.setBorder(new EmptyBorder(new Insets(10, 10, 10, 10)));
 		playerPanel.add(playerImage);
 		
@@ -462,9 +462,9 @@ public class MazeFrame {
 		sidePanel.add(exitButton, gbc);
 		
 		//Add key and sword (set size 48 x 48)
-		inventory.add(Player.KEY, new JLabel(new Sprite(keySprite,48,48).getPlayerSprite()));
-		inventory.add(Player.SWORD, new JLabel(new Sprite(swordSprite,48,48).getPlayerSprite()));
-		inventory.add(Player.ICE_POWER, new JLabel(new Sprite(snowflakeSprite,48,48).getPlayerSprite()));
+		inventory.add(Player.KEY, new JLabel(new Sprite(keySprite,48,48).getSprite()));
+		inventory.add(Player.SWORD, new JLabel(new Sprite(swordSprite,48,48).getSprite()));
+		inventory.add(Player.ICE_POWER, new JLabel(new Sprite(snowflakeSprite,48,48).getSprite()));
 		
 		 JPanel invPanel = new JPanel();
          invPanel.setPreferredSize(new Dimension(200,60));

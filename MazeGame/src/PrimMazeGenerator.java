@@ -113,7 +113,7 @@ public class PrimMazeGenerator implements MazeGenerator {
 				} else {
 					continue;
 				}
-				neighbouringEdges.add(newEdge);
+				neighbouringEdges.add(newEdge);	//add edge to list of neighbouring edges
 			}
 		}
 		return neighbouringEdges;

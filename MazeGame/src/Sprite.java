@@ -32,7 +32,7 @@ public class Sprite {
     /**
      * @return Stored image of resized sprite.
      */
-    public ImageIcon getPlayerSprite()
+    public ImageIcon getSprite()
     {
     	return this.sprite;
     }

@@ -11,25 +11,24 @@ import javax.swing.JTextField;
 
 /**
  * Class containing JPanel for options for Character, Difficulty selection and setting Name
- * @author Jeremy
- *
+ * @author Jeremy Ma
  */
 public class OptionPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private JButton setLink;
+	private JButton setLink;	//buttons for selecting characters
 	private JButton setWilliam;
 	private JButton setKainen;
-	private JTextField nameField;
+	private JTextField nameField;	//place where user enters name
 	
-	private JRadioButton easyDifficulty;
+	private JRadioButton easyDifficulty;	//buttons for choosing difficulty
 	private JRadioButton mediumDifficulty;
 	private JRadioButton hardDifficulty;
 
 	/**
-	 * Construct the JPanel containing elements for the option panel
-	 * @param Game object
+	 * Construct the JPanel containing elements for the option panel.
+	 * @param g the Game object describing the game state
 	 */
 	public OptionPanel(Game g){
 		final Game game = g;
@@ -40,10 +39,11 @@ public class OptionPanel extends JPanel {
 		Sprite williamPanel = new Sprite(MazeFrame.WilliamSprite, 48, 48);
 		Sprite kainenPanel = new Sprite(MazeFrame.KainenSprite, 48, 48);
 		
-		setLink = new JButton("Link - The Legend", linkPanel.getPlayerSprite() );
-		setWilliam = new JButton("William - The Knight", williamPanel.getPlayerSprite());
-		setKainen = new JButton("Kainen - The Dark Prince", kainenPanel.getPlayerSprite());
+		setLink = new JButton("Link - The Legend", linkPanel.getSprite() );
+		setWilliam = new JButton("William - The Knight", williamPanel.getSprite());
+		setKainen = new JButton("Kainen - The Dark Prince", kainenPanel.getSprite());
 		
+		//set up selecting character when user clicks the corresponding button
 		setLink.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				game.getPlayer().setCharacter(MazeFrame.LinkSprite);
@@ -104,6 +104,7 @@ public class OptionPanel extends JPanel {
 		gbc.gridx = 2;
 		this.add(hardDifficulty,gbc);
 		
+		//set up changing game difficulty when radio button is selected
 		easyDifficulty.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				game.setDifficulty(Game.EASY);
@@ -122,7 +123,8 @@ public class OptionPanel extends JPanel {
 	}
 	
 	/**
-	 * returns the name in the text field
+	 * Gets the name user entered in the text field
+	 * @return the name user entered in the text field
 	 */
 	public String getName(){
 		return nameField.getText();
