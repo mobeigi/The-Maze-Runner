@@ -13,6 +13,8 @@ import java.util.TimerTask;
  * @author Gavin Tam
  * @see Tile
  * @see Player
+ * @see Enemy
+ * @see MazeGenerator
  */
 public class Maze {
 	private Tile[][] grid;	//all tiles in the grid

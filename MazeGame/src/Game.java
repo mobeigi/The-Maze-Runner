@@ -5,6 +5,9 @@
  * All players and controllers are configured.
  * 
  * @author Mohammad Ghasembeigi, Gavin Tam, Jeremy Ma, Calvin Ko
+ * @see Maze
+ * @see Player
+ * @see Controller
  */
 public class Game {
 	

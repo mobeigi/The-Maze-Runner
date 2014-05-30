@@ -1,9 +1,9 @@
 /**
  * The Maze Runner
- * (May 2014)
- * @author Mohammad Ghasembeigi, Gavin Tam, Jeremy Ma, Calvin Ko
+ * (May 2014).
  * Runs the maze game.
  * Logic behind screens shown is dealt by GameManager.
+ * @author Mohammad Ghasembeigi, Gavin Tam, Jeremy Ma, Calvin Ko
  * @see GameManager
  */
 public class Run {	

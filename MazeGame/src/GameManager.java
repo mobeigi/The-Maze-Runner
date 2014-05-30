@@ -6,6 +6,9 @@ import javax.swing.JOptionPane;
  * It determines what game screens to show and
  * updates the GUI of the game seen by the user.
  * @author Mohammad Ghasembeigi, Gavin Tam
+ * @see GameFrame
+ * @see MazeFrame
+ * @see Game
  */
 public class GameManager {
 	 private GameFrame gameFrame;	//the home screen

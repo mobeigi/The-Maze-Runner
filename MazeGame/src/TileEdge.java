@@ -1,5 +1,5 @@
 /**
- * Edge between three adjacent tiles on the board of the maze.
+ * Edge consisting of three adjacent tiles on the board of the maze.
  * It is required for the maze generation algorithm.
  * @author Gavin Tam
  */

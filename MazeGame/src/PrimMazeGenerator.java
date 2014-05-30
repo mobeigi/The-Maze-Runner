@@ -9,6 +9,7 @@ import java.util.PriorityQueue;
  * Vertices are represented by tiles with odd coordinates,
  * and edges are represented by two adjacent vertices (i.e. a series of 3 consecutive tiles)
  * @author Gavin Tam 
+ * @see MazeGenerator
  */
 public class PrimMazeGenerator implements MazeGenerator {
 	/**

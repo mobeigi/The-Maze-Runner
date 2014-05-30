@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
  * String identifier constants are used to determine which sprite image to display.
  * @author Mohammad Ghasembeigi, Gavin Tam
  * @see Maze
+ * @see Game
  */
 public class MazeFrame {
 

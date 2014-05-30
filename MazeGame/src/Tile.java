@@ -1,6 +1,6 @@
 
 /**
- * Tile Class for maze representation
+ * Tile Class for maze representation.
  * Contains constants for its type.
  * @author Calvin Ko, Gavin Tam
  *
