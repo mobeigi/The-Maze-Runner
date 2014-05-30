@@ -1,7 +1,7 @@
 /**
  * The Maze Runner
- * @date May 2014
- * @contributors Mohammad Ghasembeigi, Gavin Tam, Jeremy Ma, Calvin Ko
+ * Date created: May 2014
+ * Contributors: Mohammad Ghasembeigi, Gavin Tam, Jeremy Ma, Calvin Ko
  * Runs the maze game.
  * Logic behind screens shown is dealt by GameManager.
  * @see GameManager
